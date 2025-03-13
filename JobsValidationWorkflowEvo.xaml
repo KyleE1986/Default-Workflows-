@@ -1,0 +1,625 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="BusinessTests.WorkFlow.Workflows.JobsValidationWorkflowEvo"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
+ xmlns:pcidp="clr-namespace:PackNet.Common.Interfaces.DTO.Packages;assembly=PackNet.Common.Interfaces"
+ xmlns:pcidpr="clr-namespace:PackNet.Common.Interfaces.DTO.Packages.Restrictions;assembly=PackNet.Common.Interfaces"
+ xmlns:pcis="clr-namespace:PackNet.Common.Interfaces.Services;assembly=PackNet.Common.Interfaces"
+ xmlns:pcwp="clr-namespace:PackNet.Common.WorkflowActivities.Packages;assembly=PackNet.Common"
+ xmlns:pcwr="clr-namespace:PackNet.Common.WorkflowActivities.Restrictions;assembly=PackNet.Common"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scc="clr-namespace:System.Collections.Concurrent;assembly=System"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="ServiceLocator" Type="InArgument(pcis:IServiceLocator)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="ValidationQueue" Type="InArgument(scc:BlockingCollection(pcidp:Job))">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+  </x:Members>
+  <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
+  <sap2010:WorkflowViewState.IdRef>BusinessTests.WorkFlow.Workflows.JobsValidationWorkflow_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Packages</x:String>
+      <x:String>PackNet.Common.Interfaces.Services</x:String>
+      <x:String>System.Collections.Concurrent</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>Moq</AssemblyReference>
+      <AssemblyReference>Newtonsoft.Json</AssemblyReference>
+      <AssemblyReference>Specificity.MSTest</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Configuration</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Reactive.Core</AssemblyReference>
+      <AssemblyReference>System.Reactive.Interfaces</AssemblyReference>
+      <AssemblyReference>System.Reactive.Linq</AssemblyReference>
+      <AssemblyReference>System.Reactive.PlatformServices</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PackNet.Plugins.ArticleService</AssemblyReference>
+      <AssemblyReference>PackNet.Business</AssemblyReference>
+      <AssemblyReference>TestUtils</AssemblyReference>
+      <AssemblyReference>PackNet.Common.Interfaces</AssemblyReference>
+      <AssemblyReference>PackNet.Common</AssemblyReference>
+      <AssemblyReference>PackNet.Communication</AssemblyReference>
+      <AssemblyReference>DataTests</AssemblyReference>
+      <AssemblyReference>PackNet.Data</AssemblyReference>
+      <AssemblyReference>Microsoft.Consulting.Workflow.Activities</AssemblyReference>
+      <AssemblyReference>ServicesTests</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>BusinessTests</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Flowchart sap2010:WorkflowViewState.IdRef="Flowchart_1">
+    <Flowchart.Variables>
+      <Variable x:TypeArguments="pcidp:Job" Name="job" />
+      <Variable x:TypeArguments="scg:IEnumerable(pcidp:Package)" Name="packages" />
+      <Variable x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)" Name="productionItems" />
+      <Variable x:TypeArguments="pcidp:ProductionItem" Name="newProductionItem" />
+    </Flowchart.Variables>
+    <Flowchart.StartNode>
+      <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_4">
+        <pcwp:WaitForJobToValidate sap2010:Annotation.AnnotationText="Wait for job to validate." sap2010:WorkflowViewState.IdRef="WaitForJobToValidate_1">
+          <pcwp:WaitForJobToValidate.Job>
+            <OutArgument x:TypeArguments="pcidp:Job">
+              <mca:CSharpReference x:TypeArguments="pcidp:Job">job</mca:CSharpReference>
+            </OutArgument>
+          </pcwp:WaitForJobToValidate.Job>
+          <pcwp:WaitForJobToValidate.ValidationQueue>
+            <InArgument x:TypeArguments="scc:BlockingCollection(pcidp:Job)">
+              <mca:CSharpValue x:TypeArguments="scc:BlockingCollection(pcidp:Job)">ValidationQueue</mca:CSharpValue>
+            </InArgument>
+          </pcwp:WaitForJobToValidate.ValidationQueue>
+        </pcwp:WaitForJobToValidate>
+        <FlowStep.Next>
+          <FlowStep x:Name="__ReferenceID2" sap2010:WorkflowViewState.IdRef="FlowStep_8">
+            <pcwp:GetPackagesFromJob sap2010:WorkflowViewState.IdRef="GetPackagesFromJob_2">
+              <pcwp:GetPackagesFromJob.Job>
+                <InArgument x:TypeArguments="pcidp:Job">
+                  <mca:CSharpValue x:TypeArguments="pcidp:Job">job</mca:CSharpValue>
+                </InArgument>
+              </pcwp:GetPackagesFromJob.Job>
+              <pcwp:GetPackagesFromJob.Packages>
+                <OutArgument x:TypeArguments="scg:IEnumerable(pcidp:Package)">
+                  <mca:CSharpReference x:TypeArguments="scg:IEnumerable(pcidp:Package)">packages</mca:CSharpReference>
+                </OutArgument>
+              </pcwp:GetPackagesFromJob.Packages>
+            </pcwp:GetPackagesFromJob>
+            <FlowStep.Next>
+              <FlowStep x:Name="__ReferenceID3" sap2010:WorkflowViewState.IdRef="FlowStep_7">
+                <ForEach x:TypeArguments="pcidp:Package" DisplayName="ForEach&lt;Package&gt;" sap2010:WorkflowViewState.IdRef="ForEach`1_4">
+                  <ForEach.Values>
+                    <InArgument x:TypeArguments="scg:IEnumerable(pcidp:Package)">
+                      <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:Package)">packages</mca:CSharpValue>
+                    </InArgument>
+                  </ForEach.Values>
+                  <ActivityAction x:TypeArguments="pcidp:Package">
+                    <ActivityAction.Argument>
+                      <DelegateInArgument x:TypeArguments="pcidp:Package" Name="package" />
+                    </ActivityAction.Argument>
+                    <Sequence sap2010:WorkflowViewState.IdRef="Sequence_11">
+                      <pcwp:GetProductItemsFromPackage x:TypeArguments="pcidp:Carton">
+                        <pcwp:GetProductItemsFromPackage.Package>
+                          <InArgument x:TypeArguments="pcidp:Package">
+                            <mca:CSharpValue x:TypeArguments="pcidp:Package">package</mca:CSharpValue>
+                          </InArgument>
+                        </pcwp:GetProductItemsFromPackage.Package>
+                        <pcwp:GetProductItemsFromPackage.Products>
+                          <OutArgument x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">
+                            <mca:CSharpReference x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">productionItems</mca:CSharpReference>
+                          </OutArgument>
+                        </pcwp:GetProductItemsFromPackage.Products>
+                        <sap2010:WorkflowViewState.IdRef>GetProductItemsFromPackage`1_3</sap2010:WorkflowViewState.IdRef>
+                      </pcwp:GetProductItemsFromPackage>
+                      <ForEach x:TypeArguments="pcidp:ProductionItem" DisplayName="Validate Cartons" sap2010:WorkflowViewState.IdRef="ForEach`1_3">
+                        <ForEach.Values>
+                          <InArgument x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">
+                            <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">productionItems</mca:CSharpValue>
+                          </InArgument>
+                        </ForEach.Values>
+                        <ActivityAction x:TypeArguments="pcidp:ProductionItem">
+                          <ActivityAction.Argument>
+                            <DelegateInArgument x:TypeArguments="pcidp:ProductionItem" Name="productionItem" />
+                          </ActivityAction.Argument>
+                          <Sequence sap2010:WorkflowViewState.IdRef="Sequence_10">
+                            <Sequence.Variables>
+                              <Variable x:TypeArguments="pcidp:Carton" Name="carton" />
+                            </Sequence.Variables>
+                            <Assign sap2010:WorkflowViewState.IdRef="Assign_16">
+                              <Assign.To>
+                                <OutArgument x:TypeArguments="pcidp:Carton">
+                                  <mca:CSharpReference x:TypeArguments="pcidp:Carton">carton</mca:CSharpReference>
+                                </OutArgument>
+                              </Assign.To>
+                              <Assign.Value>
+                                <InArgument x:TypeArguments="pcidp:Carton">
+                                  <mca:CSharpValue x:TypeArguments="pcidp:Carton">((Carton)productionItem.Product)</mca:CSharpValue>
+                                </InArgument>
+                              </Assign.Value>
+                            </Assign>
+                            <If sap2010:WorkflowViewState.IdRef="If_4">
+                              <If.Condition>
+                                <InArgument x:TypeArguments="x:Boolean">
+                                  <mca:CSharpValue x:TypeArguments="x:Boolean">carton.Dimensions.Length &gt; 100</mca:CSharpValue>
+                                </InArgument>
+                              </If.Condition>
+                              <If.Then>
+                                <If DisplayName="Valid Carton Run Evo" sap2010:WorkflowViewState.IdRef="If_3">
+                                  <If.Condition>
+                                    <InArgument x:TypeArguments="x:Boolean">
+                                      <mca:CSharpValue x:TypeArguments="x:Boolean">carton.DesignId == 1</mca:CSharpValue>
+                                    </InArgument>
+                                  </If.Condition>
+                                  <If.Then>
+                                    <Sequence DisplayName="Evo DesignId 1" sap2010:WorkflowViewState.IdRef="Sequence_8">
+                                      <Sequence.Variables>
+                                        <Variable x:TypeArguments="scg:ICollection(pcidp:ProductionItem)" Name="newProductionItems" />
+                                      </Sequence.Variables>
+                                      <Assign sap2010:WorkflowViewState.IdRef="Assign_17">
+                                        <Assign.To>
+                                          <OutArgument x:TypeArguments="scg:ICollection(pcidp:ProductionItem)">
+                                            <mca:CSharpReference x:TypeArguments="scg:ICollection(pcidp:ProductionItem)">newProductionItems</mca:CSharpReference>
+                                          </OutArgument>
+                                        </Assign.To>
+                                        <Assign.Value>
+                                          <InArgument x:TypeArguments="scg:List(pcidp:ProductionItem)">
+                                            <mca:CSharpValue x:TypeArguments="scg:List(pcidp:ProductionItem)">new List&lt;ProductionItem&gt;()</mca:CSharpValue>
+                                          </InArgument>
+                                        </Assign.Value>
+                                      </Assign>
+                                      <Sequence DisplayName="Lid Sequence" sap2010:WorkflowViewState.IdRef="Sequence_6">
+                                        <Sequence.Variables>
+                                          <Variable x:TypeArguments="pcidp:Carton" Name="newCarton" />
+                                        </Sequence.Variables>
+                                        <Assign sap2010:WorkflowViewState.IdRef="Assign_18">
+                                          <Assign.To>
+                                            <OutArgument x:TypeArguments="pcidp:Carton">
+                                              <mca:CSharpReference x:TypeArguments="pcidp:Carton">newCarton</mca:CSharpReference>
+                                            </OutArgument>
+                                          </Assign.To>
+                                          <Assign.Value>
+                                            <InArgument x:TypeArguments="pcidp:Carton">
+                                              <mca:CSharpValue x:TypeArguments="pcidp:Carton">new Carton()</mca:CSharpValue>
+                                            </InArgument>
+                                          </Assign.Value>
+                                        </Assign>
+                                        <Assign DisplayName="Assign Design ID" sap2010:WorkflowViewState.IdRef="Assign_19">
+                                          <Assign.To>
+                                            <OutArgument x:TypeArguments="x:Int32">
+                                              <mca:CSharpReference x:TypeArguments="x:Int32">newCarton.DesignId</mca:CSharpReference>
+                                            </OutArgument>
+                                          </Assign.To>
+                                          <Assign.Value>
+                                            <InArgument x:TypeArguments="x:Int32">201</InArgument>
+                                          </Assign.Value>
+                                        </Assign>
+                                        <Assign DisplayName="Add .25 inches to width" sap2010:WorkflowViewState.IdRef="Assign_20">
+                                          <Assign.To>
+                                            <OutArgument x:TypeArguments="x:Double">
+                                              <mca:CSharpReference x:TypeArguments="x:Double">newCarton.Dimensions.Width</mca:CSharpReference>
+                                            </OutArgument>
+                                          </Assign.To>
+                                          <Assign.Value>
+                                            <InArgument x:TypeArguments="x:Double">
+                                              <mca:CSharpValue x:TypeArguments="x:Double">carton.Dimensions.Width + 0.25</mca:CSharpValue>
+                                            </InArgument>
+                                          </Assign.Value>
+                                        </Assign>
+                                        <Assign DisplayName="Add .25 inches to length" sap2010:WorkflowViewState.IdRef="Assign_21">
+                                          <Assign.To>
+                                            <OutArgument x:TypeArguments="x:Double">
+                                              <mca:CSharpReference x:TypeArguments="x:Double">newCarton.Dimensions.Length</mca:CSharpReference>
+                                            </OutArgument>
+                                          </Assign.To>
+                                          <Assign.Value>
+                                            <InArgument x:TypeArguments="x:Double">
+                                              <mca:CSharpValue x:TypeArguments="x:Double">carton.Dimensions.Length + .25</mca:CSharpValue>
+                                            </InArgument>
+                                          </Assign.Value>
+                                        </Assign>
+                                        <Assign DisplayName="Use original Height" sap2010:WorkflowViewState.IdRef="Assign_22">
+                                          <Assign.To>
+                                            <OutArgument x:TypeArguments="x:Double">
+                                              <mca:CSharpReference x:TypeArguments="x:Double">newCarton.Dimensions.Height</mca:CSharpReference>
+                                            </OutArgument>
+                                          </Assign.To>
+                                          <Assign.Value>
+                                            <InArgument x:TypeArguments="x:Double">
+                                              <mca:CSharpValue x:TypeArguments="x:Double">carton.Dimensions.Height</mca:CSharpValue>
+                                            </InArgument>
+                                          </Assign.Value>
+                                        </Assign>
+                                        <Assign sap2010:WorkflowViewState.IdRef="Assign_23">
+                                          <Assign.To>
+                                            <OutArgument x:TypeArguments="pcidp:ProductionItem">
+                                              <mca:CSharpReference x:TypeArguments="pcidp:ProductionItem">newProductionItem</mca:CSharpReference>
+                                            </OutArgument>
+                                          </Assign.To>
+                                          <Assign.Value>
+                                            <InArgument x:TypeArguments="pcidp:ProductionItem">
+                                              <mca:CSharpValue x:TypeArguments="pcidp:ProductionItem">new ProductionItem(newCarton)</mca:CSharpValue>
+                                            </InArgument>
+                                          </Assign.Value>
+                                        </Assign>
+                                        <pcwr:AddRestrictions sap2010:WorkflowViewState.IdRef="AddRestrictions_3">
+                                          <pcwr:AddRestrictions.Restrictable>
+                                            <InArgument x:TypeArguments="pcidp:Restrictable">
+                                              <mca:CSharpValue x:TypeArguments="pcidp:Restrictable">newProductionItem</mca:CSharpValue>
+                                            </InArgument>
+                                          </pcwr:AddRestrictions.Restrictable>
+                                          <pcwr:AddRestrictions.Restrictions>
+                                            <InArgument x:TypeArguments="scg:IEnumerable(pcidpr:IRestriction)">
+                                              <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidpr:IRestriction)">productionItem.Restrictions</mca:CSharpValue>
+                                            </InArgument>
+                                          </pcwr:AddRestrictions.Restrictions>
+                                        </pcwr:AddRestrictions>
+                                        <AddToCollection x:TypeArguments="pcidp:ProductionItem" DisplayName="Add lid to newProductionItems Collection" sap2010:WorkflowViewState.IdRef="AddToCollection`1_5">
+                                          <AddToCollection.Item>
+                                            <InArgument x:TypeArguments="pcidp:ProductionItem">
+                                              <mca:CSharpValue x:TypeArguments="pcidp:ProductionItem">newProductionItem</mca:CSharpValue>
+                                            </InArgument>
+                                          </AddToCollection.Item>
+                                          <InArgument x:TypeArguments="scg:ICollection(pcidp:ProductionItem)">
+                                            <mca:CSharpValue x:TypeArguments="scg:ICollection(pcidp:ProductionItem)">newProductionItems</mca:CSharpValue>
+                                          </InArgument>
+                                        </AddToCollection>
+                                      </Sequence>
+                                      <Sequence DisplayName="Base Sequence" sap2010:WorkflowViewState.IdRef="Sequence_7">
+                                        <Sequence.Variables>
+                                          <Variable x:TypeArguments="pcidp:Carton" Name="newCarton" />
+                                        </Sequence.Variables>
+                                        <Assign sap2010:WorkflowViewState.IdRef="Assign_24">
+                                          <Assign.To>
+                                            <OutArgument x:TypeArguments="pcidp:Carton">
+                                              <mca:CSharpReference x:TypeArguments="pcidp:Carton">newCarton</mca:CSharpReference>
+                                            </OutArgument>
+                                          </Assign.To>
+                                          <Assign.Value>
+                                            <InArgument x:TypeArguments="pcidp:Carton">
+                                              <mca:CSharpValue x:TypeArguments="pcidp:Carton">new Carton()</mca:CSharpValue>
+                                            </InArgument>
+                                          </Assign.Value>
+                                        </Assign>
+                                        <Assign DisplayName="Assign Design ID" sap2010:WorkflowViewState.IdRef="Assign_25">
+                                          <Assign.To>
+                                            <OutArgument x:TypeArguments="x:Int32">
+                                              <mca:CSharpReference x:TypeArguments="x:Int32">newCarton.DesignId</mca:CSharpReference>
+                                            </OutArgument>
+                                          </Assign.To>
+                                          <Assign.Value>
+                                            <InArgument x:TypeArguments="x:Int32">202</InArgument>
+                                          </Assign.Value>
+                                        </Assign>
+                                        <Assign DisplayName="Use original Width" sap2010:WorkflowViewState.IdRef="Assign_26">
+                                          <Assign.To>
+                                            <OutArgument x:TypeArguments="x:Double">
+                                              <mca:CSharpReference x:TypeArguments="x:Double">newCarton.Dimensions.Width</mca:CSharpReference>
+                                            </OutArgument>
+                                          </Assign.To>
+                                          <Assign.Value>
+                                            <InArgument x:TypeArguments="x:Double">
+                                              <mca:CSharpValue x:TypeArguments="x:Double">carton.Dimensions.Width</mca:CSharpValue>
+                                            </InArgument>
+                                          </Assign.Value>
+                                        </Assign>
+                                        <Assign DisplayName="Use original Length" sap2010:WorkflowViewState.IdRef="Assign_27">
+                                          <Assign.To>
+                                            <OutArgument x:TypeArguments="x:Double">
+                                              <mca:CSharpReference x:TypeArguments="x:Double">newCarton.Dimensions.Length</mca:CSharpReference>
+                                            </OutArgument>
+                                          </Assign.To>
+                                          <Assign.Value>
+                                            <InArgument x:TypeArguments="x:Double">
+                                              <mca:CSharpValue x:TypeArguments="x:Double">carton.Dimensions.Length</mca:CSharpValue>
+                                            </InArgument>
+                                          </Assign.Value>
+                                        </Assign>
+                                        <Assign DisplayName="Use original Height" sap2010:WorkflowViewState.IdRef="Assign_28">
+                                          <Assign.To>
+                                            <OutArgument x:TypeArguments="x:Double">
+                                              <mca:CSharpReference x:TypeArguments="x:Double">newCarton.Dimensions.Height</mca:CSharpReference>
+                                            </OutArgument>
+                                          </Assign.To>
+                                          <Assign.Value>
+                                            <InArgument x:TypeArguments="x:Double">
+                                              <mca:CSharpValue x:TypeArguments="x:Double">carton.Dimensions.Height</mca:CSharpValue>
+                                            </InArgument>
+                                          </Assign.Value>
+                                        </Assign>
+                                        <Assign sap2010:WorkflowViewState.IdRef="Assign_29">
+                                          <Assign.To>
+                                            <OutArgument x:TypeArguments="pcidp:ProductionItem">
+                                              <mca:CSharpReference x:TypeArguments="pcidp:ProductionItem">newProductionItem</mca:CSharpReference>
+                                            </OutArgument>
+                                          </Assign.To>
+                                          <Assign.Value>
+                                            <InArgument x:TypeArguments="pcidp:ProductionItem">
+                                              <mca:CSharpValue x:TypeArguments="pcidp:ProductionItem">new ProductionItem(newCarton)</mca:CSharpValue>
+                                            </InArgument>
+                                          </Assign.Value>
+                                        </Assign>
+                                        <pcwr:AddRestrictions sap2010:WorkflowViewState.IdRef="AddRestrictions_4">
+                                          <pcwr:AddRestrictions.Restrictable>
+                                            <InArgument x:TypeArguments="pcidp:Restrictable">
+                                              <mca:CSharpValue x:TypeArguments="pcidp:Restrictable">newProductionItem</mca:CSharpValue>
+                                            </InArgument>
+                                          </pcwr:AddRestrictions.Restrictable>
+                                          <pcwr:AddRestrictions.Restrictions>
+                                            <InArgument x:TypeArguments="scg:IEnumerable(pcidpr:IRestriction)">
+                                              <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidpr:IRestriction)">productionItem.Restrictions</mca:CSharpValue>
+                                            </InArgument>
+                                          </pcwr:AddRestrictions.Restrictions>
+                                        </pcwr:AddRestrictions>
+                                        <AddToCollection x:TypeArguments="pcidp:ProductionItem" DisplayName="Add base to newProductionItems Collection" sap2010:WorkflowViewState.IdRef="AddToCollection`1_6">
+                                          <AddToCollection.Item>
+                                            <InArgument x:TypeArguments="pcidp:ProductionItem">
+                                              <mca:CSharpValue x:TypeArguments="pcidp:ProductionItem">newProductionItem</mca:CSharpValue>
+                                            </InArgument>
+                                          </AddToCollection.Item>
+                                          <InArgument x:TypeArguments="scg:ICollection(pcidp:ProductionItem)">
+                                            <mca:CSharpValue x:TypeArguments="scg:ICollection(pcidp:ProductionItem)">newProductionItems</mca:CSharpValue>
+                                          </InArgument>
+                                        </AddToCollection>
+                                      </Sequence>
+                                      <pcwp:ReplaceProductWithNewProducts sap2010:WorkflowViewState.IdRef="ReplaceProductWithNewProducts_4">
+                                        <pcwp:ReplaceProductWithNewProducts.Job>
+                                          <InArgument x:TypeArguments="pcidp:Job">
+                                            <mca:CSharpValue x:TypeArguments="pcidp:Job">job</mca:CSharpValue>
+                                          </InArgument>
+                                        </pcwp:ReplaceProductWithNewProducts.Job>
+                                        <pcwp:ReplaceProductWithNewProducts.NewProductionItems>
+                                          <InArgument x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">
+                                            <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">newProductionItems</mca:CSharpValue>
+                                          </InArgument>
+                                        </pcwp:ReplaceProductWithNewProducts.NewProductionItems>
+                                        <pcwp:ReplaceProductWithNewProducts.OriginalProductionItem>
+                                          <InArgument x:TypeArguments="pcidp:ProductionItem">
+                                            <mca:CSharpValue x:TypeArguments="pcidp:ProductionItem">productionItem</mca:CSharpValue>
+                                          </InArgument>
+                                        </pcwp:ReplaceProductWithNewProducts.OriginalProductionItem>
+                                      </pcwp:ReplaceProductWithNewProducts>
+                                    </Sequence>
+                                  </If.Then>
+                                </If>
+                              </If.Then>
+                              <If.Else>
+                                <Sequence sap2010:WorkflowViewState.IdRef="Sequence_9">
+                                  <Assign sap2010:WorkflowViewState.IdRef="Assign_30">
+                                    <Assign.To>
+                                      <OutArgument x:TypeArguments="x:Double">
+                                        <mca:CSharpReference x:TypeArguments="x:Double">carton.Dimensions.Length</mca:CSharpReference>
+                                      </OutArgument>
+                                    </Assign.To>
+                                    <Assign.Value>
+                                      <InArgument x:TypeArguments="x:Int32">-100</InArgument>
+                                    </Assign.Value>
+                                  </Assign>
+                                  <pcwp:SetNotProducibleWithCustomReason sap2010:WorkflowViewState.IdRef="SetNotProducibleWithCustomReason_2" NotProducibleReason="Custom reason">
+                                    <pcwp:SetNotProducibleWithCustomReason.Job>
+                                      <InArgument x:TypeArguments="pcidp:Job">
+                                        <mca:CSharpValue x:TypeArguments="pcidp:Job">job</mca:CSharpValue>
+                                      </InArgument>
+                                    </pcwp:SetNotProducibleWithCustomReason.Job>
+                                  </pcwp:SetNotProducibleWithCustomReason>
+                                </Sequence>
+                              </If.Else>
+                            </If>
+                          </Sequence>
+                        </ActivityAction>
+                      </ForEach>
+                    </Sequence>
+                  </ActivityAction>
+                </ForEach>
+                <FlowStep.Next>
+                  <FlowStep x:Name="__ReferenceID1" sap2010:WorkflowViewState.IdRef="FlowStep_5">
+                    <pcwp:JobValidationCompleted sap2010:WorkflowViewState.IdRef="JobValidationCompleted_1">
+                      <pcwp:JobValidationCompleted.Job>
+                        <InArgument x:TypeArguments="pcidp:Job">
+                          <mca:CSharpValue x:TypeArguments="pcidp:Job">job</mca:CSharpValue>
+                        </InArgument>
+                      </pcwp:JobValidationCompleted.Job>
+                      <pcwp:JobValidationCompleted.ServiceLocator>
+                        <InArgument x:TypeArguments="pcis:IServiceLocator">
+                          <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                        </InArgument>
+                      </pcwp:JobValidationCompleted.ServiceLocator>
+                    </pcwp:JobValidationCompleted>
+                    <FlowStep.Next>
+                      <x:Reference>__ReferenceID0</x:Reference>
+                    </FlowStep.Next>
+                  </FlowStep>
+                </FlowStep.Next>
+              </FlowStep>
+            </FlowStep.Next>
+          </FlowStep>
+        </FlowStep.Next>
+      </FlowStep>
+    </Flowchart.StartNode>
+    <x:Reference>__ReferenceID0</x:Reference>
+    <x:Reference>__ReferenceID1</x:Reference>
+    <x:Reference>__ReferenceID2</x:Reference>
+    <x:Reference>__ReferenceID3</x:Reference>
+    <sads:DebugSymbol.Symbol>d1NDOlxyb290LmdpdFxQYWNrTmV0XEJ1c2luZXNzVGVzdHNcV29ya0Zsb3dcV29ya2Zsb3dzXEpvYnNWYWxpZGF0aW9uV29ya2Zsb3dFdm8ueGFtbFtVA9sDDwIBAV4JaSUDAb4EbA13JgMBrwR6EbwDGwIBEb8DFcoDMwIBAmYPZnUDAcYEYQ9hWQMBvwR0E3R3AwG3BG8Tb1UDAbAEfRd9cwMBqASEARW6AyACARLHAxvHA3MCAQrCAxvCA10CAQOFAReRATkDAZcEkgEXuQMhAgETiAEdiAFnAwGgBI0BHY0BjwEDAZgElQEdlQGHAQMBjwScARu3AyYCARSgAR2rASYDAfoDrAEdtgMiAgEVqAEjqAGFAQMBhQSjASOjAXMDAfsDrwEjrwGDAQIBFrMBIZ8DJgIBOaIDIbQDLAIBILYBJ7YBegIBOroBJZ0DMAIBRKMDI6wDLAIBLa0DI7MDSwIBIb4BJ8kBMAMB4wPKASeqAjIDAaUCqwIniwMyAgFnjAMnnANMAgFFqgNNqgNRAgE4pgMppgOHAQIBLrADKbADawIBI60DowGtA7IBAgEixgEtxgGhAQMB7wPBAS3BAaIBAwHkA84BKdkBMgMBygPaASnjATIDAbwD5AEp7wEyAwGjA/ABKfsBMgMBigP8ASmHAjIDAfECiAIpkwIyAwHYApQCKZ8CQAMBvwKgAimpAjsDAaYCrwIpugIyAwGMArsCKcQCMgMB/gHFAinQAjIDAeUB0QIp3AIyAwHMAd0CKegCMgMBswHpAin0AjIDAZoB9QIpgANAAwGBAYEDKYoDOwIBaJkDLZkDhQECAVyUAy2UA5oBAgFRjwMtjwNvAgFG1gEv1gF9AwHXA9EBL9EBggEDAcsD4QFT4QFWAwHJA90BL90BhgEDAb0D7AEv7AGLAQMBsAPnAS/nAY8BAwGkA/gBL/gBiwEDAZcD8wEv8wGQAQMBiwOEAi+EAoUBAwH+Av8BL/8BkAEDAfICkAIvkAKWAQMB5QKLAi+LApIBAwHZApcCL5cCiAEDAcwCnAIvnAKkAQMBwAKnAi2nApoBAwGzAqMCL6MCigEDAacCtwIvtwJ9AwGZArICL7ICggEDAY0CwgJTwgJWAwGLAr4CL74ChgEDAf8BzQIvzQKEAQMB8gHIAi/IAo8BAwHmAdkCL9kChQEDAdkB1AIv1AKQAQMBzQHlAi/lAoUBAwHAAeACL+ACkAEDAbQB8QIv8QKWAQMBpwHsAi/sApIBAwGbAfgCL/gCiAEDAY4B/QIv/QKkAQMBggGIAy2IA5oBAgF1hAMvhAOKAQIBaQ==</sads:DebugSymbol.Symbol>
+  </Flowchart>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="WaitForJobToValidate_1" sap:VirtualizedContainerService.HintSize="200,45">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="GetPackagesFromJob_2" sap:VirtualizedContainerService.HintSize="200,22">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="GetProductItemsFromPackage`1_3" sap:VirtualizedContainerService.HintSize="541,22">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_16" sap:VirtualizedContainerService.HintSize="489,62" />
+      <sap2010:ViewStateData Id="Assign_17" sap:VirtualizedContainerService.HintSize="264,62" />
+      <sap2010:ViewStateData Id="Assign_18" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_19" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_20" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_21" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_22" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_23" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="AddRestrictions_3" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="AddToCollection`1_5" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="Sequence_6" sap:VirtualizedContainerService.HintSize="264,820">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_24" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_25" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_26" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_27" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_28" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_29" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="AddRestrictions_4" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="AddToCollection`1_6" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="Sequence_7" sap:VirtualizedContainerService.HintSize="264,51">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ReplaceProductWithNewProducts_4" sap:VirtualizedContainerService.HintSize="264,22" />
+      <sap2010:ViewStateData Id="Sequence_8" sap:VirtualizedContainerService.HintSize="286,1199">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_3" sap:VirtualizedContainerService.HintSize="200,51">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_30" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="SetNotProducibleWithCustomReason_2" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="Sequence_9" sap:VirtualizedContainerService.HintSize="264,248">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_4" sap:VirtualizedContainerService.HintSize="489,398" />
+      <sap2010:ViewStateData Id="Sequence_10" sap:VirtualizedContainerService.HintSize="511,624">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEach`1_3" sap:VirtualizedContainerService.HintSize="541,774" />
+      <sap2010:ViewStateData Id="Sequence_11" sap:VirtualizedContainerService.HintSize="563,960">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEach`1_4" sap:VirtualizedContainerService.HintSize="593,1110" />
+      <sap2010:ViewStateData Id="JobValidationCompleted_1" sap:VirtualizedContainerService.HintSize="200,22">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_5">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">200,533.5</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">400,544.5 430,544.5 430,141.5 400,141.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_7">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">200,337.04</av:Point>
+            <av:Size x:Key="ShapeSize">200,51</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,388.04 300,533.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">200,239</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,261 300,337.04</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">200,119</av:Point>
+            <av:Size x:Key="ShapeSize">200,45</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,164 300,239</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Flowchart_1" sap:VirtualizedContainerService.HintSize="614,636">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <av:Point x:Key="ShapeLocation">270,2.5</av:Point>
+            <av:Size x:Key="ShapeSize">60,75</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,77.5 300,119</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="BusinessTests.WorkFlow.Workflows.JobsValidationWorkflow_1" sap:VirtualizedContainerService.HintSize="654,716" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

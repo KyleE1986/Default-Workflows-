@@ -1,0 +1,568 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="PackNet.Plugins.ArticleService.Workflows.ExportArticles"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
+ xmlns:pcidp="clr-namespace:PackNet.Common.Interfaces.DTO.Packages;assembly=PackNet.Common.Interfaces"
+ xmlns:pcis="clr-namespace:PackNet.Common.Interfaces.Services;assembly=PackNet.Common.Interfaces"
+ xmlns:pcw="clr-namespace:PackNet.Common.WorkflowActivities;assembly=PackNet.Common"
+ xmlns:ppa="clr-namespace:PackNet.Plugins.ArticleService;assembly=PackNet.Plugins.ArticleService"
+ xmlns:ppad="clr-namespace:PackNet.Plugins.ArticleService.DTO;assembly=PackNet.Plugins.ArticleService"
+ xmlns:ppaw="clr-namespace:PackNet.Plugins.ArticleService.WorkflowCodeActivities;assembly=PackNet.Plugins.ArticleService"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="ArticlesToExport" Type="InArgument(scg:IEnumerable(ppad:Article))" />
+    <x:Property Name="ServiceLocator" Type="InArgument(pcis:IServiceLocator)" />
+    <x:Property Name="ExportResult" Type="OutArgument(ppa:ArticleExportResult)" />
+  </x:Members>
+  <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
+  <sap2010:WorkflowViewState.IdRef>PackNet.Plugins.ArticleService.Workflows.ExportArticles_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Packages</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Packages.Restrictions</x:String>
+      <x:String>PackNet.Common.Interfaces.Services</x:String>
+      <x:String>PackNet.Plugins.ArticleService</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Newtonsoft.Json</AssemblyReference>
+      <AssemblyReference>PackNet.X7Service</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Net.Http</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PackNet.Plugins.ArticleService</AssemblyReference>
+      <AssemblyReference>CartonPropertyGroupService</AssemblyReference>
+      <AssemblyReference>PackNet.Common.Interfaces</AssemblyReference>
+      <AssemblyReference>PackNet.Common</AssemblyReference>
+      <AssemblyReference>ExternalZebraPrintIntegration</AssemblyReference>
+      <AssemblyReference>PackNet.IODeviceService</AssemblyReference>
+      <AssemblyReference>PackNet.KvmService</AssemblyReference>
+      <AssemblyReference>RestrictionService</AssemblyReference>
+      <AssemblyReference>PackNet.ScandataService</AssemblyReference>
+      <AssemblyReference>X5AdapterService</AssemblyReference>
+      <AssemblyReference>Microsoft.Consulting.Workflow.Activities</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>Workflows</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="RootSequence" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="scg:ICollection(scg:Dictionary(x:String, x:String))" Name="exportList">
+        <Variable.Default>
+          <mca:CSharpValue x:TypeArguments="scg:ICollection(scg:Dictionary(x:String, x:String))">new List&lt;Dictionary&lt;string, string&gt;&gt;()</mca:CSharpValue>
+        </Variable.Default>
+      </Variable>
+      <Variable x:TypeArguments="pcis:IServiceLocator" Name="serviceLocator" />
+    </Sequence.Variables>
+    <Assign sap2010:WorkflowViewState.IdRef="Assign_22">
+      <Assign.To>
+        <OutArgument x:TypeArguments="ppa:ArticleExportResult">
+          <mca:CSharpReference x:TypeArguments="ppa:ArticleExportResult">ExportResult</mca:CSharpReference>
+        </OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="ppa:ArticleExportResult">
+          <mca:CSharpValue x:TypeArguments="ppa:ArticleExportResult">new ArticleExportResult()</mca:CSharpValue>
+        </InArgument>
+      </Assign.Value>
+    </Assign>
+    <ForEach x:TypeArguments="ppad:Article" DisplayName="ForEach&lt;Article&gt;" sap2010:WorkflowViewState.IdRef="ForEach`1_3">
+      <ForEach.Values>
+        <InArgument x:TypeArguments="scg:IEnumerable(ppad:Article)">
+          <mca:CSharpValue x:TypeArguments="scg:IEnumerable(ppad:Article)">ArticlesToExport</mca:CSharpValue>
+        </InArgument>
+      </ForEach.Values>
+      <ActivityAction x:TypeArguments="ppad:Article">
+        <ActivityAction.Argument>
+          <DelegateInArgument x:TypeArguments="ppad:Article" Name="article" />
+        </ActivityAction.Argument>
+        <Sequence DisplayName="ConvertKit" sap2010:WorkflowViewState.IdRef="Sequence_5">
+          <Sequence.Variables>
+            <Variable x:TypeArguments="scg:Dictionary(x:String, x:String)" Name="currentArticle" />
+          </Sequence.Variables>
+          <Sequence DisplayName="Convert-loop" sap2010:WorkflowViewState.IdRef="Sequence_2">
+            <Assign DisplayName="new Dictionary" sap2010:WorkflowViewState.IdRef="Assign_1">
+              <Assign.To>
+                <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">
+                  <mca:CSharpReference x:TypeArguments="scg:Dictionary(x:String, x:String)">currentArticle</mca:CSharpReference>
+                </OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">
+                  <mca:CSharpValue x:TypeArguments="scg:Dictionary(x:String, x:String)">new Dictionary&lt;string, string&gt;()</mca:CSharpValue>
+                </InArgument>
+              </Assign.Value>
+            </Assign>
+            <Assign DisplayName="Alias" sap2010:WorkflowViewState.IdRef="Assign_2">
+              <Assign.To>
+                <OutArgument x:TypeArguments="x:String">
+                  <mca:CSharpReference x:TypeArguments="x:String">currentArticle["ArticleName"]</mca:CSharpReference>
+                </OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="x:String">
+                  <mca:CSharpValue x:TypeArguments="x:String">article.Alias</mca:CSharpValue>
+                </InArgument>
+              </Assign.Value>
+            </Assign>
+            <Assign DisplayName="Description" sap2010:WorkflowViewState.IdRef="Assign_3">
+              <Assign.To>
+                <OutArgument x:TypeArguments="x:String">
+                  <mca:CSharpReference x:TypeArguments="x:String">currentArticle["Description"]</mca:CSharpReference>
+                </OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="x:String">
+                  <mca:CSharpValue x:TypeArguments="x:String">article.Description</mca:CSharpValue>
+                </InArgument>
+              </Assign.Value>
+            </Assign>
+            <Assign DisplayName="Type" sap2010:WorkflowViewState.IdRef="Assign_23">
+              <Assign.To>
+                <OutArgument x:TypeArguments="x:String">
+                  <mca:CSharpReference x:TypeArguments="x:String">currentArticle["Type"]</mca:CSharpReference>
+                </OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="x:String">
+                  <mca:CSharpValue x:TypeArguments="x:String">article.GetType().Name</mca:CSharpValue>
+                </InArgument>
+              </Assign.Value>
+            </Assign>
+            <AddToCollection x:TypeArguments="scg:Dictionary(x:String, x:String)" DisplayName="AddToCollection&lt;Dictionary&lt;String,String&gt;&gt;" sap2010:WorkflowViewState.IdRef="AddToCollection`1_1">
+              <AddToCollection.Item>
+                <InArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">
+                  <mca:CSharpValue x:TypeArguments="scg:Dictionary(x:String, x:String)">currentArticle</mca:CSharpValue>
+                </InArgument>
+              </AddToCollection.Item>
+              <InArgument x:TypeArguments="scg:ICollection(scg:Dictionary(x:String, x:String))">
+                <mca:CSharpValue x:TypeArguments="scg:ICollection(scg:Dictionary(x:String, x:String))">exportList</mca:CSharpValue>
+              </InArgument>
+            </AddToCollection>
+          </Sequence>
+          <ForEach x:TypeArguments="ppad:ProductTemplate" DisplayName="ForEach&lt;ProductTemplate&gt;" sap2010:WorkflowViewState.IdRef="ForEach`1_2">
+            <ForEach.Values>
+              <InArgument x:TypeArguments="scg:IEnumerable(ppad:ProductTemplate)">
+                <mca:CSharpValue x:TypeArguments="scg:IEnumerable(ppad:ProductTemplate)">article.ProductTemplates</mca:CSharpValue>
+              </InArgument>
+            </ForEach.Values>
+            <ActivityAction x:TypeArguments="ppad:ProductTemplate">
+              <ActivityAction.Argument>
+                <DelegateInArgument x:TypeArguments="ppad:ProductTemplate" Name="pt" />
+              </ActivityAction.Argument>
+              <Sequence DisplayName="Convert sub-item" sap2010:WorkflowViewState.IdRef="Sequence_11">
+                <Sequence.Variables>
+                  <Variable x:TypeArguments="pcidp:TemplateLabel" Name="label" />
+                  <Variable x:TypeArguments="pcidp:Carton" Name="carton" />
+                  <Variable x:TypeArguments="x:String" Name="type" />
+                  <Variable x:TypeArguments="scg:Dictionary(x:String, x:String)" Name="currentExportItem" />
+                </Sequence.Variables>
+                <Assign DisplayName="CurrentExportItem" sap2010:WorkflowViewState.IdRef="Assign_4">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">
+                      <mca:CSharpReference x:TypeArguments="scg:Dictionary(x:String, x:String)">currentExportItem</mca:CSharpReference>
+                    </OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">
+                      <mca:CSharpValue x:TypeArguments="scg:Dictionary(x:String, x:String)">new Dictionary&lt;string, string&gt;()</mca:CSharpValue>
+                    </InArgument>
+                  </Assign.Value>
+                </Assign>
+                <Sequence DisplayName="Convert ProductTemplate" sap2010:WorkflowViewState.IdRef="Sequence_4">
+                  <Assign DisplayName="Quantity" sap2010:WorkflowViewState.IdRef="Assign_18">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:String">
+                        <mca:CSharpReference x:TypeArguments="x:String">currentExportItem["Quantity"]</mca:CSharpReference>
+                      </OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:String">
+                        <mca:CSharpValue x:TypeArguments="x:String">pt.Quantity.ToString()</mca:CSharpValue>
+                      </InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Description" sap2010:WorkflowViewState.IdRef="Assign_7">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:String">
+                        <mca:CSharpReference x:TypeArguments="x:String">currentExportItem["Description"]</mca:CSharpReference>
+                      </OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:String">
+                        <mca:CSharpValue x:TypeArguments="x:String">pt.Description</mca:CSharpValue>
+                      </InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Type" sap2010:WorkflowViewState.IdRef="Assign_5">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:String">
+                        <mca:CSharpReference x:TypeArguments="x:String">type</mca:CSharpReference>
+                      </OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:String">
+                        <mca:CSharpValue x:TypeArguments="x:String">pt.Product.GetType().Name</mca:CSharpValue>
+                      </InArgument>
+                    </Assign.Value>
+                  </Assign>
+                </Sequence>
+                <Switch x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="Switch`1_1">
+                  <Switch.Expression>
+                    <InArgument x:TypeArguments="x:String">
+                      <mca:CSharpValue x:TypeArguments="x:String">type</mca:CSharpValue>
+                    </InArgument>
+                  </Switch.Expression>
+                  <Sequence x:Key="Carton" sap2010:WorkflowViewState.IdRef="Sequence_15">
+                    <Assign DisplayName="Carton" sap2010:WorkflowViewState.IdRef="Assign_35">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="pcidp:Carton">
+                          <mca:CSharpReference x:TypeArguments="pcidp:Carton">carton</mca:CSharpReference>
+                        </OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="pcidp:Carton">
+                          <mca:CSharpValue x:TypeArguments="pcidp:Carton">pt.Product as Carton</mca:CSharpValue>
+                        </InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <Assign DisplayName="Name" sap2010:WorkflowViewState.IdRef="Assign_36">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">
+                          <mca:CSharpReference x:TypeArguments="x:String">currentExportItem["ArticleName"]</mca:CSharpReference>
+                        </OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">
+                          <mca:CSharpValue x:TypeArguments="x:String">article.Alias</mca:CSharpValue>
+                        </InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <Assign DisplayName="Type" sap2010:WorkflowViewState.IdRef="Assign_37">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">
+                          <mca:CSharpReference x:TypeArguments="x:String">currentExportItem["Type"]</mca:CSharpReference>
+                        </OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">
+                          <mca:CSharpValue x:TypeArguments="x:String">carton.GetType().Name</mca:CSharpValue>
+                        </InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <Assign DisplayName="DesignId" sap2010:WorkflowViewState.IdRef="Assign_38">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">
+                          <mca:CSharpReference x:TypeArguments="x:String">currentExportItem["DesignId"]</mca:CSharpReference>
+                        </OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">
+                          <mca:CSharpValue x:TypeArguments="x:String">carton.DesignId.ToString()</mca:CSharpValue>
+                        </InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <Assign DisplayName="Length" sap2010:WorkflowViewState.IdRef="Assign_39">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">
+                          <mca:CSharpReference x:TypeArguments="x:String">currentExportItem["Length"]</mca:CSharpReference>
+                        </OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">
+                          <mca:CSharpValue x:TypeArguments="x:String">carton.Dimensions.Length.ToString()</mca:CSharpValue>
+                        </InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <Assign DisplayName="Width" sap2010:WorkflowViewState.IdRef="Assign_40">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">
+                          <mca:CSharpReference x:TypeArguments="x:String">currentExportItem["Width"]</mca:CSharpReference>
+                        </OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">
+                          <mca:CSharpValue x:TypeArguments="x:String">carton.Dimensions.Width.ToString()</mca:CSharpValue>
+                        </InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <Assign DisplayName="Height" sap2010:WorkflowViewState.IdRef="Assign_41">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">
+                          <mca:CSharpReference x:TypeArguments="x:String">currentExportItem["Height"]</mca:CSharpReference>
+                        </OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">
+                          <mca:CSharpValue x:TypeArguments="x:String">carton.Dimensions.Height.ToString()</mca:CSharpValue>
+                        </InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <Assign DisplayName="Rotation" sap2010:WorkflowViewState.IdRef="Assign_42">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">
+                          <mca:CSharpReference x:TypeArguments="x:String">currentExportItem["Rotation"]</mca:CSharpReference>
+                        </OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">
+                          <mca:CSharpValue x:TypeArguments="x:String">pt.Restrictions.OfType&lt;RotationRestriction&gt;().Any() ? pt.Restrictions.OfType&lt;RotationRestriction&gt;().First().Value.ToString() : string.Empty</mca:CSharpValue>
+                        </InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <ppaw:GetCartonXValues sap2010:WorkflowViewState.IdRef="GetCartonXValues_2">
+                      <ppaw:GetCartonXValues.Carton>
+                        <InArgument x:TypeArguments="pcidp:Carton">
+                          <mca:CSharpValue x:TypeArguments="pcidp:Carton">carton</mca:CSharpValue>
+                        </InArgument>
+                      </ppaw:GetCartonXValues.Carton>
+                      <ppaw:GetCartonXValues.CurrentExportItem>
+                        <InArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">
+                          <mca:CSharpValue x:TypeArguments="scg:Dictionary(x:String, x:String)">currentExportItem</mca:CSharpValue>
+                        </InArgument>
+                      </ppaw:GetCartonXValues.CurrentExportItem>
+                    </ppaw:GetCartonXValues>
+                    <ppaw:GetCorrugateRestrictionsFromProductTemplate sap2010:WorkflowViewState.IdRef="GetCorrugateRestrictionsFromProductTemplate_1">
+                      <ppaw:GetCorrugateRestrictionsFromProductTemplate.CurrentExportItem>
+                        <InArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">
+                          <mca:CSharpValue x:TypeArguments="scg:Dictionary(x:String, x:String)">currentExportItem</mca:CSharpValue>
+                        </InArgument>
+                      </ppaw:GetCorrugateRestrictionsFromProductTemplate.CurrentExportItem>
+                      <ppaw:GetCorrugateRestrictionsFromProductTemplate.ProductTemplate>
+                        <InArgument x:TypeArguments="ppad:ProductTemplate">
+                          <mca:CSharpValue x:TypeArguments="ppad:ProductTemplate">pt</mca:CSharpValue>
+                        </InArgument>
+                      </ppaw:GetCorrugateRestrictionsFromProductTemplate.ProductTemplate>
+                    </ppaw:GetCorrugateRestrictionsFromProductTemplate>
+                    <ppaw:GetPrintOnCartonRestrictionFromProductTemplate>
+                      <ppaw:GetPrintOnCartonRestrictionFromProductTemplate.CurrentExportItem>
+                        <InArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">
+                          <mca:CSharpValue x:TypeArguments="scg:Dictionary(x:String, x:String)">currentExportItem</mca:CSharpValue>
+                        </InArgument>
+                      </ppaw:GetPrintOnCartonRestrictionFromProductTemplate.CurrentExportItem>
+                      <ppaw:GetPrintOnCartonRestrictionFromProductTemplate.ProductTemplate>
+                        <InArgument x:TypeArguments="ppad:ProductTemplate">
+                          <mca:CSharpValue x:TypeArguments="ppad:ProductTemplate">pt</mca:CSharpValue>
+                        </InArgument>
+                      </ppaw:GetPrintOnCartonRestrictionFromProductTemplate.ProductTemplate>
+                      <sap2010:WorkflowViewState.IdRef>GetPrintOnCartonRestrictionFromProductTemplate_1</sap2010:WorkflowViewState.IdRef>
+                    </ppaw:GetPrintOnCartonRestrictionFromProductTemplate>
+                  </Sequence>
+                  <Sequence x:Key="TemplateLabel" sap2010:WorkflowViewState.IdRef="Sequence_16">
+                    <Assign DisplayName="Label" sap2010:WorkflowViewState.IdRef="Assign_43">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="pcidp:TemplateLabel">
+                          <mca:CSharpReference x:TypeArguments="pcidp:TemplateLabel">label</mca:CSharpReference>
+                        </OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="pcidp:TemplateLabel">
+                          <mca:CSharpValue x:TypeArguments="pcidp:TemplateLabel">pt.Product as TemplateLabel</mca:CSharpValue>
+                        </InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <Assign DisplayName="Name" sap2010:WorkflowViewState.IdRef="Assign_44">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">
+                          <mca:CSharpReference x:TypeArguments="x:String">currentExportItem["ArticleName"]</mca:CSharpReference>
+                        </OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">
+                          <mca:CSharpValue x:TypeArguments="x:String">article.Alias</mca:CSharpValue>
+                        </InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <Assign DisplayName="Type" sap2010:WorkflowViewState.IdRef="Assign_45">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">
+                          <mca:CSharpReference x:TypeArguments="x:String">currentExportItem["Type"]</mca:CSharpReference>
+                        </OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">Label</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <ppaw:GetLabelPrintData sap2010:WorkflowViewState.IdRef="GetLabelPrintData_3">
+                      <ppaw:GetLabelPrintData.CurrentExportItem>
+                        <InArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">
+                          <mca:CSharpValue x:TypeArguments="scg:Dictionary(x:String, x:String)">currentExportItem</mca:CSharpValue>
+                        </InArgument>
+                      </ppaw:GetLabelPrintData.CurrentExportItem>
+                      <ppaw:GetLabelPrintData.Label>
+                        <InArgument x:TypeArguments="pcidp:TemplateLabel">
+                          <mca:CSharpValue x:TypeArguments="pcidp:TemplateLabel">label</mca:CSharpValue>
+                        </InArgument>
+                      </ppaw:GetLabelPrintData.Label>
+                    </ppaw:GetLabelPrintData>
+                    <Assign sap2010:WorkflowViewState.IdRef="Assign_46">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">
+                          <mca:CSharpReference x:TypeArguments="x:String">currentExportItem["LabelTemplate"]</mca:CSharpReference>
+                        </OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">
+                          <mca:CSharpValue x:TypeArguments="x:String">label.TemplateName</mca:CSharpValue>
+                        </InArgument>
+                      </Assign.Value>
+                    </Assign>
+                  </Sequence>
+                </Switch>
+                <AddToCollection x:TypeArguments="scg:Dictionary(x:String, x:String)" DisplayName="AddToCollection&lt;Dictionary&lt;String,String&gt;&gt;" sap2010:WorkflowViewState.IdRef="AddToCollection`1_7">
+                  <AddToCollection.Item>
+                    <InArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">
+                      <mca:CSharpValue x:TypeArguments="scg:Dictionary(x:String, x:String)">currentExportItem</mca:CSharpValue>
+                    </InArgument>
+                  </AddToCollection.Item>
+                  <InArgument x:TypeArguments="scg:ICollection(scg:Dictionary(x:String, x:String))">
+                    <mca:CSharpValue x:TypeArguments="scg:ICollection(scg:Dictionary(x:String, x:String))">exportList</mca:CSharpValue>
+                  </InArgument>
+                </AddToCollection>
+              </Sequence>
+            </ActivityAction>
+          </ForEach>
+        </Sequence>
+      </ActivityAction>
+    </ForEach>
+    <Assign sap2010:WorkflowViewState.IdRef="Assign_21">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:Int32">
+          <mca:CSharpReference x:TypeArguments="x:Int32">ExportResult.NumberOfExportedArticles</mca:CSharpReference>
+        </OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:Int32">
+          <mca:CSharpValue x:TypeArguments="x:Int32">exportList.Count() &gt; 0 ? exportList.Select(a =&gt; a["ArticleName"]).Distinct().Count() : 0</mca:CSharpValue>
+        </InArgument>
+      </Assign.Value>
+    </Assign>
+    <pcw:CreateCSVFromDictionary sap2010:WorkflowViewState.IdRef="CreateCSVFromDictionary_1" Separator=";" UseHeaders="True">
+      <pcw:CreateCSVFromDictionary.CSVString>
+        <OutArgument x:TypeArguments="x:String">
+          <mca:CSharpReference x:TypeArguments="x:String">ExportResult.ExportResult</mca:CSharpReference>
+        </OutArgument>
+      </pcw:CreateCSVFromDictionary.CSVString>
+      <pcw:CreateCSVFromDictionary.Dictionaries>
+        <InArgument x:TypeArguments="scg:ICollection(scg:Dictionary(x:String, x:String))">
+          <mca:CSharpValue x:TypeArguments="scg:ICollection(scg:Dictionary(x:String, x:String))">exportList</mca:CSharpValue>
+        </InArgument>
+      </pcw:CreateCSVFromDictionary.Dictionaries>
+    </pcw:CreateCSVFromDictionary>
+    <sads:DebugSymbol.Symbol>dzdDOlxDb2RlXHBob2VuaXhcV29ya2Zsb3dzXFdvcmtmbG93c1xFeHBvcnRBcnRpY2xlcy54YW1sZ0gD3QMOAgEBTAtMpgECAQJRBVwOAwHIBV0FwwMPAgEkxAMFzwMOAgEX0AMF2wMjAgEIWQtZcQMBzwVUC1RsAwHJBWALYG4DAcIFZwnBAxQCASXMAwvMA6YBAgEexwMLxwN1AgEY0wML0wNqAgER0AN30AN9AgEQ2AML2AN+AgEK0ANo0ANrAgEJawumARYDAewEpwELwAMVAgEmbA13FgMBsQV4DYMBFgMBoAWEAQ2PARYDAY8FkAENmwEWAwH+BJwBDaUBHwMB7QSqARGqAYQBAwHkBLEBD74DGgIBJ3QTdJEBAwG6BW8Tb4EBAwGyBYABE4ABXgMBqQV7E3t2AwGhBYwBE4wBZAMBmAWHAROHAXYDAZAFmAETmAFnAwGHBZMBE5MBbwMB/wSjARGjAYQBAwH2BJ8BE58BeQMB7gS4ARHDARoDAckExAER6QEcAwH3A+oBEbMDGgIBQ7QDEb0DIwIBKMABF8ABlQEDAdcEuwEXuwGIAQMBygTFARPQARwDAa4E0QET3AEcAwGTBN0BE+gBHAMB+APtARftAVkCAUTwARP2Ah4DAc0B9wITsgMeAgFRuwMVuwOIAQIBNrcDF7cDgAECASnNARnNAW0DAbwEyAEZyAF8AwGvBNkBGdkBZQMBoQTUARnUAX8DAZQE5QEZ5QFwAwGGBOABGeABYwMB+QPxARX8AR4DAdwD/QEViAIeAwHBA4kCFZQCHgMBpgOVAhWgAh4DAYsDoQIVrAIeAwHwAq0CFbgCHgMB1QK5AhXEAh4DAboCxQIV0AIeAwGfAtECFdwCLQMBhALdAhXoAkgDAekB6QIV9QJLAwHOAfgCFYMDHgMBsgGEAxWPAx4DAZcBkAMVmQMeAwGIAZoDFaUDLgIBbaYDFbEDHgIBUvkBG/kBcQMB6gP0ARv0AWsDAd0DhQIbhQJmAwHPA4ACG4ACgQEDAcIDkQIbkQJuAwG0A4wCG4wCegMBpwOdAhudAnMDAZkDmAIbmAJ+AwGMA6kCG6kCfAMB/gKkAhukAnwDAfECtQIbtQJ7AwHjArACG7ACewMB1gLBAhvBAnwDAcgCvAIbvAJ8AwG7As0CG80C8AEDAa0CyAIbyAJ+AwGgAtkCG9kChAEDAZIC1AIb1AJjAwGFAuACG+AChAEDAfcB5QIb5QJnAwHqAewCG+wChAEDAdwB8QIb8QJnAwHPAYADG4ADfwMBwAH7Ahv7AnEDAbMBjAMbjANmAwGlAYcDG4cDgQEDAZgBlwNAlwNFAwGWAZMDG5MDegMBiQGdAxudA4QBAgF7ogMbogNpAgFurgMbrgNrAgFgqQMbqQODAQIBUw==</sads:DebugSymbol.Symbol>
+  </Sequence>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="Assign_22" sap:VirtualizedContainerService.HintSize="579.428571428571,61.7142857142857" />
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_2" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_3" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_23" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="AddToCollection`1_1" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="528,52.5714285714286">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_4" sap:VirtualizedContainerService.HintSize="476.571428571429,61.7142857142857" />
+      <sap2010:ViewStateData Id="Assign_18" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_7" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_5" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Sequence_4" sap:VirtualizedContainerService.HintSize="476.571428571429,52.5714285714286">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_35" sap:VirtualizedContainerService.HintSize="241.142857142857,61.7142857142857" />
+      <sap2010:ViewStateData Id="Assign_36" sap:VirtualizedContainerService.HintSize="241.142857142857,61.7142857142857" />
+      <sap2010:ViewStateData Id="Assign_37" sap:VirtualizedContainerService.HintSize="241.142857142857,61.7142857142857" />
+      <sap2010:ViewStateData Id="Assign_38" sap:VirtualizedContainerService.HintSize="241.142857142857,61.7142857142857" />
+      <sap2010:ViewStateData Id="Assign_39" sap:VirtualizedContainerService.HintSize="241.142857142857,61.7142857142857" />
+      <sap2010:ViewStateData Id="Assign_40" sap:VirtualizedContainerService.HintSize="241.142857142857,61.7142857142857" />
+      <sap2010:ViewStateData Id="Assign_41" sap:VirtualizedContainerService.HintSize="241.142857142857,61.7142857142857" />
+      <sap2010:ViewStateData Id="Assign_42" sap:VirtualizedContainerService.HintSize="241.142857142857,61.7142857142857" />
+      <sap2010:ViewStateData Id="GetCartonXValues_2" sap:VirtualizedContainerService.HintSize="241.142857142857,21.7142857142857" />
+      <sap2010:ViewStateData Id="GetCorrugateRestrictionsFromProductTemplate_1" sap:VirtualizedContainerService.HintSize="241.142857142857,21.7142857142857" />
+      <sap2010:ViewStateData Id="GetPrintOnCartonRestrictionFromProductTemplate_1" sap:VirtualizedContainerService.HintSize="241.142857142857,21.7142857142857" />
+      <sap2010:ViewStateData Id="Sequence_15" sap:VirtualizedContainerService.HintSize="262.857142857143,1082.28571428571">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_43" sap:VirtualizedContainerService.HintSize="242.285714285714,61.7142857142857" />
+      <sap2010:ViewStateData Id="Assign_44" sap:VirtualizedContainerService.HintSize="242.285714285714,61.7142857142857" />
+      <sap2010:ViewStateData Id="Assign_45" sap:VirtualizedContainerService.HintSize="242.285714285714,61.7142857142857" />
+      <sap2010:ViewStateData Id="GetLabelPrintData_3" sap:VirtualizedContainerService.HintSize="242.285714285714,21.7142857142857" />
+      <sap2010:ViewStateData Id="Assign_46" sap:VirtualizedContainerService.HintSize="242.285714285714,61.7142857142857" />
+      <sap2010:ViewStateData Id="Sequence_16" sap:VirtualizedContainerService.HintSize="264,553.142857142857">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Switch`1_1" sap:VirtualizedContainerService.HintSize="476.571428571429,1298.28571428571" />
+      <sap2010:ViewStateData Id="AddToCollection`1_7" sap:VirtualizedContainerService.HintSize="476.571428571429,21.7142857142857" />
+      <sap2010:ViewStateData Id="Sequence_11" sap:VirtualizedContainerService.HintSize="498.285714285714,1677.71428571429">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEach`1_2" sap:VirtualizedContainerService.HintSize="528,1829.71428571429" />
+      <sap2010:ViewStateData Id="Sequence_5" sap:VirtualizedContainerService.HintSize="549.714285714286,2045.71428571429">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEach`1_3" sap:VirtualizedContainerService.HintSize="579.428571428571,2197.71428571429" />
+      <sap2010:ViewStateData Id="Assign_21" sap:VirtualizedContainerService.HintSize="579.428571428571,61.7142857142857" />
+      <sap2010:ViewStateData Id="CreateCSVFromDictionary_1" sap:VirtualizedContainerService.HintSize="579.428571428571,21.7142857142857" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="601.142857142857,2586.28571428571">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PackNet.Plugins.ArticleService.Workflows.ExportArticles_1" sap:VirtualizedContainerService.HintSize="641.142857142857,2666.28571428571" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

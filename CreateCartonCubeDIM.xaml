@@ -1,0 +1,488 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="PackNet.Importer.Workflows.ImportPlugins.SLD.CreateCartonCubeDIM"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
+ xmlns:pcidp="clr-namespace:PackNet.Common.Interfaces.DTO.Packages;assembly=PackNet.Common.Interfaces"
+ xmlns:pcidp1="clr-namespace:PackNet.Common.Interfaces.DTO.PackagingDesigns;assembly=PackNet.Common.Interfaces"
+ xmlns:pcis="clr-namespace:PackNet.Common.Interfaces.Services;assembly=PackNet.Common.Interfaces"
+ xmlns:pcw="clr-namespace:PackNet.Common.WorkflowActivities;assembly=PackNet.Common"
+ xmlns:pcwp="clr-namespace:PackNet.Common.WorkflowActivities.Packages;assembly=PackNet.Common"
+ xmlns:pcwr="clr-namespace:PackNet.Common.WorkflowActivities.Restrictions;assembly=PackNet.Common"
+ xmlns:s="clr-namespace:System;assembly=mscorlib"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="ServiceLocator" Type="InArgument(pcis:IServiceLocator)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="Row" Type="InArgument(scg:IDictionary(x:String, x:String))">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="Package" Type="InArgument(pcidp:Package)" />
+  </x:Members>
+  <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
+  <sap2010:WorkflowViewState.IdRef>PackNet.Importer.CreateCarton_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>PackNet.Common.Interfaces.Services</x:String>
+      <x:String>System.Globalization</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Packages</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Microsoft.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.Activities.Extensions</AssemblyReference>
+      <AssemblyReference>Microsoft.Activities.Extensions.Design</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>System.Workflow.ComponentModel</AssemblyReference>
+      <AssemblyReference>System.Workflow.Runtime</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PackNet.Plugins.ArticleService</AssemblyReference>
+      <AssemblyReference>PackNet.Common.Interfaces</AssemblyReference>
+      <AssemblyReference>PackNet.Common</AssemblyReference>
+      <AssemblyReference>PackNet.Data</AssemblyReference>
+      <AssemblyReference>PackNet.IODeviceService</AssemblyReference>
+      <AssemblyReference>Microsoft.Consulting.Workflow.Activities</AssemblyReference>
+      <AssemblyReference>PackNet.ScandataService</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>PackNet.Importer</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="pcidp:Carton" Name="carton" />
+      <Variable x:TypeArguments="x:String" Name="designIdAsString" />
+      <Variable x:TypeArguments="s:String[]" Name="designIdPieces">
+        <Variable.Default>
+          <mca:CSharpValue x:TypeArguments="s:String[]">new string[]{}</mca:CSharpValue>
+        </Variable.Default>
+      </Variable>
+      <Variable x:TypeArguments="x:String" Name="wasteVolume" />
+      <Variable x:TypeArguments="pcidp:ProductionItem" Name="productionItem" />
+    </Sequence.Variables>
+    <Assign sap2010:WorkflowViewState.IdRef="Assign_1">
+      <Assign.To>
+        <OutArgument x:TypeArguments="pcidp:Carton">
+          <mca:CSharpReference x:TypeArguments="pcidp:Carton">carton</mca:CSharpReference>
+        </OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="pcidp:Carton">
+          <mca:CSharpValue x:TypeArguments="pcidp:Carton">new Carton()</mca:CSharpValue>
+        </InArgument>
+      </Assign.Value>
+    </Assign>
+    <pcw:ImportFieldLookup x:TypeArguments="x:String" sap2010:Annotation.AnnotationText="DesignId may have the format from Cube of DesignId+WasteVolume so we will handle that below" DisplayName="Get DesignId as String" FieldToRetrieve="DesignId" sap2010:WorkflowViewState.IdRef="ImportFieldLookup`1_10">
+      <pcw:ImportFieldLookup.DefaultValue>
+        <InArgument x:TypeArguments="x:String">
+          <Literal x:TypeArguments="x:String" Value="" />
+        </InArgument>
+      </pcw:ImportFieldLookup.DefaultValue>
+      <pcw:ImportFieldLookup.OutputValue>
+        <OutArgument x:TypeArguments="x:String">
+          <mca:CSharpReference x:TypeArguments="x:String">designIdAsString</mca:CSharpReference>
+        </OutArgument>
+      </pcw:ImportFieldLookup.OutputValue>
+      <pcw:ImportFieldLookup.Row>
+        <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+          <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">Row</mca:CSharpValue>
+        </InArgument>
+      </pcw:ImportFieldLookup.Row>
+    </pcw:ImportFieldLookup>
+    <If sap2010:Annotation.AnnotationText="If designId has a plus sign (+) in it, that means waste volume is included so deal with it here.&#xA;&#xA;DesignId+WasteVolume" DisplayName="If " sap2010:WorkflowViewState.IdRef="If_7">
+      <If.Condition>
+        <InArgument x:TypeArguments="x:Boolean">
+          <mca:CSharpValue x:TypeArguments="x:Boolean">designIdAsString.Contains("+")</mca:CSharpValue>
+        </InArgument>
+      </If.Condition>
+      <If.Then>
+        <Sequence sap2010:WorkflowViewState.IdRef="Sequence_7">
+          <Sequence.Variables>
+            <Variable x:TypeArguments="pcidp:Job" Name="job" />
+          </Sequence.Variables>
+          <Assign sap2010:Annotation.AnnotationText="" DisplayName="Set DesignId" sap2010:WorkflowViewState.IdRef="Assign_7">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:Int32">
+                <mca:CSharpReference x:TypeArguments="x:Int32">carton.DesignId</mca:CSharpReference>
+              </OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:Int32">0</InArgument>
+            </Assign.Value>
+          </Assign>
+          <pcw:AddCustomAttribute sap2010:Annotation.AnnotationText="This value will be processed during Validation" DisplayName="Save DesignId as CustomAttribute" FieldToRetrieve="DesignId" sap2010:WorkflowViewState.IdRef="AddCustomAttribute_1">
+            <pcw:AddCustomAttribute.ImportRow>
+              <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+                <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">Row</mca:CSharpValue>
+              </InArgument>
+            </pcw:AddCustomAttribute.ImportRow>
+            <pcw:AddCustomAttribute.Job>
+              <InArgument x:TypeArguments="pcidp:Job">
+                <mca:CSharpValue x:TypeArguments="pcidp:Job">Package.Job</mca:CSharpValue>
+              </InArgument>
+            </pcw:AddCustomAttribute.Job>
+          </pcw:AddCustomAttribute>
+        </Sequence>
+      </If.Then>
+      <If.Else>
+        <Assign sap2010:Annotation.AnnotationText="" DisplayName="Set DesignId" sap2010:WorkflowViewState.IdRef="Assign_6">
+          <Assign.To>
+            <OutArgument x:TypeArguments="x:Int32">
+              <mca:CSharpReference x:TypeArguments="x:Int32">carton.DesignId</mca:CSharpReference>
+            </OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="x:Int32">
+              <mca:CSharpValue x:TypeArguments="x:Int32">int.Parse(designIdAsString)</mca:CSharpValue>
+            </InArgument>
+          </Assign.Value>
+        </Assign>
+      </If.Else>
+    </If>
+    <pcw:ImportFieldLookup x:TypeArguments="x:Double" sap2010:Annotation.AnnotationText="Set Carton.Dimensions.Length property." DefaultValue="0" DisplayName="Set Length" FieldToRetrieve="Length" sap2010:WorkflowViewState.IdRef="ImportFieldLookup`1_11">
+      <pcw:ImportFieldLookup.OutputValue>
+        <OutArgument x:TypeArguments="x:Double">
+          <mca:CSharpReference x:TypeArguments="x:Double">carton.Dimensions.Length</mca:CSharpReference>
+        </OutArgument>
+      </pcw:ImportFieldLookup.OutputValue>
+      <pcw:ImportFieldLookup.Row>
+        <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+          <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">Row</mca:CSharpValue>
+        </InArgument>
+      </pcw:ImportFieldLookup.Row>
+    </pcw:ImportFieldLookup>
+    <pcw:ImportFieldLookup x:TypeArguments="x:Double" sap2010:Annotation.AnnotationText="Set Carton.Dimensions.Width property." DefaultValue="0" DisplayName="Set Width" FieldToRetrieve="Width" sap2010:WorkflowViewState.IdRef="ImportFieldLookup`1_12">
+      <pcw:ImportFieldLookup.OutputValue>
+        <OutArgument x:TypeArguments="x:Double">
+          <mca:CSharpReference x:TypeArguments="x:Double">carton.Dimensions.Width</mca:CSharpReference>
+        </OutArgument>
+      </pcw:ImportFieldLookup.OutputValue>
+      <pcw:ImportFieldLookup.Row>
+        <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+          <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">Row</mca:CSharpValue>
+        </InArgument>
+      </pcw:ImportFieldLookup.Row>
+    </pcw:ImportFieldLookup>
+    <pcw:ImportFieldLookup x:TypeArguments="x:Double" sap2010:Annotation.AnnotationText="Set Carton.Dimensions.Height property." DefaultValue="0" DisplayName="Set Height" FieldToRetrieve="Height" sap2010:WorkflowViewState.IdRef="ImportFieldLookup`1_13">
+      <pcw:ImportFieldLookup.OutputValue>
+        <OutArgument x:TypeArguments="x:Double">
+          <mca:CSharpReference x:TypeArguments="x:Double">carton.Dimensions.Height</mca:CSharpReference>
+        </OutArgument>
+      </pcw:ImportFieldLookup.OutputValue>
+      <pcw:ImportFieldLookup.Row>
+        <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+          <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">Row</mca:CSharpValue>
+        </InArgument>
+      </pcw:ImportFieldLookup.Row>
+    </pcw:ImportFieldLookup>
+    <pcw:ImportXValues sap2010:Annotation.AnnotationText="Imports all X-values from the import row and adds them to the carton." sap2010:WorkflowViewState.IdRef="ImportXValues_4">
+      <pcw:ImportXValues.Carton>
+        <InArgument x:TypeArguments="pcidp:Carton">
+          <mca:CSharpValue x:TypeArguments="pcidp:Carton">carton</mca:CSharpValue>
+        </InArgument>
+      </pcw:ImportXValues.Carton>
+      <pcw:ImportXValues.Row>
+        <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+          <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">Row</mca:CSharpValue>
+        </InArgument>
+      </pcw:ImportXValues.Row>
+    </pcw:ImportXValues>
+    <Assign sap2010:WorkflowViewState.IdRef="Assign_8">
+      <Assign.To>
+        <OutArgument x:TypeArguments="pcidp:ProductionItem">
+          <mca:CSharpReference x:TypeArguments="pcidp:ProductionItem">productionItem</mca:CSharpReference>
+        </OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="pcidp:ProductionItem">
+          <mca:CSharpValue x:TypeArguments="pcidp:ProductionItem">new ProductionItem(carton)</mca:CSharpValue>
+        </InArgument>
+      </Assign.Value>
+    </Assign>
+    <pcwr:TryAddCorrugateQualityRestriction DefaultLookupValue="{x:Null}" HasRestriction="{x:Null}" sap2010:Annotation.AnnotationText="Add corrugate quality restriction." DisplayName="Try Add Corrugate Quality Restriction" FieldToRetrieve="CorrugateQuality" sap2010:WorkflowViewState.IdRef="TryAddCorrugateQualityRestriction_2">
+      <pcwr:TryAddCorrugateQualityRestriction.ImportRow>
+        <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+          <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">Row</mca:CSharpValue>
+        </InArgument>
+      </pcwr:TryAddCorrugateQualityRestriction.ImportRow>
+      <pcwr:TryAddCorrugateQualityRestriction.ProductionItem>
+        <InArgument x:TypeArguments="pcidp:Restrictable">
+          <mca:CSharpValue x:TypeArguments="pcidp:Restrictable">productionItem</mca:CSharpValue>
+        </InArgument>
+      </pcwr:TryAddCorrugateQualityRestriction.ProductionItem>
+    </pcwr:TryAddCorrugateQualityRestriction>
+    <pcwr:TryAddCorrugateThicknessRestriction DefaultLookupValue="{x:Null}" HasRestriction="{x:Null}" sap2010:Annotation.AnnotationText="Add corrugate thickness restriction." DisplayName="Try Add Corrugate Thickness Restriction" FieldToRetrieve="CorrugateThickness" sap2010:WorkflowViewState.IdRef="TryAddCorrugateThicknessRestriction_2">
+      <pcwr:TryAddCorrugateThicknessRestriction.ImportRow>
+        <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+          <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">Row</mca:CSharpValue>
+        </InArgument>
+      </pcwr:TryAddCorrugateThicknessRestriction.ImportRow>
+      <pcwr:TryAddCorrugateThicknessRestriction.ProductionItem>
+        <InArgument x:TypeArguments="pcidp:Restrictable">
+          <mca:CSharpValue x:TypeArguments="pcidp:Restrictable">productionItem</mca:CSharpValue>
+        </InArgument>
+      </pcwr:TryAddCorrugateThicknessRestriction.ProductionItem>
+    </pcwr:TryAddCorrugateThicknessRestriction>
+    <Sequence DisplayName="Add Rotation Restriction" sap2010:WorkflowViewState.IdRef="Sequence_6">
+      <Sequence.Variables>
+        <Variable x:TypeArguments="s:Nullable(x:Int32)" Name="rotationValue" />
+      </Sequence.Variables>
+      <pcw:ImportFieldLookup x:TypeArguments="s:Nullable(x:Int32)" FieldToRetrieve="Rotation" sap2010:WorkflowViewState.IdRef="ImportFieldLookup`1_14">
+        <pcw:ImportFieldLookup.DefaultValue>
+          <InArgument x:TypeArguments="s:Nullable(x:Int32)">
+            <mca:CSharpValue x:TypeArguments="s:Nullable(x:Int32)">null</mca:CSharpValue>
+          </InArgument>
+        </pcw:ImportFieldLookup.DefaultValue>
+        <pcw:ImportFieldLookup.OutputValue>
+          <OutArgument x:TypeArguments="s:Nullable(x:Int32)">
+            <mca:CSharpReference x:TypeArguments="s:Nullable(x:Int32)">rotationValue</mca:CSharpReference>
+          </OutArgument>
+        </pcw:ImportFieldLookup.OutputValue>
+        <pcw:ImportFieldLookup.Row>
+          <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+            <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">Row</mca:CSharpValue>
+          </InArgument>
+        </pcw:ImportFieldLookup.Row>
+      </pcw:ImportFieldLookup>
+      <If sap2010:WorkflowViewState.IdRef="If_8">
+        <If.Condition>
+          <InArgument x:TypeArguments="x:Boolean">
+            <mca:CSharpValue x:TypeArguments="x:Boolean">rotationValue.HasValue</mca:CSharpValue>
+          </InArgument>
+        </If.Condition>
+        <If.Then>
+          <Switch x:TypeArguments="s:Nullable(x:Int32)" DisplayName="Map and Assign Rotation Restriction" sap2010:WorkflowViewState.IdRef="Switch`1_2">
+            <Switch.Expression>
+              <InArgument x:TypeArguments="s:Nullable(x:Int32)">
+                <mca:CSharpValue x:TypeArguments="s:Nullable(x:Int32)">rotationValue.Value</mca:CSharpValue>
+              </InArgument>
+            </Switch.Expression>
+            <pcwr:AddRotationRestriction sap2010:WorkflowViewState.IdRef="AddRotationRestriction_7">
+              <x:Key>
+                <x:Int32>0</x:Int32>
+              </x:Key>
+              <pcwr:AddRotationRestriction.ProductionItem>
+                <InArgument x:TypeArguments="pcidp:Restrictable">
+                  <mca:CSharpValue x:TypeArguments="pcidp:Restrictable">productionItem</mca:CSharpValue>
+                </InArgument>
+              </pcwr:AddRotationRestriction.ProductionItem>
+              <pcwr:AddRotationRestriction.Value>
+                <InArgument x:TypeArguments="pcidp1:OrientationEnum">
+                  <mca:CSharpValue x:TypeArguments="pcidp1:OrientationEnum">Common.Interfaces.DTO.PackagingDesigns.OrientationEnum.Degree0</mca:CSharpValue>
+                </InArgument>
+              </pcwr:AddRotationRestriction.Value>
+            </pcwr:AddRotationRestriction>
+            <pcwr:AddRotationRestriction sap2010:WorkflowViewState.IdRef="AddRotationRestriction_8">
+              <x:Key>
+                <x:Int32>90</x:Int32>
+              </x:Key>
+              <pcwr:AddRotationRestriction.ProductionItem>
+                <InArgument x:TypeArguments="pcidp:Restrictable">
+                  <mca:CSharpValue x:TypeArguments="pcidp:Restrictable">productionItem</mca:CSharpValue>
+                </InArgument>
+              </pcwr:AddRotationRestriction.ProductionItem>
+              <pcwr:AddRotationRestriction.Value>
+                <InArgument x:TypeArguments="pcidp1:OrientationEnum">
+                  <mca:CSharpValue x:TypeArguments="pcidp1:OrientationEnum">Common.Interfaces.DTO.PackagingDesigns.OrientationEnum.Degree90</mca:CSharpValue>
+                </InArgument>
+              </pcwr:AddRotationRestriction.Value>
+            </pcwr:AddRotationRestriction>
+            <pcwr:AddRotationRestriction sap2010:WorkflowViewState.IdRef="AddRotationRestriction_9">
+              <x:Key>
+                <x:Int32>180</x:Int32>
+              </x:Key>
+              <pcwr:AddRotationRestriction.ProductionItem>
+                <InArgument x:TypeArguments="pcidp:Restrictable">
+                  <mca:CSharpValue x:TypeArguments="pcidp:Restrictable">productionItem</mca:CSharpValue>
+                </InArgument>
+              </pcwr:AddRotationRestriction.ProductionItem>
+              <pcwr:AddRotationRestriction.Value>
+                <InArgument x:TypeArguments="pcidp1:OrientationEnum">
+                  <mca:CSharpValue x:TypeArguments="pcidp1:OrientationEnum">Common.Interfaces.DTO.PackagingDesigns.OrientationEnum.Degree180</mca:CSharpValue>
+                </InArgument>
+              </pcwr:AddRotationRestriction.Value>
+            </pcwr:AddRotationRestriction>
+            <pcwr:AddRotationRestriction sap2010:WorkflowViewState.IdRef="AddRotationRestriction_10">
+              <x:Key>
+                <x:Int32>270</x:Int32>
+              </x:Key>
+              <pcwr:AddRotationRestriction.ProductionItem>
+                <InArgument x:TypeArguments="pcidp:Restrictable">
+                  <mca:CSharpValue x:TypeArguments="pcidp:Restrictable">productionItem</mca:CSharpValue>
+                </InArgument>
+              </pcwr:AddRotationRestriction.ProductionItem>
+              <pcwr:AddRotationRestriction.Value>
+                <InArgument x:TypeArguments="pcidp1:OrientationEnum">
+                  <mca:CSharpValue x:TypeArguments="pcidp1:OrientationEnum">Common.Interfaces.DTO.PackagingDesigns.OrientationEnum.Degree270</mca:CSharpValue>
+                </InArgument>
+              </pcwr:AddRotationRestriction.Value>
+            </pcwr:AddRotationRestriction>
+          </Switch>
+        </If.Then>
+      </If>
+    </Sequence>
+    <pcwp:AddProductionItemToPackage sap2010:WorkflowViewState.IdRef="AddProductionItemToPackage_2" Quantity="1">
+      <pcwp:AddProductionItemToPackage.Package>
+        <InArgument x:TypeArguments="pcidp:Package">
+          <mca:CSharpValue x:TypeArguments="pcidp:Package">Package</mca:CSharpValue>
+        </InArgument>
+      </pcwp:AddProductionItemToPackage.Package>
+      <pcwp:AddProductionItemToPackage.ProductionItem>
+        <InArgument x:TypeArguments="pcidp:ProductionItem">
+          <mca:CSharpValue x:TypeArguments="pcidp:ProductionItem">productionItem</mca:CSharpValue>
+        </InArgument>
+      </pcwp:AddProductionItemToPackage.ProductionItem>
+    </pcwp:AddProductionItemToPackage>
+    <sads:DebugSymbol.Symbol>d1pDOlxTb3VyY2VcUGFja25ldFxJbXBvcnRlclxXb3JrZmxvd3NcSW1wb3J0UGx1Z2luc1xBbHRlcm5hdGVXb3JrZmxvd3NcQ3JlYXRlQ2FydG9uU0xELnhhbWxOTwPtAg4CAQFVC1VZAgECWwVmDgMBjANnBXcdAwH3AngFqQEKAwG3AqoBBbUBHQMBogK2AQXBAR0DAY0CwgEFzQEdAwH4Ac4BBdkBGQMB5QHaAQXlAQ4DAdIB5gEF8QEuAwG+AfIBBf0BMAMBqgH+AQXfAhACAR/gAgXrAicCAQtjC2NZAwGWA14LXlsDAY0DagtqOgMBiwNn7AFn9gEDAYoDdAt0ZwMBgQNvC29hAwH4AnsLe2gDAbgCfwmZARQDAdQCnAEJpwESAwHBAqoBjwGqAZIBAwG2AqoBvAGqAcQBAwG1ArIBC7IBZwMBrAKtAQutAWkDAaMCtgGOAbYBkQEDAaECtgG6AbYBwQEDAaACvgELvgFnAwGXArkBC7kBaAMBjgLCAY8BwgGSAQMBjALCAbwBwgHEAQMBiwLKAQvKAWcDAYICxQELxQFpAwH5AdYBC9YBZwMB7wHRAQvRAVMDAeYB4gEL4gFvAwHcAd0BC90BawMB0wHmAfAB5gGCAgMB0QHuAQvuAWEDAcgB6QEL6QFnAwG/AfIB9gHyAYoCAwG9AfoBC/oBYQMBtAH1AQv1AWcDAasBggIHkgIfAwGKAZMCB94CDAIBIOgCC+gCYwIBFuMCC+MCVQIBDeACbuACcQIBDIMBC4wBFAMB6wKNAQuYASQDAdUCpAEPpAFnAwHLAp8BD58BYwMBwgKFAg2FAloDAaABggJUggJeAwGfAY8CDY8CaQMBlQGKAg2KAmsDAYsBlgINlgJiAgEhmgIL3AIUAgErigE1igE2AwH2AoYBEYYBZQMB7AKNAbUBjQG/AQMB6gKQARGQAW0DAeAClQERlQFbAwHWAp0CEZ0CbQIBLKACDa4CKwIBda8CDb0CKwIBYL4CDcwCKwIBS80CDdsCKwIBNqsCE6sCnQEDAYABpgITpgJpAgF2ugITugKeAQIBa7UCE7UCaQIBYckCE8kCnwECAVbEAhPEAmkCAUzYAhPYAp8BAgFB0wIT0wJpAgE3</sads:DebugSymbol.Symbol>
+  </Sequence>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="623,62" />
+      <sap2010:ViewStateData Id="ImportFieldLookup`1_10" sap:VirtualizedContainerService.HintSize="623,90">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_7" sap:VirtualizedContainerService.HintSize="242,62">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="AddCustomAttribute_1" sap:VirtualizedContainerService.HintSize="242,60">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_7" sap:VirtualizedContainerService.HintSize="264,286">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_6" sap:VirtualizedContainerService.HintSize="242,62">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_7" sap:VirtualizedContainerService.HintSize="623,489">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ImportFieldLookup`1_11" sap:VirtualizedContainerService.HintSize="623,60">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ImportFieldLookup`1_12" sap:VirtualizedContainerService.HintSize="623,60">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ImportFieldLookup`1_13" sap:VirtualizedContainerService.HintSize="623,60">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ImportXValues_4" sap:VirtualizedContainerService.HintSize="623,75">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_8" sap:VirtualizedContainerService.HintSize="623,62" />
+      <sap2010:ViewStateData Id="TryAddCorrugateQualityRestriction_2" sap:VirtualizedContainerService.HintSize="623,60">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryAddCorrugateThicknessRestriction_2" sap:VirtualizedContainerService.HintSize="623,60">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ImportFieldLookup`1_14" sap:VirtualizedContainerService.HintSize="601,22" />
+      <sap2010:ViewStateData Id="AddRotationRestriction_7" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="AddRotationRestriction_8" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="AddRotationRestriction_9" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="AddRotationRestriction_10" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Switch`1_2" sap:VirtualizedContainerService.HintSize="476,206">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_8" sap:VirtualizedContainerService.HintSize="601,356" />
+      <sap2010:ViewStateData Id="Sequence_6" sap:VirtualizedContainerService.HintSize="623,542">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="AddProductionItemToPackage_2" sap:VirtualizedContainerService.HintSize="623,22" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="645,2206">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PackNet.Importer.CreateCarton_1" sap:VirtualizedContainerService.HintSize="685,2286" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

@@ -1,0 +1,388 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="PackNet.IODeviceService.Workflows.Importers.BoxLast.BoxLastImportWithPackstations"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:local="clr-namespace:PackNet.IODeviceService.CodeActivities;assembly=PackNet.IODeviceService"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
+ xmlns:mcwa="clr-namespace:Microsoft.Consulting.Workflow.Activities;assembly=Microsoft.Consulting.Workflow.Activities"
+ xmlns:pcid="clr-namespace:PackNet.Common.Interfaces.DTO;assembly=PackNet.Common.Interfaces"
+ xmlns:pcidp="clr-namespace:PackNet.Common.Interfaces.DTO.Packages;assembly=PackNet.Common.Interfaces"
+ xmlns:pcis="clr-namespace:PackNet.Common.Interfaces.Services;assembly=PackNet.Common.Interfaces"
+ xmlns:pcw="clr-namespace:PackNet.Common.WorkflowActivities;assembly=PackNet.Common"
+ xmlns:pcwp="clr-namespace:PackNet.Common.WorkflowActivities.Packages;assembly=PackNet.Common"
+ xmlns:s="clr-namespace:System;assembly=mscorlib"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="Importable" Type="InArgument(pcid:Importable)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="ServiceLocator" Type="InArgument(pcis:IServiceLocator)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="FailedRows" Type="InOutArgument(scg:IDictionary(x:Int32, x:String))">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="CustomerUniqueIdsToRemove" Type="InOutArgument(scg:List(x:String))">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+  </x:Members>
+  <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
+  <sap2010:WorkflowViewState.IdRef>PackNet.IODeviceService.Workflows.Importers.BoxLast.BoxLastImportWithPackstations_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO</x:String>
+      <x:String>PackNet.Common.Interfaces.Services</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Packages</x:String>
+      <x:String>PackNet.Common.Interfaces.Enums</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>MongoDB.Bson</AssemblyReference>
+      <AssemblyReference>MongoDB.Driver</AssemblyReference>
+      <AssemblyReference>MongoDB.Driver.Core</AssemblyReference>
+      <AssemblyReference>Newtonsoft.Json</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Activities.Presentation</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Reactive.Core</AssemblyReference>
+      <AssemblyReference>System.Reactive.Interfaces</AssemblyReference>
+      <AssemblyReference>System.Reactive.Linq</AssemblyReference>
+      <AssemblyReference>System.Reactive.PlatformServices</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PackNet.Business</AssemblyReference>
+      <AssemblyReference>PackNet.Common.Interfaces</AssemblyReference>
+      <AssemblyReference>PackNet.Common</AssemblyReference>
+      <AssemblyReference>PackNet.Communication</AssemblyReference>
+      <AssemblyReference>PackNet.Data</AssemblyReference>
+      <AssemblyReference>Microsoft.Consulting.Workflow.Activities</AssemblyReference>
+      <AssemblyReference>PackNet.ScandataService</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>PackNet.IODeviceService</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap2010:WorkflowViewState.IdRef="Sequence_3">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:Int32" Default="0" Name="rowNumber" />
+      <Variable x:TypeArguments="x:Boolean" Name="hasPackstationRestriction" />
+    </Sequence.Variables>
+    <Assign sap2010:Annotation.AnnotationText="rowNumber needs to be initialized to 0 before the loop." sap2010:WorkflowViewState.IdRef="Assign_1">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:Int32">
+          <mca:CSharpReference x:TypeArguments="x:Int32">rowNumber</mca:CSharpReference>
+        </OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:Int32">0</InArgument>
+      </Assign.Value>
+    </Assign>
+    <ForEach x:TypeArguments="scg:IDictionary(x:String, x:String)" DisplayName="For each row in the import file" sap2010:WorkflowViewState.IdRef="ForEach`1_1">
+      <ForEach.Values>
+        <InArgument x:TypeArguments="scg:IEnumerable(scg:IDictionary(x:String, x:String))">
+          <mca:CSharpValue x:TypeArguments="scg:IEnumerable(scg:IDictionary(x:String, x:String))">Importable.ImportedItems</mca:CSharpValue>
+        </InArgument>
+      </ForEach.Values>
+      <ActivityAction x:TypeArguments="scg:IDictionary(x:String, x:String)">
+        <ActivityAction.Argument>
+          <DelegateInArgument x:TypeArguments="scg:IDictionary(x:String, x:String)" Name="row" />
+        </ActivityAction.Argument>
+        <Sequence DisplayName="Row specific logic" sap2010:WorkflowViewState.IdRef="Sequence_2">
+          <Assign sap2010:Annotation.AnnotationText="Track row number in case of import failure for logging purposes" DisplayName="Increment row number" sap2010:WorkflowViewState.IdRef="Assign_2">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:Int32">
+                <mca:CSharpReference x:TypeArguments="x:Int32">rowNumber</mca:CSharpReference>
+              </OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:Int32">
+                <mca:CSharpValue x:TypeArguments="x:Int32">rowNumber + 1</mca:CSharpValue>
+              </InArgument>
+            </Assign.Value>
+          </Assign>
+          <TryCatch sap2010:WorkflowViewState.IdRef="TryCatch_1">
+            <TryCatch.Try>
+              <Sequence DisplayName="Create Job" sap2010:WorkflowViewState.IdRef="Sequence_1">
+                <Sequence.Variables>
+                  <Variable x:TypeArguments="pcidp:Job" Name="job">
+                    <Variable.Default>
+                      <mca:CSharpValue x:TypeArguments="pcidp:Job">new Job(SelectionAlgorithmTypes.BoxLast)</mca:CSharpValue>
+                    </Variable.Default>
+                  </Variable>
+                  <Variable x:TypeArguments="pcidp:Carton" Name="carton" />
+                  <Variable x:TypeArguments="pcidp:LabelPrintRequest" Name="label" />
+                  <Variable x:TypeArguments="pcidp:Package" Name="package" />
+                </Sequence.Variables>
+                <pcw:ImportFieldLookup x:TypeArguments="x:String" sap2010:Annotation.AnnotationText="This is a custom ImportFieldLookup CodeActivity - it looks for the CustomerUniqueId field and returns the value as a string." DisplayName="Get CustomerUniqueId" FieldToRetrieve="CustomerUniqueId" sap2010:WorkflowViewState.IdRef="ImportFieldLookup`1_1">
+                  <pcw:ImportFieldLookup.DefaultValue>
+                    <InArgument x:TypeArguments="x:String">
+                      <mca:CSharpValue x:TypeArguments="x:String">Guid.NewGuid().ToString()</mca:CSharpValue>
+                    </InArgument>
+                  </pcw:ImportFieldLookup.DefaultValue>
+                  <pcw:ImportFieldLookup.OutputValue>
+                    <OutArgument x:TypeArguments="x:String">
+                      <mca:CSharpReference x:TypeArguments="x:String">job.CustomerUniqueId</mca:CSharpReference>
+                    </OutArgument>
+                  </pcw:ImportFieldLookup.OutputValue>
+                  <pcw:ImportFieldLookup.Row>
+                    <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+                      <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">row</mca:CSharpValue>
+                    </InArgument>
+                  </pcw:ImportFieldLookup.Row>
+                </pcw:ImportFieldLookup>
+                <Assign sap2010:Annotation.AnnotationText="Create new instance of a Package before adding cartons or labels." sap2010:WorkflowViewState.IdRef="Assign_3">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="pcidp:Package">
+                      <mca:CSharpReference x:TypeArguments="pcidp:Package">package</mca:CSharpReference>
+                    </OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="pcidp:Package">
+                      <mca:CSharpValue x:TypeArguments="pcidp:Package">new Package()</mca:CSharpValue>
+                    </InArgument>
+                  </Assign.Value>
+                </Assign>
+                <mcwa:ExecuteXamlWorkflow sap2010:Annotation.AnnotationText="Creates new carton from the import row and adds it to the package." DisplayName="Create Carton From Import Data" sap2010:WorkflowViewState.IdRef="ExecuteXamlWorkflow_1" WorkflowPath="\ImportPlugins\CreateCarton.xaml">
+                  <mcwa:ExecuteXamlWorkflow.ChildArguments>
+                    <InArgument x:TypeArguments="pcidp:Package" x:Key="Package">
+                      <mca:CSharpValue x:TypeArguments="pcidp:Package">package</mca:CSharpValue>
+                    </InArgument>
+                    <InArgument x:TypeArguments="pcis:IServiceLocator" x:Key="ServiceLocator">
+                      <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                    </InArgument>
+                    <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)" x:Key="Row">
+                      <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">row</mca:CSharpValue>
+                    </InArgument>
+                  </mcwa:ExecuteXamlWorkflow.ChildArguments>
+                </mcwa:ExecuteXamlWorkflow>
+                <mcwa:ExecuteXamlWorkflow sap2010:Annotation.AnnotationText="Creates a new label from the import row and adds it to the package." DisplayName="Create Label From Import Data" sap2010:WorkflowViewState.IdRef="ExecuteXamlWorkflow_2" WorkflowPath="\ImportPlugins\CreateLabel.xaml">
+                  <mcwa:ExecuteXamlWorkflow.ChildArguments>
+                    <InArgument x:TypeArguments="pcis:IServiceLocator" x:Key="ServiceLocator">
+                      <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                    </InArgument>
+                    <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)" x:Key="Row">
+                      <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">row</mca:CSharpValue>
+                    </InArgument>
+                    <InArgument x:TypeArguments="pcidp:Package" x:Key="Package">
+                      <mca:CSharpValue x:TypeArguments="pcidp:Package">package</mca:CSharpValue>
+                    </InArgument>
+                  </mcwa:ExecuteXamlWorkflow.ChildArguments>
+                </mcwa:ExecuteXamlWorkflow>
+                <pcwp:AddPackageToJob sap2010:Annotation.AnnotationText="Adds package to job. Use quantity to specify how many copies of the package to add." DisplayName="Add Package To Job" Quantity="1">
+                  <pcwp:AddPackageToJob.Job>
+                    <InArgument x:TypeArguments="pcidp:Job">
+                      <mca:CSharpValue x:TypeArguments="pcidp:Job">job</mca:CSharpValue>
+                    </InArgument>
+                  </pcwp:AddPackageToJob.Job>
+                  <pcwp:AddPackageToJob.Package>
+                    <InArgument x:TypeArguments="pcidp:Package">
+                      <mca:CSharpValue x:TypeArguments="pcidp:Package">package</mca:CSharpValue>
+                    </InArgument>
+                  </pcwp:AddPackageToJob.Package>
+                  <sap2010:WorkflowViewState.IdRef>AddPackageToJob_1</sap2010:WorkflowViewState.IdRef>
+                </pcwp:AddPackageToJob>
+                <pcwp:SetJobToWaitForProductionTrigger sap2010:Annotation.AnnotationText="Wait for trigger used by box last workflow. Imported job will not produce until trigger is fired." DisplayName="Set Job to wait for trigger" sap2010:WorkflowViewState.IdRef="SetJobToWaitForProductionTrigger_1">
+                  <pcwp:SetJobToWaitForProductionTrigger.Job>
+                    <InArgument x:TypeArguments="pcidp:Job">
+                      <mca:CSharpValue x:TypeArguments="pcidp:Job">job</mca:CSharpValue>
+                    </InArgument>
+                  </pcwp:SetJobToWaitForProductionTrigger.Job>
+                </pcwp:SetJobToWaitForProductionTrigger>
+                <local:TryAddPackstationRestriction DefaultLookupValue="{x:Null}" sap2010:Annotation.AnnotationText="Adds a packstation restriction to the job and all cartons in it if the header &quot;Packstations&quot; exists. Otherwise no restriction is added" FieldToRetrieve="Packstation" sap2010:WorkflowViewState.IdRef="TryAddPackstationRestriction_1">
+                  <local:TryAddPackstationRestriction.HasRestriction>
+                    <OutArgument x:TypeArguments="x:Boolean">
+                      <mca:CSharpReference x:TypeArguments="x:Boolean">hasPackstationRestriction</mca:CSharpReference>
+                    </OutArgument>
+                  </local:TryAddPackstationRestriction.HasRestriction>
+                  <local:TryAddPackstationRestriction.ImportRow>
+                    <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+                      <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">row</mca:CSharpValue>
+                    </InArgument>
+                  </local:TryAddPackstationRestriction.ImportRow>
+                  <local:TryAddPackstationRestriction.ProductionItem>
+                    <InArgument x:TypeArguments="pcidp:Restrictable">
+                      <mca:CSharpValue x:TypeArguments="pcidp:Restrictable">job</mca:CSharpValue>
+                    </InArgument>
+                  </local:TryAddPackstationRestriction.ProductionItem>
+                </local:TryAddPackstationRestriction>
+                <pcwp:CreateJob sap2010:WorkflowViewState.IdRef="CreateJob_1">
+                  <pcwp:CreateJob.Job>
+                    <InArgument x:TypeArguments="pcidp:Job">
+                      <mca:CSharpValue x:TypeArguments="pcidp:Job">job</mca:CSharpValue>
+                    </InArgument>
+                  </pcwp:CreateJob.Job>
+                  <pcwp:CreateJob.ServiceLocator>
+                    <InArgument x:TypeArguments="pcis:IServiceLocator">
+                      <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                    </InArgument>
+                  </pcwp:CreateJob.ServiceLocator>
+                </pcwp:CreateJob>
+              </Sequence>
+            </TryCatch.Try>
+            <TryCatch.Catches>
+              <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_1">
+                <ActivityAction x:TypeArguments="s:Exception">
+                  <ActivityAction.Argument>
+                    <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                  </ActivityAction.Argument>
+                  <pcw:AddFailedImportRow DisplayName="Add row to failed import list" sap2010:WorkflowViewState.IdRef="AddFailedImportRow_1">
+                    <pcw:AddFailedImportRow.Exception>
+                      <InArgument x:TypeArguments="s:Exception">
+                        <mca:CSharpValue x:TypeArguments="s:Exception">exception</mca:CSharpValue>
+                      </InArgument>
+                    </pcw:AddFailedImportRow.Exception>
+                    <pcw:AddFailedImportRow.FailedRows>
+                      <InArgument x:TypeArguments="scg:IDictionary(x:Int32, x:String)">
+                        <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:Int32, x:String)">FailedRows</mca:CSharpValue>
+                      </InArgument>
+                    </pcw:AddFailedImportRow.FailedRows>
+                    <pcw:AddFailedImportRow.Row>
+                      <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+                        <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">row</mca:CSharpValue>
+                      </InArgument>
+                    </pcw:AddFailedImportRow.Row>
+                    <pcw:AddFailedImportRow.RowNumber>
+                      <InArgument x:TypeArguments="x:Int32">
+                        <mca:CSharpValue x:TypeArguments="x:Int32">rowNumber</mca:CSharpValue>
+                      </InArgument>
+                    </pcw:AddFailedImportRow.RowNumber>
+                  </pcw:AddFailedImportRow>
+                </ActivityAction>
+              </Catch>
+            </TryCatch.Catches>
+          </TryCatch>
+        </Sequence>
+      </ActivityAction>
+    </ForEach>
+    <sads:DebugSymbol.Symbol>d11EOlxkZXZcUGFja05ldFxJT0RldmljZVNlcnZpY2VcV29ya2Zsb3dzXEltcG9ydGVyc1xCb3hMYXN0XEJveExhc3RJbXBvcnRXaXRoUGFja3N0YXRpb25zLnhhbWwxXgOfAg4CAQFgM2A2AgECYwVsDgMBvwJtBZ0CDwIBA2ovajADAccCZgtmWQMBwAJwC3CNAQMBuAJ3CZsCFAIBBHgLgwEUAwGnAoQBC5oCFgIBBYABEYABWwMBsAJ7EXtfAwGoAoYBD/kBGgIBK4ECE5YCLAIBBooBF4oBfgIBLJEBEaEBKQMBgQKiARGtARoDAegBrgERugEsAwHDAbsBEccBLAMBngHIARHUASgDAYQB1QER2wE5AgF33AER7AE2AgFR7QER+AEiAgE4iQIZiQJ7AgEijgIZjgJ1AgEZhAIZhAJjAgEQkwIZkwJfAgEHlAEXlAFuAwGbApEBlwKRAakCAwGaAp4BF54BcwMBjgKZAReZAXEDAYICqgEXqgFnAwH1AaUBF6UBaQMB6QG3ARe3AXMDAdwBsQEXsQFhAwHQAbQBF7QBbwMBxAHBARfBAXMDAbcBxAEXxAFhAwGrAb4BF74BbwMBnwHQARfQAWEDAZIByAHJAcgBzAEDAZEBywEXywFZAwGFAdgBF9gBWQIBeN8BF98BdwIBa9wBmALcAaUCAgFq6QEX6QFiAgFe5AEX5AFzAgFS9QEX9QFvAgFF8AEX8AFZAgE5</sads:DebugSymbol.Symbol>
+  </Sequence>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="470,100">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_2" sap:VirtualizedContainerService.HintSize="418,100">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ImportFieldLookup`1_1" sap:VirtualizedContainerService.HintSize="270,105">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_3" sap:VirtualizedContainerService.HintSize="270,100">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ExecuteXamlWorkflow_1" sap:VirtualizedContainerService.HintSize="270,144">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ExecuteXamlWorkflow_2" sap:VirtualizedContainerService.HintSize="270,144">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="AddPackageToJob_1" sap:VirtualizedContainerService.HintSize="270,75">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="SetJobToWaitForProductionTrigger_1" sap:VirtualizedContainerService.HintSize="270,90">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryAddPackstationRestriction_1" sap:VirtualizedContainerService.HintSize="270,105">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="CreateJob_1" sap:VirtualizedContainerService.HintSize="270,22" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="292,1189">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="AddFailedImportRow_1" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Catch`1_1" sap:VirtualizedContainerService.HintSize="404,21">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryCatch_1" sap:VirtualizedContainerService.HintSize="418,1416" />
+      <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="440,1680">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEach`1_1" sap:VirtualizedContainerService.HintSize="470,1830" />
+      <sap2010:ViewStateData Id="Sequence_3" sap:VirtualizedContainerService.HintSize="492,2094">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PackNet.IODeviceService.Workflows.Importers.BoxLast.BoxLastImportWithPackstations_1" sap:VirtualizedContainerService.HintSize="532,2174" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

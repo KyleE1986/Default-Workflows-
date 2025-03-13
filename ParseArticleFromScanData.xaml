@@ -1,0 +1,716 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="PackNet.Plugins.ArticleService.WorkFlows.ScanData.ParseArticleFromScanData"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:local="clr-namespace:PackNet.Plugins.ArticleService.DTO;assembly=PackNet.Plugins.ArticleService"
+ xmlns:local1="clr-namespace:PackNet.Plugins.ArticleService.WorkflowCodeActivities;assembly=PackNet.Plugins.ArticleService"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
+ xmlns:pcidm="clr-namespace:PackNet.Common.Interfaces.DTO.Machines;assembly=PackNet.Common.Interfaces"
+ xmlns:pcidp="clr-namespace:PackNet.Common.Interfaces.DTO.ProductionGroups;assembly=PackNet.Common.Interfaces"
+ xmlns:pcidp1="clr-namespace:PackNet.Common.Interfaces.DTO.Packages;assembly=PackNet.Common.Interfaces"
+ xmlns:pcids="clr-namespace:PackNet.Common.Interfaces.DTO.Scanning;assembly=PackNet.Common.Interfaces"
+ xmlns:pcie="clr-namespace:PackNet.Common.Interfaces.Eventing;assembly=PackNet.Common.Interfaces"
+ xmlns:pcie1="clr-namespace:PackNet.Common.Interfaces.Enums;assembly=PackNet.Common.Interfaces"
+ xmlns:pcis="clr-namespace:PackNet.Common.Interfaces.Services;assembly=PackNet.Common.Interfaces"
+ xmlns:pcw="clr-namespace:PackNet.Common.WorkflowActivities;assembly=PackNet.Common"
+ xmlns:pcwn="clr-namespace:PackNet.Common.WorkflowActivities.Notification;assembly=PackNet.Common"
+ xmlns:pcwp="clr-namespace:PackNet.Common.WorkflowActivities.Parsing;assembly=PackNet.Common"
+ xmlns:pcwp1="clr-namespace:PackNet.Common.WorkflowActivities.Packages;assembly=PackNet.Common"
+ xmlns:pcwr="clr-namespace:PackNet.Common.WorkflowActivities.Restrictions;assembly=PackNet.Common"
+ xmlns:s="clr-namespace:System;assembly=mscorlib"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="ServiceLocator" Type="InArgument(pcis:IServiceLocator)" />
+    <x:Property Name="Publisher" Type="InArgument(pcie:IEventAggregatorPublisher)" />
+    <x:Property Name="ProductionGroup" Type="InArgument(pcidp:ProductionGroup)" />
+    <x:Property Name="ScanData" Type="InArgument(pcids:IScanTrigger)" />
+    <x:Property Name="MachineGroup" Type="InArgument(pcidm:MachineGroup)" />
+  </x:Members>
+  <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
+  <sap2010:WorkflowViewState.IdRef>PackNet.ScandataService.WorkFlows.ScanData.ParseArticleFromScanData_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>PackNet.Common.Interfaces.Services</x:String>
+      <x:String>PackNet.Common.Interfaces.Eventing</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.ProductionGroups</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Scanning</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Machines</x:String>
+      <x:String>PackNet.Plugins.ArticleService.DTO</x:String>
+      <x:String>PackNet.Common.Interfaces.Enums</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Packages</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>MongoDB.Bson</AssemblyReference>
+      <AssemblyReference>MongoDB.Driver</AssemblyReference>
+      <AssemblyReference>MongoDB.Driver.Core</AssemblyReference>
+      <AssemblyReference>Newtonsoft.Json</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Activities.Presentation</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Reactive.Core</AssemblyReference>
+      <AssemblyReference>System.Reactive.Interfaces</AssemblyReference>
+      <AssemblyReference>System.Reactive.Linq</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Net.Http</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PackNet.Common.Interfaces</AssemblyReference>
+      <AssemblyReference>PackNet.Common</AssemblyReference>
+      <AssemblyReference>PackNet.Data</AssemblyReference>
+      <AssemblyReference>Microsoft.Consulting.Workflow.Activities</AssemblyReference>
+      <AssemblyReference>PackNet.UiCommunicationService</AssemblyReference>
+      <AssemblyReference>PackNet.IODeviceService</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>PackNet.Plugins.ArticleService</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Flowchart sap2010:WorkflowViewState.IdRef="Flowchart_1">
+    <Flowchart.Variables>
+      <Variable x:TypeArguments="s:String[]" Name="parts" />
+      <Variable x:TypeArguments="x:Char" Default=":" Name="SplitCharacter" />
+      <Variable x:TypeArguments="scg:Dictionary(x:String, x:String)" Name="row">
+        <Variable.Default>
+          <mca:CSharpValue x:TypeArguments="scg:Dictionary(x:String, x:String)">new Dictionary&lt;string, string&gt;()</mca:CSharpValue>
+        </Variable.Default>
+      </Variable>
+      <Variable x:TypeArguments="local:Article" Name="article" />
+      <Variable x:TypeArguments="s:Nullable(x:Int32)" Name="quantity">
+        <Variable.Default>
+          <mca:CSharpValue x:TypeArguments="s:Nullable(x:Int32)">1</mca:CSharpValue>
+        </Variable.Default>
+      </Variable>
+      <Variable x:TypeArguments="pcidp1:Job" Name="job" />
+    </Flowchart.Variables>
+    <Flowchart.StartNode>
+      <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_1">
+        <pcw:SplitString DisplayName="Split Barcode Data" sap2010:WorkflowViewState.IdRef="SplitString_1">
+          <pcw:SplitString.CharacterToSplitWith>
+            <InArgument x:TypeArguments="x:Char">
+              <mca:CSharpValue x:TypeArguments="x:Char">SplitCharacter</mca:CSharpValue>
+            </InArgument>
+          </pcw:SplitString.CharacterToSplitWith>
+          <pcw:SplitString.Result>
+            <OutArgument x:TypeArguments="s:String[]">
+              <mca:CSharpReference x:TypeArguments="s:String[]">parts</mca:CSharpReference>
+            </OutArgument>
+          </pcw:SplitString.Result>
+          <pcw:SplitString.StringToSplit>
+            <InArgument x:TypeArguments="x:String">
+              <mca:CSharpValue x:TypeArguments="x:String">ScanData.BarcodeData</mca:CSharpValue>
+            </InArgument>
+          </pcw:SplitString.StringToSplit>
+        </pcw:SplitString>
+        <FlowStep.Next>
+          <FlowDecision x:Name="__ReferenceID1" DisplayName="Split data has correct number" sap2010:WorkflowViewState.IdRef="FlowDecision_1">
+            <FlowDecision.Condition>
+              <mca:CSharpValue x:TypeArguments="x:Boolean">parts.Length &lt;= 2</mca:CSharpValue>
+            </FlowDecision.Condition>
+            <FlowDecision.True>
+              <FlowStep x:Name="__ReferenceID2" sap2010:WorkflowViewState.IdRef="FlowStep_2">
+                <local1:GetArticleByArticleName DisplayName="Get article" sap2010:WorkflowViewState.IdRef="GetArticleByArticleName_1">
+                  <local1:GetArticleByArticleName.ArticleName>
+                    <InArgument x:TypeArguments="x:String">
+                      <mca:CSharpValue x:TypeArguments="x:String">parts[0]</mca:CSharpValue>
+                    </InArgument>
+                  </local1:GetArticleByArticleName.ArticleName>
+                  <local1:GetArticleByArticleName.Result>
+                    <OutArgument x:TypeArguments="local:Article">
+                      <mca:CSharpReference x:TypeArguments="local:Article">article</mca:CSharpReference>
+                    </OutArgument>
+                  </local1:GetArticleByArticleName.Result>
+                  <local1:GetArticleByArticleName.ServiceLocator>
+                    <InArgument x:TypeArguments="pcis:IServiceLocator">
+                      <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                    </InArgument>
+                  </local1:GetArticleByArticleName.ServiceLocator>
+                </local1:GetArticleByArticleName>
+                <FlowStep.Next>
+                  <FlowDecision x:Name="__ReferenceID3" DisplayName="Found article" sap2010:WorkflowViewState.IdRef="FlowDecision_2">
+                    <FlowDecision.Condition>
+                      <mca:CSharpValue x:TypeArguments="x:Boolean">article != null</mca:CSharpValue>
+                    </FlowDecision.Condition>
+                    <FlowDecision.True>
+                      <FlowStep x:Name="__ReferenceID4" sap2010:WorkflowViewState.IdRef="FlowStep_4">
+                        <TryCatch DisplayName="Read Quantity" sap2010:WorkflowViewState.IdRef="TryCatch_1">
+                          <TryCatch.Try>
+                            <pcwp:ParseInt DisplayName="Parse quantity" sap2010:WorkflowViewState.IdRef="ParseInt_1">
+                              <pcwp:ParseInt.Result>
+                                <OutArgument x:TypeArguments="s:Nullable(x:Int32)">
+                                  <mca:CSharpReference x:TypeArguments="s:Nullable(x:Int32)">quantity</mca:CSharpReference>
+                                </OutArgument>
+                              </pcwp:ParseInt.Result>
+                              <pcwp:ParseInt.StringToParse>
+                                <InArgument x:TypeArguments="x:String">
+                                  <mca:CSharpValue x:TypeArguments="x:String">parts[1]</mca:CSharpValue>
+                                </InArgument>
+                              </pcwp:ParseInt.StringToParse>
+                            </pcwp:ParseInt>
+                          </TryCatch.Try>
+                          <TryCatch.Catches>
+                            <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_1">
+                              <ActivityAction x:TypeArguments="s:Exception">
+                                <ActivityAction.Argument>
+                                  <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                                </ActivityAction.Argument>
+                                <Sequence sap2010:Annotation.AnnotationText="Default quantity 1 will be used" DisplayName="Default quantity 1 will be used" sap2010:WorkflowViewState.IdRef="Sequence_1" />
+                              </ActivityAction>
+                            </Catch>
+                          </TryCatch.Catches>
+                        </TryCatch>
+                        <FlowStep.Next>
+                          <FlowStep x:Name="__ReferenceID11" sap2010:WorkflowViewState.IdRef="FlowStep_13">
+                            <local1:CreateJobFromArticle sap2010:WorkflowViewState.IdRef="CreateJobFromArticle_1">
+                              <local1:CreateJobFromArticle.Article>
+                                <InArgument x:TypeArguments="local:Article">
+                                  <mca:CSharpValue x:TypeArguments="local:Article">article</mca:CSharpValue>
+                                </InArgument>
+                              </local1:CreateJobFromArticle.Article>
+                              <local1:CreateJobFromArticle.Job>
+                                <OutArgument x:TypeArguments="pcidp1:Job">
+                                  <mca:CSharpReference x:TypeArguments="pcidp1:Job">job</mca:CSharpReference>
+                                </OutArgument>
+                              </local1:CreateJobFromArticle.Job>
+                              <local1:CreateJobFromArticle.Quantity>
+                                <InArgument x:TypeArguments="x:Int32">
+                                  <mca:CSharpValue x:TypeArguments="x:Int32">quantity.Value</mca:CSharpValue>
+                                </InArgument>
+                              </local1:CreateJobFromArticle.Quantity>
+                              <local1:CreateJobFromArticle.ServiceLocator>
+                                <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                  <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                                </InArgument>
+                              </local1:CreateJobFromArticle.ServiceLocator>
+                            </local1:CreateJobFromArticle>
+                            <FlowStep.Next>
+                              <FlowStep x:Name="__ReferenceID12" sap2010:WorkflowViewState.IdRef="FlowStep_16">
+                                <pcwr:AddDistributedRestrictionBasedOnProductionGroupSettings sap2010:WorkflowViewState.IdRef="AddDistributedRestrictionBasedOnProductionGroupSettings_1">
+                                  <pcwr:AddDistributedRestrictionBasedOnProductionGroupSettings.Job>
+                                    <InArgument x:TypeArguments="pcidp1:Job">
+                                      <mca:CSharpValue x:TypeArguments="pcidp1:Job">job</mca:CSharpValue>
+                                    </InArgument>
+                                  </pcwr:AddDistributedRestrictionBasedOnProductionGroupSettings.Job>
+                                  <pcwr:AddDistributedRestrictionBasedOnProductionGroupSettings.ServiceLocator>
+                                    <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                      <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                                    </InArgument>
+                                  </pcwr:AddDistributedRestrictionBasedOnProductionGroupSettings.ServiceLocator>
+                                </pcwr:AddDistributedRestrictionBasedOnProductionGroupSettings>
+                                <FlowStep.Next>
+                                  <FlowStep x:Name="__ReferenceID9" sap2010:WorkflowViewState.IdRef="FlowStep_11">
+                                    <If sap2010:Annotation.AnnotationText="If the machine group is is 'Auto' the article will be sent to the production group. Otherwise the article will be sent to the machine group as a Manual job" DisplayName="Send to manual or auto?" sap2010:WorkflowViewState.IdRef="If_1">
+                                      <If.Condition>
+                                        <InArgument x:TypeArguments="x:Boolean">
+                                          <mca:CSharpValue x:TypeArguments="x:Boolean">MachineGroup.ProductionMode == MachineGroupProductionModes.AutoProductionMode</mca:CSharpValue>
+                                        </InArgument>
+                                      </If.Condition>
+                                      <If.Then>
+                                        <Sequence sap2010:WorkflowViewState.IdRef="Sequence_2">
+                                          <pcwr:TryAddProductionGroupRestriction HasRestriction="{x:Null}" FieldToRetrieve="PG" sap2010:WorkflowViewState.IdRef="TryAddProductionGroupRestriction_1">
+                                            <pcwr:TryAddProductionGroupRestriction.DefaultLookupValue>
+                                              <InArgument x:TypeArguments="x:String">
+                                                <mca:CSharpValue x:TypeArguments="x:String">ProductionGroup.Alias</mca:CSharpValue>
+                                              </InArgument>
+                                            </pcwr:TryAddProductionGroupRestriction.DefaultLookupValue>
+                                            <pcwr:TryAddProductionGroupRestriction.ImportRow>
+                                              <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+                                                <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">new Dictionary&lt;string, string&gt;()</mca:CSharpValue>
+                                              </InArgument>
+                                            </pcwr:TryAddProductionGroupRestriction.ImportRow>
+                                            <pcwr:TryAddProductionGroupRestriction.ProductionItem>
+                                              <InArgument x:TypeArguments="pcidp1:Restrictable">
+                                                <mca:CSharpValue x:TypeArguments="pcidp1:Restrictable">job</mca:CSharpValue>
+                                              </InArgument>
+                                            </pcwr:TryAddProductionGroupRestriction.ProductionItem>
+                                          </pcwr:TryAddProductionGroupRestriction>
+                                        </Sequence>
+                                      </If.Then>
+                                      <If.Else>
+                                        <Sequence sap2010:WorkflowViewState.IdRef="Sequence_3">
+                                          <pcwr:TryAddMachineGroupRestriction HasRestriction="{x:Null}" FieldToRetrieve="MG" sap2010:WorkflowViewState.IdRef="TryAddMachineGroupRestriction_1">
+                                            <pcwr:TryAddMachineGroupRestriction.DefaultLookupValue>
+                                              <InArgument x:TypeArguments="x:String">
+                                                <mca:CSharpValue x:TypeArguments="x:String">MachineGroup.Alias</mca:CSharpValue>
+                                              </InArgument>
+                                            </pcwr:TryAddMachineGroupRestriction.DefaultLookupValue>
+                                            <pcwr:TryAddMachineGroupRestriction.ImportRow>
+                                              <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+                                                <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">new Dictionary&lt;string, string&gt;()</mca:CSharpValue>
+                                              </InArgument>
+                                            </pcwr:TryAddMachineGroupRestriction.ImportRow>
+                                            <pcwr:TryAddMachineGroupRestriction.ProductionItem>
+                                              <InArgument x:TypeArguments="pcidp1:Restrictable">
+                                                <mca:CSharpValue x:TypeArguments="pcidp1:Restrictable">job</mca:CSharpValue>
+                                              </InArgument>
+                                            </pcwr:TryAddMachineGroupRestriction.ProductionItem>
+                                          </pcwr:TryAddMachineGroupRestriction>
+                                        </Sequence>
+                                      </If.Else>
+                                    </If>
+                                    <FlowStep.Next>
+                                      <FlowStep x:Name="__ReferenceID13" sap2010:WorkflowViewState.IdRef="FlowStep_15">
+                                        <pcwp1:CreateJob sap2010:WorkflowViewState.IdRef="CreateJob_1">
+                                          <pcwp1:CreateJob.Job>
+                                            <InArgument x:TypeArguments="pcidp1:Job">
+                                              <mca:CSharpValue x:TypeArguments="pcidp1:Job">job</mca:CSharpValue>
+                                            </InArgument>
+                                          </pcwp1:CreateJob.Job>
+                                          <pcwp1:CreateJob.ServiceLocator>
+                                            <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                              <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                                            </InArgument>
+                                          </pcwp1:CreateJob.ServiceLocator>
+                                        </pcwp1:CreateJob>
+                                        <FlowStep.Next>
+                                          <FlowStep x:Name="__ReferenceID10" sap2010:WorkflowViewState.IdRef="FlowStep_12">
+                                            <pcwn:SendOperatorPanelScanNotificationToMachineGroup TextArgument2="{x:Null}" TextArgument3="{x:Null}" TextArgument4="{x:Null}" TextArgument5="{x:Null}" TextArgument6="{x:Null}" TextArgument7="{x:Null}" TextArgument8="{x:Null}" TextArgument9="{x:Null}" DisplayName="Send Operator Panel Notification" sap2010:WorkflowViewState.IdRef="SendOperatorPanelScanNotificationToMachineGroup_5" SuccessfulScan="True" Text="Successfully scanned '{0}'">
+                                              <pcwn:SendOperatorPanelScanNotificationToMachineGroup.ScanTrigger>
+                                                <InArgument x:TypeArguments="pcids:IScanTrigger">
+                                                  <mca:CSharpValue x:TypeArguments="pcids:IScanTrigger">ScanData</mca:CSharpValue>
+                                                </InArgument>
+                                              </pcwn:SendOperatorPanelScanNotificationToMachineGroup.ScanTrigger>
+                                              <pcwn:SendOperatorPanelScanNotificationToMachineGroup.ServiceLocator>
+                                                <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                                  <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                                                </InArgument>
+                                              </pcwn:SendOperatorPanelScanNotificationToMachineGroup.ServiceLocator>
+                                              <pcwn:SendOperatorPanelScanNotificationToMachineGroup.TextArgument1>
+                                                <InArgument x:TypeArguments="x:Object">
+                                                  <mca:CSharpValue x:TypeArguments="x:Object">parts[0]</mca:CSharpValue>
+                                                </InArgument>
+                                              </pcwn:SendOperatorPanelScanNotificationToMachineGroup.TextArgument1>
+                                            </pcwn:SendOperatorPanelScanNotificationToMachineGroup>
+                                          </FlowStep>
+                                        </FlowStep.Next>
+                                      </FlowStep>
+                                    </FlowStep.Next>
+                                  </FlowStep>
+                                </FlowStep.Next>
+                              </FlowStep>
+                            </FlowStep.Next>
+                          </FlowStep>
+                        </FlowStep.Next>
+                      </FlowStep>
+                    </FlowDecision.True>
+                    <FlowDecision.False>
+                      <FlowStep x:Name="__ReferenceID5" sap2010:WorkflowViewState.IdRef="FlowStep_5">
+                        <pcwn:SendUiNotificationToMachineGroupAndLog TextArgument3="{x:Null}" TextArgument4="{x:Null}" TextArgument5="{x:Null}" TextArgument6="{x:Null}" TextArgument7="{x:Null}" TextArgument8="{x:Null}" TextArgument9="{x:Null}" DisplayName="Notify failed to find article" sap2010:WorkflowViewState.IdRef="SendUiNotificationToMachineGroupAndLog_1">
+                          <pcwn:SendUiNotificationToMachineGroupAndLog.MachineGroupId>
+                            <InArgument x:TypeArguments="s:Guid">
+                              <mca:CSharpValue x:TypeArguments="s:Guid">MachineGroup.Id</mca:CSharpValue>
+                            </InArgument>
+                          </pcwn:SendUiNotificationToMachineGroupAndLog.MachineGroupId>
+                          <pcwn:SendUiNotificationToMachineGroupAndLog.NotificationSeverity>
+                            <InArgument x:TypeArguments="pcie1:NotificationSeverity">
+                              <mca:CSharpValue x:TypeArguments="pcie1:NotificationSeverity">NotificationSeverity.Error</mca:CSharpValue>
+                            </InArgument>
+                          </pcwn:SendUiNotificationToMachineGroupAndLog.NotificationSeverity>
+                          <pcwn:SendUiNotificationToMachineGroupAndLog.ServiceLocator>
+                            <InArgument x:TypeArguments="pcis:IServiceLocator">
+                              <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                            </InArgument>
+                          </pcwn:SendUiNotificationToMachineGroupAndLog.ServiceLocator>
+                          <pcwn:SendUiNotificationToMachineGroupAndLog.Text>
+                            <InArgument x:TypeArguments="x:String">
+                              <mca:CSharpValue x:TypeArguments="x:String">"Article creation failed. Article with name '{0}' could not be found. Verify that the article exists and that the format is correct. Acceptable formats are \"&lt;Article Name&gt;\" or \"&lt;Article Name&gt;{1}&lt;Quantity&gt;\""</mca:CSharpValue>
+                            </InArgument>
+                          </pcwn:SendUiNotificationToMachineGroupAndLog.Text>
+                          <pcwn:SendUiNotificationToMachineGroupAndLog.TextArgument1>
+                            <InArgument x:TypeArguments="x:Object">
+                              <mca:CSharpValue x:TypeArguments="x:Object">parts[0]</mca:CSharpValue>
+                            </InArgument>
+                          </pcwn:SendUiNotificationToMachineGroupAndLog.TextArgument1>
+                          <pcwn:SendUiNotificationToMachineGroupAndLog.TextArgument2>
+                            <InArgument x:TypeArguments="x:Object">
+                              <mca:CSharpValue x:TypeArguments="x:Object">SplitCharacter</mca:CSharpValue>
+                            </InArgument>
+                          </pcwn:SendUiNotificationToMachineGroupAndLog.TextArgument2>
+                        </pcwn:SendUiNotificationToMachineGroupAndLog>
+                        <FlowStep.Next>
+                          <FlowStep x:Name="__ReferenceID8" sap2010:WorkflowViewState.IdRef="FlowStep_8">
+                            <pcwn:SendOperatorPanelScanNotificationToMachineGroup TextArgument2="{x:Null}" TextArgument3="{x:Null}" TextArgument4="{x:Null}" TextArgument5="{x:Null}" TextArgument6="{x:Null}" TextArgument7="{x:Null}" TextArgument8="{x:Null}" TextArgument9="{x:Null}" DisplayName="Send Operator Panel Notification" sap2010:WorkflowViewState.IdRef="SendOperatorPanelScanNotificationToMachineGroup_2" SuccessfulScan="False" Text="Could not find article with name '{0}'">
+                              <pcwn:SendOperatorPanelScanNotificationToMachineGroup.ScanTrigger>
+                                <InArgument x:TypeArguments="pcids:IScanTrigger">
+                                  <mca:CSharpValue x:TypeArguments="pcids:IScanTrigger">ScanData</mca:CSharpValue>
+                                </InArgument>
+                              </pcwn:SendOperatorPanelScanNotificationToMachineGroup.ScanTrigger>
+                              <pcwn:SendOperatorPanelScanNotificationToMachineGroup.ServiceLocator>
+                                <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                  <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                                </InArgument>
+                              </pcwn:SendOperatorPanelScanNotificationToMachineGroup.ServiceLocator>
+                              <pcwn:SendOperatorPanelScanNotificationToMachineGroup.TextArgument1>
+                                <InArgument x:TypeArguments="x:Object">
+                                  <mca:CSharpValue x:TypeArguments="x:Object">parts[0]</mca:CSharpValue>
+                                </InArgument>
+                              </pcwn:SendOperatorPanelScanNotificationToMachineGroup.TextArgument1>
+                            </pcwn:SendOperatorPanelScanNotificationToMachineGroup>
+                          </FlowStep>
+                        </FlowStep.Next>
+                      </FlowStep>
+                    </FlowDecision.False>
+                  </FlowDecision>
+                </FlowStep.Next>
+              </FlowStep>
+            </FlowDecision.True>
+            <FlowDecision.False>
+              <FlowStep x:Name="__ReferenceID6" sap2010:WorkflowViewState.IdRef="FlowStep_6">
+                <pcwn:SendUiNotificationToMachineGroupAndLog TextArgument3="{x:Null}" TextArgument4="{x:Null}" TextArgument5="{x:Null}" TextArgument6="{x:Null}" TextArgument7="{x:Null}" TextArgument8="{x:Null}" TextArgument9="{x:Null}" DisplayName="Notify invalid format" sap2010:WorkflowViewState.IdRef="SendUiNotificationToMachineGroupAndLog_2">
+                  <pcwn:SendUiNotificationToMachineGroupAndLog.MachineGroupId>
+                    <InArgument x:TypeArguments="s:Guid">
+                      <mca:CSharpValue x:TypeArguments="s:Guid">MachineGroup.Id</mca:CSharpValue>
+                    </InArgument>
+                  </pcwn:SendUiNotificationToMachineGroupAndLog.MachineGroupId>
+                  <pcwn:SendUiNotificationToMachineGroupAndLog.NotificationSeverity>
+                    <InArgument x:TypeArguments="pcie1:NotificationSeverity">
+                      <mca:CSharpValue x:TypeArguments="pcie1:NotificationSeverity">NotificationSeverity.Error</mca:CSharpValue>
+                    </InArgument>
+                  </pcwn:SendUiNotificationToMachineGroupAndLog.NotificationSeverity>
+                  <pcwn:SendUiNotificationToMachineGroupAndLog.ServiceLocator>
+                    <InArgument x:TypeArguments="pcis:IServiceLocator">
+                      <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                    </InArgument>
+                  </pcwn:SendUiNotificationToMachineGroupAndLog.ServiceLocator>
+                  <pcwn:SendUiNotificationToMachineGroupAndLog.Text>
+                    <InArgument x:TypeArguments="x:String">
+                      <mca:CSharpValue x:TypeArguments="x:String">"Invalid article barcode format '{0}'. Acceptable formats are \"&lt;Article Name&gt;\" or \"&lt;Article Name&gt;{1}&lt;Quantity&gt;\""</mca:CSharpValue>
+                    </InArgument>
+                  </pcwn:SendUiNotificationToMachineGroupAndLog.Text>
+                  <pcwn:SendUiNotificationToMachineGroupAndLog.TextArgument1>
+                    <InArgument x:TypeArguments="x:Object">
+                      <mca:CSharpValue x:TypeArguments="x:Object">ScanData.BarcodeData</mca:CSharpValue>
+                    </InArgument>
+                  </pcwn:SendUiNotificationToMachineGroupAndLog.TextArgument1>
+                  <pcwn:SendUiNotificationToMachineGroupAndLog.TextArgument2>
+                    <InArgument x:TypeArguments="x:Object">
+                      <mca:CSharpValue x:TypeArguments="x:Object">SplitCharacter</mca:CSharpValue>
+                    </InArgument>
+                  </pcwn:SendUiNotificationToMachineGroupAndLog.TextArgument2>
+                </pcwn:SendUiNotificationToMachineGroupAndLog>
+                <FlowStep.Next>
+                  <FlowStep x:Name="__ReferenceID7" sap2010:WorkflowViewState.IdRef="FlowStep_9">
+                    <pcwn:SendOperatorPanelScanNotificationToMachineGroup TextArgument2="{x:Null}" TextArgument3="{x:Null}" TextArgument4="{x:Null}" TextArgument5="{x:Null}" TextArgument6="{x:Null}" TextArgument7="{x:Null}" TextArgument8="{x:Null}" TextArgument9="{x:Null}" DisplayName="Send Operator Panel Notification" sap2010:WorkflowViewState.IdRef="SendOperatorPanelScanNotificationToMachineGroup_3" SuccessfulScan="False" Text="Failed to parse barcode {0}">
+                      <pcwn:SendOperatorPanelScanNotificationToMachineGroup.ScanTrigger>
+                        <InArgument x:TypeArguments="pcids:IScanTrigger">
+                          <mca:CSharpValue x:TypeArguments="pcids:IScanTrigger">ScanData</mca:CSharpValue>
+                        </InArgument>
+                      </pcwn:SendOperatorPanelScanNotificationToMachineGroup.ScanTrigger>
+                      <pcwn:SendOperatorPanelScanNotificationToMachineGroup.ServiceLocator>
+                        <InArgument x:TypeArguments="pcis:IServiceLocator">
+                          <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                        </InArgument>
+                      </pcwn:SendOperatorPanelScanNotificationToMachineGroup.ServiceLocator>
+                      <pcwn:SendOperatorPanelScanNotificationToMachineGroup.TextArgument1>
+                        <InArgument x:TypeArguments="x:Object">
+                          <mca:CSharpValue x:TypeArguments="x:Object">ScanData.BarcodeData</mca:CSharpValue>
+                        </InArgument>
+                      </pcwn:SendOperatorPanelScanNotificationToMachineGroup.TextArgument1>
+                    </pcwn:SendOperatorPanelScanNotificationToMachineGroup>
+                  </FlowStep>
+                </FlowStep.Next>
+              </FlowStep>
+            </FlowDecision.False>
+          </FlowDecision>
+        </FlowStep.Next>
+      </FlowStep>
+    </Flowchart.StartNode>
+    <x:Reference>__ReferenceID0</x:Reference>
+    <x:Reference>__ReferenceID1</x:Reference>
+    <x:Reference>__ReferenceID2</x:Reference>
+    <x:Reference>__ReferenceID3</x:Reference>
+    <x:Reference>__ReferenceID4</x:Reference>
+    <x:Reference>__ReferenceID5</x:Reference>
+    <x:Reference>__ReferenceID6</x:Reference>
+    <x:Reference>__ReferenceID7</x:Reference>
+    <x:Reference>__ReferenceID8</x:Reference>
+    <x:Reference>__ReferenceID9</x:Reference>
+    <x:Reference>__ReferenceID10</x:Reference>
+    <x:Reference>__ReferenceID11</x:Reference>
+    <x:Reference>__ReferenceID12</x:Reference>
+    <x:Reference>__ReferenceID13</x:Reference>
+    <sads:DebugSymbol.Symbol>d1BDOlxSZXBvc1xQYWNrbmV0XEFydGljbGVTZXJ2aWNlXFdvcmtmbG93c1xTY2FuRGF0YVxQYXJzZUFydGljbGVGcm9tU2NhbkRhdGEueGFtbExYA8QDDwIBAVsyWzUCARpeC16JAQIBDmQLZFUCAQJrCXsbAwG4BH8Pf2IDAawE+gIRmQM/AwHjA5wDFawDTAMBvAODARGTATIDAZcDlwEXlwFlAwGLA70CGdwCRwMBwgLfAh3vAlQDAZsCmwEZtAEkAwGAArcBHcwBOwMBzwHPASHaAWADAbYB3QEljQIqAgFbkAIpmwI7AgFCngItrgJkAgEbeA94YQMB0QRzD3NcAwHFBG4PblkDAbkEggMXggOBAQMBoAT9Ahf9AmIDAZQEjAMXjAPbAQMBiASWAxeWA2MDAfwDhwMXhwNvAwHwA5EDF5EDaQMB5AOcA7IDnAPPAwMB4gOfAxufA2sDAdYDpAMbpANzAwHKA6kDG6kDbQMBvgOcA6UDnAOsAwMBvQOGAReGAV0DAbADiwEXiwFpAwGkA5ABF5ABbwMBmAPFAh/FAokBAwH/AsACH8ACagMB8wLPAh/PAsECAwHnAtkCH9kCawMB2wLKAh/KAncDAc8C1AIf1AJlAwHDAt8CugPfAuIDAwHBAuICI+ICcwMBtQLnAiPnAnsDAakC7AIj7AJpAwGdAt8CrQPfArQDAwGcAp0BHagBLQMBggKwASGwAcwBAwGBAroBI7oBbQMB9AHEASPEAW4DAegByQEjyQF7AwHcAb8BI78BbgMB0AHXASfXAX8DAcMB0gEn0gFqAwG3AeABK+ABtwECAVzkASn2ATQDAY8B+QEpiwI0AgFomAIvmAKHAQIBT5MCL5MCcgIBQ54CyQOeAuUDAgFBoQIzoQKDAQIBNaYCM6YCiwECASmrAjOrAnkCAR2eAr0DngLDAwIBHKABI6ABfAMBjwKlASOlAWkDAYMC5QEr9QFTAwGQAfoBK4oCUAIBaeUBfOUBgAEDAbUB8gEx8gF9AwGpAe0BMe0BsAEDAZ0B6AEx6AGEAQMBkQH6AXn6AX0DAY4BhwIxhwJ9AwGCAYICMYICsAECAXb9ATH9AYEBAgFq</sads:DebugSymbol.Symbol>
+  </Flowchart>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="SplitString_1" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="GetArticleByArticleName_1" sap:VirtualizedContainerService.HintSize="200,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ParseInt_1" sap:VirtualizedContainerService.HintSize="200,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="200,92.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Catch`1_1" sap:VirtualizedContainerService.HintSize="403.2,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryCatch_1" sap:VirtualizedContainerService.HintSize="200,52.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="CreateJobFromArticle_1" sap:VirtualizedContainerService.HintSize="200,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="AddDistributedRestrictionBasedOnProductionGroupSettings_1" sap:VirtualizedContainerService.HintSize="200,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryAddProductionGroupRestriction_1" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="222.4,147.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryAddMachineGroupRestriction_1" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Sequence_3" sap:VirtualizedContainerService.HintSize="222.4,147.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_1" sap:VirtualizedContainerService.HintSize="200,156.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="CreateJob_1" sap:VirtualizedContainerService.HintSize="200,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="SendOperatorPanelScanNotificationToMachineGroup_5" sap:VirtualizedContainerService.HintSize="200,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_12">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">250,908.8</av:Point>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_15">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">250,848.8</av:Point>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">350,871.2 350,908.8</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_11">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">250,661.6</av:Point>
+            <av:Size x:Key="ShapeSize">200,156.8</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">350,818.4 350,848.8</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_16">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">250,608.8</av:Point>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">350,631.2 350,661.6</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_13">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">0,548.8</av:Point>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">200,560 350,560 350,608.8</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">0,433.6</av:Point>
+            <av:Size x:Key="ShapeSize">200,52.8</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">100,486.4 100,548.8</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="SendUiNotificationToMachineGroupAndLog_1" sap:VirtualizedContainerService.HintSize="200,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="SendOperatorPanelScanNotificationToMachineGroup_2" sap:VirtualizedContainerService.HintSize="200,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">590,508.8</av:Point>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_5">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">590,448.8</av:Point>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">690,471.2 690,508.8</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDecision_2" sap:VirtualizedContainerService.HintSize="72.8,87.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">313.6,416.4</av:Point>
+            <av:Size x:Key="ShapeSize">72.8,87.2</av:Size>
+            <av:PointCollection x:Key="TrueConnector">313.6,460 200,460</av:PointCollection>
+            <av:PointCollection x:Key="FalseConnector">386.4,460 590,460</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">220,338.8</av:Point>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">320,361.2 320,391.2 350,391.2 350,416.4</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="SendUiNotificationToMachineGroupAndLog_2" sap:VirtualizedContainerService.HintSize="200,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="SendOperatorPanelScanNotificationToMachineGroup_3" sap:VirtualizedContainerService.HintSize="200,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_9">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">760,229</av:Point>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_6">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">530,229</av:Point>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">730,240 760,240</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDecision_1" sap:VirtualizedContainerService.HintSize="160,87.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">290.5,196.5</av:Point>
+            <av:Size x:Key="ShapeSize">160,87.2</av:Size>
+            <av:PointCollection x:Key="TrueConnector">290.5,240.1 260.5,240.1 260.5,308.8 320,308.8 320,338.8</av:PointCollection>
+            <av:PointCollection x:Key="FalseConnector">450.5,240.1 480.5,240.1 480.5,240.2 530,240.2</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_1">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">270,129</av:Point>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">370,151 370,196.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Flowchart_1" sap:VirtualizedContainerService.HintSize="974.4,2995.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <av:Point x:Key="ShapeLocation">340,2.5</av:Point>
+            <av:Size x:Key="ShapeSize">60,75.2</av:Size>
+            <x:Double x:Key="Width">960</x:Double>
+            <av:PointCollection x:Key="ConnectorLocation">370,77.5 370,129</av:PointCollection>
+            <x:Double x:Key="Height">2958.5</x:Double>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PackNet.ScandataService.WorkFlows.ScanData.ParseArticleFromScanData_1" sap:VirtualizedContainerService.HintSize="1014.4,3075.2" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

@@ -1,0 +1,983 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="PackNet.Services.Workflows.MachineGroupNested.CreatePackageOnMachineGroupWithX5"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
+ xmlns:pcidm="clr-namespace:PackNet.Common.Interfaces.DTO.Machines;assembly=PackNet.Common.Interfaces"
+ xmlns:pcidp="clr-namespace:PackNet.Common.Interfaces.DTO.Packages;assembly=PackNet.Common.Interfaces"
+ xmlns:pcidpp="clr-namespace:PackNet.Common.Interfaces.DTO.Packages.ProductionStates;assembly=PackNet.Common.Interfaces"
+ xmlns:pcil="clr-namespace:PackNet.Common.Interfaces.Logging;assembly=PackNet.Common.Interfaces"
+ xmlns:pcis="clr-namespace:PackNet.Common.Interfaces.Services;assembly=PackNet.Common.Interfaces"
+ xmlns:pcism="clr-namespace:PackNet.Common.Interfaces.Services.Machines;assembly=PackNet.Common.Interfaces"
+ xmlns:pcw="clr-namespace:PackNet.Common.WorkflowActivities;assembly=PackNet.Common"
+ xmlns:pcwe="clr-namespace:PackNet.Common.WorkflowActivities.Eventing;assembly=PackNet.Common"
+ xmlns:s="clr-namespace:System;assembly=mscorlib"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:uc="clr-namespace:X5AdapterService.CodeActivities;assembly=X5AdapterService"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="ServiceLocator" Type="InArgument(pcis:IServiceLocator)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="MachineGroup" Type="InArgument(pcidm:MachineGroup)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="MachineService" Type="InArgument(pcism:IAggregateMachineService)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="ProductionSets" Type="InArgument(scg:IEnumerable(pcidp:ProductionSet))">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+  </x:Members>
+  <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
+  <sap2010:WorkflowViewState.IdRef>PackNet.Services.Workflows.MachineGroupNested.CreatePackageOnMachineGroupWithX5_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>PackNet.Common.Interfaces.Services</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Machines</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Packages</x:String>
+      <x:String>PackNet.Common.Interfaces</x:String>
+      <x:String>PackNet.Common.Interfaces.Enums</x:String>
+      <x:String>PackNet.Common.Interfaces.Services.Machines</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Packages.ProductionStates</x:String>
+      <x:String>System.Activities</x:String>
+      <x:String>PackNet.Common.ExtensionMethods</x:String>
+      <x:String>System.Runtime</x:String>
+      <x:String>PackNet.Common.Interfaces.Exceptions</x:String>
+      <x:String>X5AdapterService</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Newtonsoft.Json</AssemblyReference>
+      <AssemblyReference>PackNet.X7Service</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Net.Http</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PackNet.Plugins.ArticleService</AssemblyReference>
+      <AssemblyReference>CartonPropertyGroupService</AssemblyReference>
+      <AssemblyReference>PackNet.Common.Interfaces</AssemblyReference>
+      <AssemblyReference>PackNet.Common</AssemblyReference>
+      <AssemblyReference>ExternalZebraPrintIntegration</AssemblyReference>
+      <AssemblyReference>PackNet.IODeviceService</AssemblyReference>
+      <AssemblyReference>PackNet.KvmService</AssemblyReference>
+      <AssemblyReference>RestrictionService</AssemblyReference>
+      <AssemblyReference>PackNet.ScandataService</AssemblyReference>
+      <AssemblyReference>X5AdapterService</AssemblyReference>
+      <AssemblyReference>Microsoft.Consulting.Workflow.Activities</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>Workflows</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Flowchart sap2010:WorkflowViewState.IdRef="Flowchart_1">
+    <Flowchart.Variables>
+      <Variable x:TypeArguments="scg:IEnumerable(pcidp:ProductionSet)" Name="lastProductionSets">
+        <Variable.Default>
+          <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:ProductionSet)">new ProductionSet[0]</mca:CSharpValue>
+        </Variable.Default>
+      </Variable>
+      <Variable x:TypeArguments="pcidp:ProductionSet" Name="productionSet" />
+    </Flowchart.Variables>
+    <Flowchart.StartNode>
+      <FlowStep x:Name="__ReferenceID1" sap2010:WorkflowViewState.IdRef="FlowStep_37">
+        <Assign sap2010:WorkflowViewState.IdRef="Assign_4">
+          <Assign.To>
+            <OutArgument x:TypeArguments="pcidp:ProductionSet">
+              <mca:CSharpReference x:TypeArguments="pcidp:ProductionSet">productionSet</mca:CSharpReference>
+            </OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="pcidp:ProductionSet">
+              <mca:CSharpValue x:TypeArguments="pcidp:ProductionSet">ProductionSets.First()</mca:CSharpValue>
+            </InArgument>
+          </Assign.Value>
+        </Assign>
+        <FlowStep.Next>
+          <FlowStep x:Name="__ReferenceID3" sap2010:WorkflowViewState.IdRef="FlowStep_46">
+            <pcw:GetPreviousProductionSetsForMachineGroup DisplayName="Get Previous Production Set" sap2010:WorkflowViewState.IdRef="GetPreviousProductionSetsForMachineGroup_1">
+              <pcw:GetPreviousProductionSetsForMachineGroup.CurrentProductionSets>
+                <InArgument x:TypeArguments="scg:IEnumerable(pcidp:ProductionSet)">
+                  <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:ProductionSet)">ProductionSets</mca:CSharpValue>
+                </InArgument>
+              </pcw:GetPreviousProductionSetsForMachineGroup.CurrentProductionSets>
+              <pcw:GetPreviousProductionSetsForMachineGroup.MachineGroup>
+                <InArgument x:TypeArguments="pcidm:MachineGroup">
+                  <mca:CSharpValue x:TypeArguments="pcidm:MachineGroup">MachineGroup</mca:CSharpValue>
+                </InArgument>
+              </pcw:GetPreviousProductionSetsForMachineGroup.MachineGroup>
+              <pcw:GetPreviousProductionSetsForMachineGroup.Result>
+                <OutArgument x:TypeArguments="scg:IEnumerable(pcidp:ProductionSet)">
+                  <mca:CSharpReference x:TypeArguments="scg:IEnumerable(pcidp:ProductionSet)">lastProductionSets</mca:CSharpReference>
+                </OutArgument>
+              </pcw:GetPreviousProductionSetsForMachineGroup.Result>
+              <pcw:GetPreviousProductionSetsForMachineGroup.ServiceLocator>
+                <InArgument x:TypeArguments="pcis:IServiceLocator">
+                  <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                </InArgument>
+              </pcw:GetPreviousProductionSetsForMachineGroup.ServiceLocator>
+            </pcw:GetPreviousProductionSetsForMachineGroup>
+            <FlowStep.Next>
+              <FlowDecision x:Name="__ReferenceID4" DisplayName="Is there a previous job?" sap2010:WorkflowViewState.IdRef="FlowDecision_1">
+                <FlowDecision.Condition>
+                  <mca:CSharpValue x:TypeArguments="x:Boolean">!lastProductionSets.IsNullOrEmpty()</mca:CSharpValue>
+                </FlowDecision.Condition>
+                <FlowDecision.True>
+                  <FlowStep x:Name="__ReferenceID5" sap2010:WorkflowViewState.IdRef="FlowStep_48">
+                    <Pick sap2010:Annotation.AnnotationText="Wait for previous cartons to be sent to machine" DisplayName="Waiting for cartons of previous" sap2010:WorkflowViewState.IdRef="Pick_2">
+                      <PickBranch DisplayName="Previous job has been sent to machine or beyond" sap2010:WorkflowViewState.IdRef="PickBranch_4">
+                        <PickBranch.Trigger>
+                          <Sequence sap2010:WorkflowViewState.IdRef="Sequence_1">
+                            <pcw:LogString DisplayName="Log waiting for previous items" sap2010:WorkflowViewState.IdRef="LogString_1">
+                              <pcw:LogString.Level>
+                                <InArgument x:TypeArguments="pcil:LogLevel">
+                                  <mca:CSharpValue x:TypeArguments="pcil:LogLevel">Common.Interfaces.Logging.LogLevel.Debug</mca:CSharpValue>
+                                </InArgument>
+                              </pcw:LogString.Level>
+                              <pcw:LogString.Message>
+                                <InArgument x:TypeArguments="x:String">
+                                  <mca:CSharpValue x:TypeArguments="x:String" xml:space="preserve">"Production Set " + productionSet.ProductionItems.First().Package.Job.Title + " is waiting for [" 
+                + string.Join(", ", lastProductionSets.GetProductionItems().Where(pi =&gt; pi.Product is Carton).Select(pi =&gt; pi.Package.Job.Title)) + "] to be sent to machine or beyond."</mca:CSharpValue>
+                                </InArgument>
+                              </pcw:LogString.Message>
+                              <pcw:LogString.ServiceLocator>
+                                <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                  <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                                </InArgument>
+                              </pcw:LogString.ServiceLocator>
+                            </pcw:LogString>
+                            <pcwe:WaitForProductionStatusesForAll DisplayName="SentToMachine or beyond" sap2010:WorkflowViewState.IdRef="WaitForProductionStatusesForAll_1">
+                              <pcwe:WaitForProductionStatusesForAll.ProductionItems>
+                                <InArgument x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">
+                                  <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">lastProductionSets.GetProductionItems().Where(pi =&gt; pi.Product is Carton)</mca:CSharpValue>
+                                </InArgument>
+                              </pcwe:WaitForProductionStatusesForAll.ProductionItems>
+                              <pcwe:WaitForProductionStatusesForAll.ProductionStatuses>
+                                <InArgument x:TypeArguments="scg:IEnumerable(pcidpp:ProductionStatuses)">
+                                  <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidpp:ProductionStatuses)" xml:space="preserve">new ProductionStatuses[] {
+  InProductionStatuses.SentToMachine,
+  InProductionStatuses.Started,
+  X5InProductionStatuses.Folding,
+  X5InProductionStatuses.Ejecting,
+  X5InProductionStatuses.ApplyingLabels,
+  X5InProductionStatuses.VerifyingPrint,
+  CompletedProductionStatuses.Completed,
+  CompletedProductionStatuses.Cancelled,
+  ErrorProductionStatuses.Removed,
+  ErrorProductionStatuses.Failed
+}</mca:CSharpValue>
+                                </InArgument>
+                              </pcwe:WaitForProductionStatusesForAll.ProductionStatuses>
+                            </pcwe:WaitForProductionStatusesForAll>
+                          </Sequence>
+                        </PickBranch.Trigger>
+                      </PickBranch>
+                      <PickBranch DisplayName="Terminate if machine group is not available" sap2010:WorkflowViewState.IdRef="PickBranch_6">
+                        <PickBranch.Trigger>
+                          <pcwe:WaitForMachineGroupOfflineOrError sap2010:WorkflowViewState.IdRef="WaitForMachineGroupOfflineOrError_1">
+                            <pcwe:WaitForMachineGroupOfflineOrError.MachineGroup>
+                              <InArgument x:TypeArguments="pcidm:MachineGroup">
+                                <mca:CSharpValue x:TypeArguments="pcidm:MachineGroup">MachineGroup</mca:CSharpValue>
+                              </InArgument>
+                            </pcwe:WaitForMachineGroupOfflineOrError.MachineGroup>
+                            <pcwe:WaitForMachineGroupOfflineOrError.ServiceLocator>
+                              <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                              </InArgument>
+                            </pcwe:WaitForMachineGroupOfflineOrError.ServiceLocator>
+                          </pcwe:WaitForMachineGroupOfflineOrError>
+                        </PickBranch.Trigger>
+                        <Sequence sap2010:WorkflowViewState.IdRef="Sequence_2">
+                          <WriteLine sap2010:WorkflowViewState.IdRef="WriteLine_5">
+                            <InArgument x:TypeArguments="x:String">
+                              <mca:CSharpValue x:TypeArguments="x:String">"Production Set " + productionSet.ProductionItems.First().Package.Job.Title + " will be reverted due to machine group not in available status"</mca:CSharpValue>
+                            </InArgument>
+                          </WriteLine>
+                          <TerminateWorkflow sap2010:WorkflowViewState.IdRef="TerminateWorkflow_4">
+                            <TerminateWorkflow.Exception>
+                              <InArgument x:TypeArguments="s:Exception">
+                                <mca:CSharpValue x:TypeArguments="s:Exception">new WorkflowApplicationTerminatedException("Machine Group " + MachineGroup.Alias + " is offline or in error.")</mca:CSharpValue>
+                              </InArgument>
+                            </TerminateWorkflow.Exception>
+                          </TerminateWorkflow>
+                        </Sequence>
+                      </PickBranch>
+                      <PickBranch DisplayName="Last job retracted" sap2010:WorkflowViewState.IdRef="PickBranch_5">
+                        <PickBranch.Trigger>
+                          <pcwe:WaitForProductionStatusForAny DisplayName="last job retracted" sap2010:WorkflowViewState.IdRef="WaitForProductionStatusForAny_3">
+                            <pcwe:WaitForProductionStatusForAny.ProductionItems>
+                              <InArgument x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">
+                                <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">lastProductionSets.GetProductionItems().Where(pi =&gt; pi.Product is Carton)</mca:CSharpValue>
+                              </InArgument>
+                            </pcwe:WaitForProductionStatusForAny.ProductionItems>
+                            <pcwe:WaitForProductionStatusForAny.ProductionStatus>
+                              <InArgument x:TypeArguments="pcidpp:ProductionStatuses">
+                                <mca:CSharpValue x:TypeArguments="pcidpp:ProductionStatuses">ErrorProductionStatuses.Removed</mca:CSharpValue>
+                              </InArgument>
+                            </pcwe:WaitForProductionStatusForAny.ProductionStatus>
+                          </pcwe:WaitForProductionStatusForAny>
+                        </PickBranch.Trigger>
+                        <TerminateWorkflow sap2010:WorkflowViewState.IdRef="TerminateWorkflow_3">
+                          <TerminateWorkflow.Exception>
+                            <InArgument x:TypeArguments="s:Exception">
+                              <mca:CSharpValue x:TypeArguments="s:Exception">new WorkflowApplicationTerminatedException("Machine Group " + MachineGroup.Alias + " retracted last job.")</mca:CSharpValue>
+                            </InArgument>
+                          </TerminateWorkflow.Exception>
+                        </TerminateWorkflow>
+                      </PickBranch>
+                      <PickBranch DisplayName="Current job cancelled" sap2010:WorkflowViewState.IdRef="PickBranch_12">
+                        <PickBranch.Trigger>
+                          <pcwe:WaitForProductionStatusForAny DisplayName="Current job cancelled" sap2010:WorkflowViewState.IdRef="WaitForProductionStatusForAny_5">
+                            <pcwe:WaitForProductionStatusForAny.ProductionItems>
+                              <InArgument x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">
+                                <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">ProductionSets.GetProductionItems()</mca:CSharpValue>
+                              </InArgument>
+                            </pcwe:WaitForProductionStatusForAny.ProductionItems>
+                            <pcwe:WaitForProductionStatusForAny.ProductionStatus>
+                              <InArgument x:TypeArguments="pcidpp:ProductionStatuses">
+                                <mca:CSharpValue x:TypeArguments="pcidpp:ProductionStatuses">CompletedProductionStatuses.Cancelled</mca:CSharpValue>
+                              </InArgument>
+                            </pcwe:WaitForProductionStatusForAny.ProductionStatus>
+                          </pcwe:WaitForProductionStatusForAny>
+                        </PickBranch.Trigger>
+                        <TerminateWorkflow sap2010:WorkflowViewState.IdRef="TerminateWorkflow_9" Reason="Job was cancelled">
+                          <TerminateWorkflow.Exception>
+                            <InArgument x:TypeArguments="s:Exception">
+                              <mca:CSharpValue x:TypeArguments="s:Exception">new JobCancelledException("Current was cancelled before being sent to the machine.")</mca:CSharpValue>
+                            </InArgument>
+                          </TerminateWorkflow.Exception>
+                        </TerminateWorkflow>
+                      </PickBranch>
+                      <PickBranch DisplayName="Terminate if machine group is not available" sap2010:WorkflowViewState.IdRef="PickBranch_10">
+                        <PickBranch.Trigger>
+                          <pcwe:WaitForMachineGroupNotOnline sap2010:WorkflowViewState.IdRef="WaitForMachineGroupNotOnline_2">
+                            <pcwe:WaitForMachineGroupNotOnline.MachineGroup>
+                              <InArgument x:TypeArguments="pcidm:MachineGroup">
+                                <mca:CSharpValue x:TypeArguments="pcidm:MachineGroup">MachineGroup</mca:CSharpValue>
+                              </InArgument>
+                            </pcwe:WaitForMachineGroupNotOnline.MachineGroup>
+                            <pcwe:WaitForMachineGroupNotOnline.ServiceLocator>
+                              <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                              </InArgument>
+                            </pcwe:WaitForMachineGroupNotOnline.ServiceLocator>
+                          </pcwe:WaitForMachineGroupNotOnline>
+                        </PickBranch.Trigger>
+                        <Sequence sap2010:WorkflowViewState.IdRef="Sequence_5">
+                          <WriteLine sap2010:WorkflowViewState.IdRef="WriteLine_9">
+                            <InArgument x:TypeArguments="x:String">
+                              <mca:CSharpValue x:TypeArguments="x:String">"Production Set " + productionSet.ProductionItems.First().Package.Job.Title + " will be reverted due to machine group no longer being Online."</mca:CSharpValue>
+                            </InArgument>
+                          </WriteLine>
+                          <TerminateWorkflow sap2010:WorkflowViewState.IdRef="TerminateWorkflow_7">
+                            <TerminateWorkflow.Exception>
+                              <InArgument x:TypeArguments="s:Exception">
+                                <mca:CSharpValue x:TypeArguments="s:Exception">new WorkflowApplicationTerminatedException("Machine Group " + MachineGroup.Alias + " is offline or in error.")</mca:CSharpValue>
+                              </InArgument>
+                            </TerminateWorkflow.Exception>
+                          </TerminateWorkflow>
+                        </Sequence>
+                      </PickBranch>
+                    </Pick>
+                    <FlowStep.Next>
+                      <FlowStep x:Name="__ReferenceID9" sap2010:WorkflowViewState.IdRef="FlowStep_56">
+                        <pcw:LogString DisplayName="Log waiting for machine ready" sap2010:WorkflowViewState.IdRef="LogString_2">
+                          <pcw:LogString.Level>
+                            <InArgument x:TypeArguments="pcil:LogLevel">
+                              <mca:CSharpValue x:TypeArguments="pcil:LogLevel">Common.Interfaces.Logging.LogLevel.Debug</mca:CSharpValue>
+                            </InArgument>
+                          </pcw:LogString.Level>
+                          <pcw:LogString.Message>
+                            <InArgument x:TypeArguments="x:String">
+                              <mca:CSharpValue x:TypeArguments="x:String">"Production Set " + productionSet.ProductionItems.First().Package.Job.Title + " waiting for machine to be ready for more work"</mca:CSharpValue>
+                            </InArgument>
+                          </pcw:LogString.Message>
+                          <pcw:LogString.ServiceLocator>
+                            <InArgument x:TypeArguments="pcis:IServiceLocator">
+                              <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                            </InArgument>
+                          </pcw:LogString.ServiceLocator>
+                        </pcw:LogString>
+                        <FlowStep.Next>
+                          <FlowStep x:Name="__ReferenceID7" sap2010:WorkflowViewState.IdRef="FlowStep_55">
+                            <Pick sap2010:Annotation.AnnotationText="Wait for machine to be ready for next job" DisplayName="Wait for machine ready or not available" sap2010:WorkflowViewState.IdRef="Pick_4">
+                              <PickBranch DisplayName="Wait for machine ready" sap2010:WorkflowViewState.IdRef="PickBranch_15">
+                                <PickBranch.Trigger>
+                                  <uc:WaitForX5MachineIsReadyForMoreWork sap2010:Annotation.AnnotationText="Wait for the machine to be ready for more work" DisplayName="Wait for machine ready" sap2010:WorkflowViewState.IdRef="WaitForX5MachineIsReadyForMoreWork_3">
+                                    <uc:WaitForX5MachineIsReadyForMoreWork.MachineId>
+                                      <InArgument x:TypeArguments="s:Guid">
+                                        <mca:CSharpValue x:TypeArguments="s:Guid">ProductionSets.First().ProduceOnMachineId</mca:CSharpValue>
+                                      </InArgument>
+                                    </uc:WaitForX5MachineIsReadyForMoreWork.MachineId>
+                                    <uc:WaitForX5MachineIsReadyForMoreWork.ServiceLocator>
+                                      <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                        <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                                      </InArgument>
+                                    </uc:WaitForX5MachineIsReadyForMoreWork.ServiceLocator>
+                                  </uc:WaitForX5MachineIsReadyForMoreWork>
+                                </PickBranch.Trigger>
+                                <pcw:LogString DisplayName="Log done waiting for machine ready" sap2010:WorkflowViewState.IdRef="LogString_3">
+                                  <pcw:LogString.Level>
+                                    <InArgument x:TypeArguments="pcil:LogLevel">
+                                      <mca:CSharpValue x:TypeArguments="pcil:LogLevel">Common.Interfaces.Logging.LogLevel.Debug</mca:CSharpValue>
+                                    </InArgument>
+                                  </pcw:LogString.Level>
+                                  <pcw:LogString.Message>
+                                    <InArgument x:TypeArguments="x:String">
+                                      <mca:CSharpValue x:TypeArguments="x:String">"Production Set " + productionSet.ProductionItems.First().Package.Job.Title + " done waiting for machine to be ready for more work"</mca:CSharpValue>
+                                    </InArgument>
+                                  </pcw:LogString.Message>
+                                  <pcw:LogString.ServiceLocator>
+                                    <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                      <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                                    </InArgument>
+                                  </pcw:LogString.ServiceLocator>
+                                </pcw:LogString>
+                              </PickBranch>
+                              <PickBranch DisplayName="Last job retracted" sap2010:WorkflowViewState.IdRef="PickBranch_16">
+                                <PickBranch.Trigger>
+                                  <pcwe:WaitForProductionStatusForAny DisplayName="last job retracted" sap2010:WorkflowViewState.IdRef="WaitForProductionStatusForAny_8">
+                                    <pcwe:WaitForProductionStatusForAny.ProductionItems>
+                                      <InArgument x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">
+                                        <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">lastProductionSets.GetProductionItems().Where(pi =&gt; pi.Product is Carton)</mca:CSharpValue>
+                                      </InArgument>
+                                    </pcwe:WaitForProductionStatusForAny.ProductionItems>
+                                    <pcwe:WaitForProductionStatusForAny.ProductionStatus>
+                                      <InArgument x:TypeArguments="pcidpp:ProductionStatuses">
+                                        <mca:CSharpValue x:TypeArguments="pcidpp:ProductionStatuses">ErrorProductionStatuses.Removed</mca:CSharpValue>
+                                      </InArgument>
+                                    </pcwe:WaitForProductionStatusForAny.ProductionStatus>
+                                  </pcwe:WaitForProductionStatusForAny>
+                                </PickBranch.Trigger>
+                                <TerminateWorkflow sap2010:WorkflowViewState.IdRef="TerminateWorkflow_11">
+                                  <TerminateWorkflow.Exception>
+                                    <InArgument x:TypeArguments="s:Exception">
+                                      <mca:CSharpValue x:TypeArguments="s:Exception">new WorkflowApplicationTerminatedException("Machine Group " + MachineGroup.Alias + " retracted last job.")</mca:CSharpValue>
+                                    </InArgument>
+                                  </TerminateWorkflow.Exception>
+                                </TerminateWorkflow>
+                              </PickBranch>
+                              <PickBranch DisplayName="Terminate if machine group is not available" sap2010:WorkflowViewState.IdRef="PickBranch_17">
+                                <PickBranch.Trigger>
+                                  <pcwe:WaitForMachineGroupOfflineOrError sap2010:WorkflowViewState.IdRef="WaitForMachineGroupOfflineOrError_3">
+                                    <pcwe:WaitForMachineGroupOfflineOrError.MachineGroup>
+                                      <InArgument x:TypeArguments="pcidm:MachineGroup">
+                                        <mca:CSharpValue x:TypeArguments="pcidm:MachineGroup">MachineGroup</mca:CSharpValue>
+                                      </InArgument>
+                                    </pcwe:WaitForMachineGroupOfflineOrError.MachineGroup>
+                                    <pcwe:WaitForMachineGroupOfflineOrError.ServiceLocator>
+                                      <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                        <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                                      </InArgument>
+                                    </pcwe:WaitForMachineGroupOfflineOrError.ServiceLocator>
+                                  </pcwe:WaitForMachineGroupOfflineOrError>
+                                </PickBranch.Trigger>
+                                <Sequence sap2010:WorkflowViewState.IdRef="Sequence_6">
+                                  <WriteLine sap2010:WorkflowViewState.IdRef="WriteLine_11">
+                                    <InArgument x:TypeArguments="x:String">
+                                      <mca:CSharpValue x:TypeArguments="x:String">"Production Set " + productionSet.ProductionItems.First().Package.Job.Title + " will be reverted due to machine group not in available status"</mca:CSharpValue>
+                                    </InArgument>
+                                  </WriteLine>
+                                  <TerminateWorkflow sap2010:WorkflowViewState.IdRef="TerminateWorkflow_12">
+                                    <TerminateWorkflow.Exception>
+                                      <InArgument x:TypeArguments="s:Exception">
+                                        <mca:CSharpValue x:TypeArguments="s:Exception">new WorkflowApplicationTerminatedException("Machine Group " + MachineGroup.Alias + " is offline or in error.")</mca:CSharpValue>
+                                      </InArgument>
+                                    </TerminateWorkflow.Exception>
+                                  </TerminateWorkflow>
+                                </Sequence>
+                              </PickBranch>
+                              <PickBranch DisplayName="Terminate if machine group is not available" sap2010:WorkflowViewState.IdRef="PickBranch_18">
+                                <PickBranch.Trigger>
+                                  <pcwe:WaitForMachineGroupNotOnline sap2010:WorkflowViewState.IdRef="WaitForMachineGroupNotOnline_3">
+                                    <pcwe:WaitForMachineGroupNotOnline.MachineGroup>
+                                      <InArgument x:TypeArguments="pcidm:MachineGroup">
+                                        <mca:CSharpValue x:TypeArguments="pcidm:MachineGroup">MachineGroup</mca:CSharpValue>
+                                      </InArgument>
+                                    </pcwe:WaitForMachineGroupNotOnline.MachineGroup>
+                                    <pcwe:WaitForMachineGroupNotOnline.ServiceLocator>
+                                      <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                        <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                                      </InArgument>
+                                    </pcwe:WaitForMachineGroupNotOnline.ServiceLocator>
+                                  </pcwe:WaitForMachineGroupNotOnline>
+                                </PickBranch.Trigger>
+                                <Sequence sap2010:WorkflowViewState.IdRef="Sequence_7">
+                                  <WriteLine sap2010:WorkflowViewState.IdRef="WriteLine_12">
+                                    <InArgument x:TypeArguments="x:String">
+                                      <mca:CSharpValue x:TypeArguments="x:String">"Production Set " + productionSet.ProductionItems.First().Package.Job.Title + " will be reverted due to machine group no longer being Online."</mca:CSharpValue>
+                                    </InArgument>
+                                  </WriteLine>
+                                  <TerminateWorkflow sap2010:WorkflowViewState.IdRef="TerminateWorkflow_13">
+                                    <TerminateWorkflow.Exception>
+                                      <InArgument x:TypeArguments="s:Exception">
+                                        <mca:CSharpValue x:TypeArguments="s:Exception">new WorkflowApplicationTerminatedException("Machine Group " + MachineGroup.Alias + " is offline or in error.")</mca:CSharpValue>
+                                      </InArgument>
+                                    </TerminateWorkflow.Exception>
+                                  </TerminateWorkflow>
+                                </Sequence>
+                              </PickBranch>
+                            </Pick>
+                            <FlowStep.Next>
+                              <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_54">
+                                <uc:ProduceSetsOnX5 sap2010:WorkflowViewState.IdRef="ProduceSetsOnX5_2">
+                                  <uc:ProduceSetsOnX5.ProductionSets>
+                                    <InArgument x:TypeArguments="scg:IEnumerable(pcidp:ProductionSet)">
+                                      <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:ProductionSet)">ProductionSets</mca:CSharpValue>
+                                    </InArgument>
+                                  </uc:ProduceSetsOnX5.ProductionSets>
+                                  <uc:ProduceSetsOnX5.ServiceLocator>
+                                    <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                      <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                                    </InArgument>
+                                  </uc:ProduceSetsOnX5.ServiceLocator>
+                                </uc:ProduceSetsOnX5>
+                                <FlowStep.Next>
+                                  <FlowStep x:Name="__ReferenceID2" sap2010:WorkflowViewState.IdRef="FlowStep_45">
+                                    <Pick sap2010:Annotation.AnnotationText="Waiting for entire job to be produced on machines" DisplayName="Wait for current job to be Produced" sap2010:WorkflowViewState.IdRef="Pick_1">
+                                      <PickBranch DisplayName="All Items Completed" sap2010:WorkflowViewState.IdRef="PickBranch_1">
+                                        <PickBranch.Trigger>
+                                          <pcwe:WaitForProductionStatusForAny DisplayName="Job Completed" sap2010:WorkflowViewState.IdRef="WaitForProductionStatusForAny_9">
+                                            <pcwe:WaitForProductionStatusForAny.ProductionItems>
+                                              <InArgument x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">
+                                                <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">ProductionSets.GetProductionItems()</mca:CSharpValue>
+                                              </InArgument>
+                                            </pcwe:WaitForProductionStatusForAny.ProductionItems>
+                                            <pcwe:WaitForProductionStatusForAny.ProductionStatus>
+                                              <InArgument x:TypeArguments="pcidpp:ProductionStatuses">
+                                                <mca:CSharpValue x:TypeArguments="pcidpp:ProductionStatuses">CompletedProductionStatuses.Completed</mca:CSharpValue>
+                                              </InArgument>
+                                            </pcwe:WaitForProductionStatusForAny.ProductionStatus>
+                                          </pcwe:WaitForProductionStatusForAny>
+                                        </PickBranch.Trigger>
+                                      </PickBranch>
+                                      <PickBranch DisplayName="Job retracted" sap2010:WorkflowViewState.IdRef="PickBranch_14">
+                                        <PickBranch.Trigger>
+                                          <pcwe:WaitForProductionStatusForAny DisplayName="Job retracted" sap2010:WorkflowViewState.IdRef="WaitForProductionStatusForAny_7">
+                                            <pcwe:WaitForProductionStatusForAny.ProductionItems>
+                                              <InArgument x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">
+                                                <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">ProductionSets.GetProductionItems()</mca:CSharpValue>
+                                              </InArgument>
+                                            </pcwe:WaitForProductionStatusForAny.ProductionItems>
+                                            <pcwe:WaitForProductionStatusForAny.ProductionStatus>
+                                              <InArgument x:TypeArguments="pcidpp:ProductionStatuses">
+                                                <mca:CSharpValue x:TypeArguments="pcidpp:ProductionStatuses">ErrorProductionStatuses.Removed</mca:CSharpValue>
+                                              </InArgument>
+                                            </pcwe:WaitForProductionStatusForAny.ProductionStatus>
+                                          </pcwe:WaitForProductionStatusForAny>
+                                        </PickBranch.Trigger>
+                                        <TerminateWorkflow>
+                                          <TerminateWorkflow.Exception>
+                                            <InArgument x:TypeArguments="s:Exception">
+                                              <mca:CSharpValue x:TypeArguments="s:Exception">new WorkflowApplicationTerminatedException("Current job removed from machine queue because it was retracted.")</mca:CSharpValue>
+                                            </InArgument>
+                                          </TerminateWorkflow.Exception>
+                                          <sap2010:WorkflowViewState.IdRef>TerminateWorkflow_14</sap2010:WorkflowViewState.IdRef>
+                                        </TerminateWorkflow>
+                                      </PickBranch>
+                                      <PickBranch DisplayName="Failed" sap2010:WorkflowViewState.IdRef="PickBranch_11">
+                                        <PickBranch.Trigger>
+                                          <pcwe:WaitForProductionStatusForAny DisplayName="Failed" sap2010:WorkflowViewState.IdRef="WaitForProductionStatusForAny_4">
+                                            <pcwe:WaitForProductionStatusForAny.ProductionItems>
+                                              <InArgument x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">
+                                                <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">ProductionSets.GetProductionItems()</mca:CSharpValue>
+                                              </InArgument>
+                                            </pcwe:WaitForProductionStatusForAny.ProductionItems>
+                                            <pcwe:WaitForProductionStatusForAny.ProductionStatus>
+                                              <InArgument x:TypeArguments="pcidpp:ProductionStatuses">
+                                                <mca:CSharpValue x:TypeArguments="pcidpp:ProductionStatuses">ErrorProductionStatuses.Failed</mca:CSharpValue>
+                                              </InArgument>
+                                            </pcwe:WaitForProductionStatusForAny.ProductionStatus>
+                                          </pcwe:WaitForProductionStatusForAny>
+                                        </PickBranch.Trigger>
+                                        <TerminateWorkflow sap2010:WorkflowViewState.IdRef="TerminateWorkflow_8">
+                                          <TerminateWorkflow.Exception>
+                                            <InArgument x:TypeArguments="s:Exception">
+                                              <mca:CSharpValue x:TypeArguments="s:Exception">new WorkflowApplicationTerminatedException("Current job failed while waiting to be completed.")</mca:CSharpValue>
+                                            </InArgument>
+                                          </TerminateWorkflow.Exception>
+                                        </TerminateWorkflow>
+                                      </PickBranch>
+                                      <PickBranch DisplayName="Removed" sap2010:WorkflowViewState.IdRef="PickBranch_3">
+                                        <PickBranch.Trigger>
+                                          <pcwe:WaitForProductionStatusForAny DisplayName="Removed" sap2010:WorkflowViewState.IdRef="WaitForProductionStatusForAny_2">
+                                            <pcwe:WaitForProductionStatusForAny.ProductionItems>
+                                              <InArgument x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">
+                                                <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">ProductionSets.GetProductionItems()</mca:CSharpValue>
+                                              </InArgument>
+                                            </pcwe:WaitForProductionStatusForAny.ProductionItems>
+                                            <pcwe:WaitForProductionStatusForAny.ProductionStatus>
+                                              <InArgument x:TypeArguments="pcidpp:ProductionStatuses">
+                                                <mca:CSharpValue x:TypeArguments="pcidpp:ProductionStatuses">ErrorProductionStatuses.Removed</mca:CSharpValue>
+                                              </InArgument>
+                                            </pcwe:WaitForProductionStatusForAny.ProductionStatus>
+                                          </pcwe:WaitForProductionStatusForAny>
+                                        </PickBranch.Trigger>
+                                        <TerminateWorkflow sap2010:WorkflowViewState.IdRef="TerminateWorkflow_2">
+                                          <TerminateWorkflow.Exception>
+                                            <InArgument x:TypeArguments="s:Exception">
+                                              <mca:CSharpValue x:TypeArguments="s:Exception">new WorkflowApplicationTerminatedException("Current job removed from machine queue before production started.")</mca:CSharpValue>
+                                            </InArgument>
+                                          </TerminateWorkflow.Exception>
+                                        </TerminateWorkflow>
+                                      </PickBranch>
+                                    </Pick>
+                                  </FlowStep>
+                                </FlowStep.Next>
+                              </FlowStep>
+                            </FlowStep.Next>
+                          </FlowStep>
+                        </FlowStep.Next>
+                      </FlowStep>
+                    </FlowStep.Next>
+                  </FlowStep>
+                </FlowDecision.True>
+                <FlowDecision.False>
+                  <FlowStep x:Name="__ReferenceID8" sap2010:WorkflowViewState.IdRef="FlowStep_57">
+                    <pcw:LogString DisplayName="Log waiting for machine ready" sap2010:WorkflowViewState.IdRef="LogString_4">
+                      <pcw:LogString.Level>
+                        <InArgument x:TypeArguments="pcil:LogLevel">
+                          <mca:CSharpValue x:TypeArguments="pcil:LogLevel">Common.Interfaces.Logging.LogLevel.Debug</mca:CSharpValue>
+                        </InArgument>
+                      </pcw:LogString.Level>
+                      <pcw:LogString.Message>
+                        <InArgument x:TypeArguments="x:String">
+                          <mca:CSharpValue x:TypeArguments="x:String">"Production Set " + productionSet.ProductionItems.First().Package.Job.Title + " waiting for machine to be ready for more work"</mca:CSharpValue>
+                        </InArgument>
+                      </pcw:LogString.Message>
+                      <pcw:LogString.ServiceLocator>
+                        <InArgument x:TypeArguments="pcis:IServiceLocator">
+                          <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                        </InArgument>
+                      </pcw:LogString.ServiceLocator>
+                    </pcw:LogString>
+                    <FlowStep.Next>
+                      <FlowStep x:Name="__ReferenceID6" sap2010:WorkflowViewState.IdRef="FlowStep_53">
+                        <Pick sap2010:Annotation.AnnotationText="Wait for machine to be ready for next job" DisplayName="Wait for machine ready or not available" sap2010:WorkflowViewState.IdRef="Pick_3">
+                          <PickBranch DisplayName="Wait for machine ready" sap2010:WorkflowViewState.IdRef="PickBranch_7">
+                            <PickBranch.Trigger>
+                              <uc:WaitForX5MachineIsReadyForMoreWork sap2010:Annotation.AnnotationText="Wait for the machine to be ready for more work" DisplayName="Wait for machine ready" sap2010:WorkflowViewState.IdRef="WaitForX5MachineIsReadyForMoreWork_2">
+                                <uc:WaitForX5MachineIsReadyForMoreWork.MachineId>
+                                  <InArgument x:TypeArguments="s:Guid">
+                                    <mca:CSharpValue x:TypeArguments="s:Guid">ProductionSets.First().ProduceOnMachineId</mca:CSharpValue>
+                                  </InArgument>
+                                </uc:WaitForX5MachineIsReadyForMoreWork.MachineId>
+                                <uc:WaitForX5MachineIsReadyForMoreWork.ServiceLocator>
+                                  <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                    <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                                  </InArgument>
+                                </uc:WaitForX5MachineIsReadyForMoreWork.ServiceLocator>
+                              </uc:WaitForX5MachineIsReadyForMoreWork>
+                            </PickBranch.Trigger>
+                            <pcw:LogString DisplayName="Log done waiting for machine ready" sap2010:WorkflowViewState.IdRef="LogString_5">
+                              <pcw:LogString.Level>
+                                <InArgument x:TypeArguments="pcil:LogLevel">
+                                  <mca:CSharpValue x:TypeArguments="pcil:LogLevel">Common.Interfaces.Logging.LogLevel.Debug</mca:CSharpValue>
+                                </InArgument>
+                              </pcw:LogString.Level>
+                              <pcw:LogString.Message>
+                                <InArgument x:TypeArguments="x:String">
+                                  <mca:CSharpValue x:TypeArguments="x:String">"Production Set " + productionSet.ProductionItems.First().Package.Job.Title + " done waiting for machine to be ready for more work"</mca:CSharpValue>
+                                </InArgument>
+                              </pcw:LogString.Message>
+                              <pcw:LogString.ServiceLocator>
+                                <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                  <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                                </InArgument>
+                              </pcw:LogString.ServiceLocator>
+                            </pcw:LogString>
+                          </PickBranch>
+                          <PickBranch DisplayName="Terminate if machine group is not available" sap2010:WorkflowViewState.IdRef="PickBranch_8">
+                            <PickBranch.Trigger>
+                              <pcwe:WaitForMachineGroupOfflineOrError sap2010:WorkflowViewState.IdRef="WaitForMachineGroupOfflineOrError_2">
+                                <pcwe:WaitForMachineGroupOfflineOrError.MachineGroup>
+                                  <InArgument x:TypeArguments="pcidm:MachineGroup">
+                                    <mca:CSharpValue x:TypeArguments="pcidm:MachineGroup">MachineGroup</mca:CSharpValue>
+                                  </InArgument>
+                                </pcwe:WaitForMachineGroupOfflineOrError.MachineGroup>
+                                <pcwe:WaitForMachineGroupOfflineOrError.ServiceLocator>
+                                  <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                    <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                                  </InArgument>
+                                </pcwe:WaitForMachineGroupOfflineOrError.ServiceLocator>
+                              </pcwe:WaitForMachineGroupOfflineOrError>
+                            </PickBranch.Trigger>
+                            <Sequence sap2010:WorkflowViewState.IdRef="Sequence_3">
+                              <WriteLine sap2010:WorkflowViewState.IdRef="WriteLine_7">
+                                <InArgument x:TypeArguments="x:String">
+                                  <mca:CSharpValue x:TypeArguments="x:String">"Production Set " + productionSet.ProductionItems.First().Package.Job.Title + " will be reverted due to machine group not in available status"</mca:CSharpValue>
+                                </InArgument>
+                              </WriteLine>
+                              <TerminateWorkflow sap2010:WorkflowViewState.IdRef="TerminateWorkflow_5">
+                                <TerminateWorkflow.Exception>
+                                  <InArgument x:TypeArguments="s:Exception">
+                                    <mca:CSharpValue x:TypeArguments="s:Exception">new WorkflowApplicationTerminatedException("Machine Group " + MachineGroup.Alias + " is offline or in error.")</mca:CSharpValue>
+                                  </InArgument>
+                                </TerminateWorkflow.Exception>
+                              </TerminateWorkflow>
+                            </Sequence>
+                          </PickBranch>
+                          <PickBranch DisplayName="Terminate if machine group is not available" sap2010:WorkflowViewState.IdRef="PickBranch_9">
+                            <PickBranch.Trigger>
+                              <pcwe:WaitForMachineGroupNotOnline sap2010:WorkflowViewState.IdRef="WaitForMachineGroupNotOnline_1">
+                                <pcwe:WaitForMachineGroupNotOnline.MachineGroup>
+                                  <InArgument x:TypeArguments="pcidm:MachineGroup">
+                                    <mca:CSharpValue x:TypeArguments="pcidm:MachineGroup">MachineGroup</mca:CSharpValue>
+                                  </InArgument>
+                                </pcwe:WaitForMachineGroupNotOnline.MachineGroup>
+                                <pcwe:WaitForMachineGroupNotOnline.ServiceLocator>
+                                  <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                    <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                                  </InArgument>
+                                </pcwe:WaitForMachineGroupNotOnline.ServiceLocator>
+                              </pcwe:WaitForMachineGroupNotOnline>
+                            </PickBranch.Trigger>
+                            <Sequence sap2010:WorkflowViewState.IdRef="Sequence_4">
+                              <WriteLine sap2010:WorkflowViewState.IdRef="WriteLine_8">
+                                <InArgument x:TypeArguments="x:String">
+                                  <mca:CSharpValue x:TypeArguments="x:String">"Production Set " + productionSet.ProductionItems.First().Package.Job.Title + " will be reverted due to machine group no longer being Online."</mca:CSharpValue>
+                                </InArgument>
+                              </WriteLine>
+                              <TerminateWorkflow sap2010:WorkflowViewState.IdRef="TerminateWorkflow_6">
+                                <TerminateWorkflow.Exception>
+                                  <InArgument x:TypeArguments="s:Exception">
+                                    <mca:CSharpValue x:TypeArguments="s:Exception">new WorkflowApplicationTerminatedException("Machine Group " + MachineGroup.Alias + " is offline or in error.")</mca:CSharpValue>
+                                  </InArgument>
+                                </TerminateWorkflow.Exception>
+                              </TerminateWorkflow>
+                            </Sequence>
+                          </PickBranch>
+                        </Pick>
+                        <FlowStep.Next>
+                          <x:Reference>__ReferenceID0</x:Reference>
+                        </FlowStep.Next>
+                      </FlowStep>
+                    </FlowStep.Next>
+                  </FlowStep>
+                </FlowDecision.False>
+              </FlowDecision>
+            </FlowStep.Next>
+          </FlowStep>
+        </FlowStep.Next>
+      </FlowStep>
+    </Flowchart.StartNode>
+    <x:Reference>__ReferenceID1</x:Reference>
+    <x:Reference>__ReferenceID2</x:Reference>
+    <x:Reference>__ReferenceID3</x:Reference>
+    <x:Reference>__ReferenceID4</x:Reference>
+    <x:Reference>__ReferenceID5</x:Reference>
+    <x:Reference>__ReferenceID6</x:Reference>
+    <x:Reference>__ReferenceID0</x:Reference>
+    <x:Reference>__ReferenceID7</x:Reference>
+    <x:Reference>__ReferenceID8</x:Reference>
+    <x:Reference>__ReferenceID9</x:Reference>
+    <sads:DebugSymbol.Symbol>d2FDOlxnaXRcNC4zLXN1c3RhaW5pbmdcV29ya2Zsb3dzXFdvcmtmbG93c1xNYWNoaW5lR3JvdXBzXENyZWF0ZVBhY2thZ2VPbk1hY2hpbmVHcm91cFdpdGhVbHRyYS54YW1skgFlA78FDwIBAWkLaXkCAQJwCXsSAwHGBH4NkwE8AwGpBJcBE5cBdQMBogS1BBXFBCUDAYwEyAQZpgUgAwGjA8MDIc4DOQMBlAPRAyWoBCwDAbsCmwEVtQIcAwGgAbgCGcgCKQMBigHLAh3AAyQCAQl4D3huAwHOBHMPc20DAccEhgEThgFnAwG/BIEBE4EBewMBuASLAROLAYcBAwGxBJABE5ABawMBqgS9BBu9BNcBAwGbBLgEG7gEhgEDAZQEwgQbwgRzAwGNBMkEG+kEKAMB5gPqBBuHBSgDAcUDiAUbpQUoAwGkA8YDJ8YDjwEDAZwDywMnywN/AwGVA9IDJ+EDNAMBhAPiAyf5AzQDAewC+gMnkAQ0AwHUApEEJ6cENAMBvAKcARfKASQDAZQCywEX6AEkAwHzAekBF/8BJAMB2wGAAheWAiQDAcIBlwIXtAIkAwGhAcACH8AC2wEDAZkBuwIfuwKKAQMBkgHFAh/FAncDAYsBzAIf7AIsAgFk7QIfgwMsAgFMhAMfoQMsAgErogMfvwMsAgEKywQf1gRKAwH9A9gEHegELQMB5wPsBB/3BEgDAdcD+QQdhgUoAwHGA4oFH5UFQwMBtgOXBR2kBSgDAaUD1AMr3wNQAwGFA+QDK+8DUAMB9QLxAyn4Az0DAe0C/AMrhwRQAwHdAokEKY8EPQMB1QKTBCueBFADAcUCoAQppgQ9AwG9Ap4BG8gBJgMBlQLNARvYAUQDAYUC2gEZ5wEkAwH0AesBG/YBQAMB5AH4ARn+AS0DAdwBggIbjQJAAwHMAY8CGZUCLQMBwwGZAhukAj8DAbMBpgIZswIkAwGiAc4CI9kCTgIBe9sCIesCMQIBZe8CI/oCSAIBVfwCIYIDNQIBTYYDI5EDTAIBPZMDIaADLAIBLKQDI68DRwIBHLEDIb4DLAIBC9MEJdMEfQMBhQTOBCXOBIoBAwH+A+AEI+AE5AEDAfYD2wQj2wSOAQMB7wPlBCPlBHsDAegD7wQl7wR5AwHfA/QEJfQEfQMB2AP6BB/+BCsDAc8D/wQfhQUzAwHHA40FJY0FeQMBvgOSBSWSBX0DAbcDmAUfnAUrAwGuA50FH6MFMwMBpgPXAzHXA68BAwGNA9wDMdwDpQEDAYYD5wMx5wOvAQMB/QLsAzHsA58BAwH2AvQDL/QD3gEDAe4C/wMx/wOvAQMB5QKEBDGEBJ4BAwHeAowEL4wEzwEDAdYClgQxlgSvAQMBzQKbBDGbBJ8BAwHGAqMEL6ME3wEDAb4CnwEdsAEtAwGlArEBHccBRAMBlgLQASHQAXUDAY0C1QEh1QF5AwGGAtsBG98BJwMB/QHgARvmAS8DAfUB7gEh7gHIAQMB7AHzASHzAY8BAwHlAfsBH/sBygEDAd0BhQIhhQKfAQMB1AGKAiGKApUBAwHNAY8CaY8CfAMBywGSAh+SArQBAwHEAZwCIZwCdQMBuwGhAiGhAnkDAbQBpwIbqwInAwGrAawCG7ICLwMBowHWAinWAoEBAwGDAdECKdECjgECAXzjAifjAugBAgF03gIn3gKSAQIBbegCJ+gCfwIBZvICKfIC0AECAV33Ain3ApcBAgFW/wIn/wLSAQIBTokDKYkDfQIBRY4DKY4DgQECAT6UAyOYAy8CATWZAyOfAzcCAS2nAymnA30CASSsAymsA4EBAgEdsgMjtgMvAgEUtwMjvQM3AgEM/AQj/ATvAQMB0AOCBSWCBdQBAwHIA5oFI5oF7wEDAa8DoAUloAXUAQMBpwOnASOoAdEBAwG0AqIBI6IBjgEDAa0CrQEjrQF7AwGmArkBI8QBFAMBngK0ASO0AcoBAwGXAt0BH90B6wEDAf4B4wEh4wHQAQMB9gGpAh+pAusBAwGsAa8CIa8C0AEDAaQBlgMnlgPzAQIBNpwDKZwD2AECAS60Aye0A/MBAgEVugMpugPYAQIBDQ==</sads:DebugSymbol.Symbol>
+  </Flowchart>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="Assign_4" sap:VirtualizedContainerService.HintSize="242,62">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="GetPreviousProductionSetsForMachineGroup_1" sap:VirtualizedContainerService.HintSize="200,22">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogString_1" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="WaitForProductionStatusesForAll_1" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="222,208">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PickBranch_4" sap:VirtualizedContainerService.HintSize="252,508" />
+      <sap2010:ViewStateData Id="WaitForMachineGroupOfflineOrError_1" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="WriteLine_5" sap:VirtualizedContainerService.HintSize="210.5,62" />
+      <sap2010:ViewStateData Id="TerminateWorkflow_4" sap:VirtualizedContainerService.HintSize="210.5,22" />
+      <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="232.5,248">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PickBranch_6" sap:VirtualizedContainerService.HintSize="262.5,508" />
+      <sap2010:ViewStateData Id="WaitForProductionStatusForAny_3" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="TerminateWorkflow_3" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="PickBranch_5" sap:VirtualizedContainerService.HintSize="230,508" />
+      <sap2010:ViewStateData Id="WaitForProductionStatusForAny_5" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="TerminateWorkflow_9" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="PickBranch_12" sap:VirtualizedContainerService.HintSize="230,508" />
+      <sap2010:ViewStateData Id="WaitForMachineGroupNotOnline_2" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="WriteLine_9" sap:VirtualizedContainerService.HintSize="210.5,62" />
+      <sap2010:ViewStateData Id="TerminateWorkflow_7" sap:VirtualizedContainerService.HintSize="210.5,22" />
+      <sap2010:ViewStateData Id="Sequence_5" sap:VirtualizedContainerService.HintSize="232.5,248">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PickBranch_10" sap:VirtualizedContainerService.HintSize="262.5,508" />
+      <sap2010:ViewStateData Id="Pick_2" sap:VirtualizedContainerService.HintSize="200,92">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogString_2" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="WaitForX5MachineIsReadyForMoreWork_3" sap:VirtualizedContainerService.HintSize="200,62">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogString_3" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="PickBranch_15" sap:VirtualizedContainerService.HintSize="230,508" />
+      <sap2010:ViewStateData Id="WaitForProductionStatusForAny_8" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="TerminateWorkflow_11" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="PickBranch_16" sap:VirtualizedContainerService.HintSize="230,508" />
+      <sap2010:ViewStateData Id="WaitForMachineGroupOfflineOrError_3" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="WriteLine_11" sap:VirtualizedContainerService.HintSize="210.5,62" />
+      <sap2010:ViewStateData Id="TerminateWorkflow_12" sap:VirtualizedContainerService.HintSize="210.5,22" />
+      <sap2010:ViewStateData Id="Sequence_6" sap:VirtualizedContainerService.HintSize="232.5,248">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PickBranch_17" sap:VirtualizedContainerService.HintSize="262.5,508" />
+      <sap2010:ViewStateData Id="WaitForMachineGroupNotOnline_3" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="WriteLine_12" sap:VirtualizedContainerService.HintSize="210.5,62" />
+      <sap2010:ViewStateData Id="TerminateWorkflow_13" sap:VirtualizedContainerService.HintSize="210.5,22" />
+      <sap2010:ViewStateData Id="Sequence_7" sap:VirtualizedContainerService.HintSize="232.5,248">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PickBranch_18" sap:VirtualizedContainerService.HintSize="262.5,508" />
+      <sap2010:ViewStateData Id="Pick_4" sap:VirtualizedContainerService.HintSize="200,92">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ProduceSetsOnX5_2" sap:VirtualizedContainerService.HintSize="200,22">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="WaitForProductionStatusForAny_9" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="PickBranch_1" sap:VirtualizedContainerService.HintSize="230,320" />
+      <sap2010:ViewStateData Id="WaitForProductionStatusForAny_7" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="TerminateWorkflow_14" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="PickBranch_14" sap:VirtualizedContainerService.HintSize="230,320" />
+      <sap2010:ViewStateData Id="WaitForProductionStatusForAny_4" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="TerminateWorkflow_8" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="PickBranch_11" sap:VirtualizedContainerService.HintSize="230,320" />
+      <sap2010:ViewStateData Id="WaitForProductionStatusForAny_2" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="TerminateWorkflow_2" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="PickBranch_3" sap:VirtualizedContainerService.HintSize="230,320" />
+      <sap2010:ViewStateData Id="Pick_1" sap:VirtualizedContainerService.HintSize="1154,390">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_45">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">500,595.5</av:Point>
+            <av:Size x:Key="ShapeSize">200,92</av:Size>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_54">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">500,549</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">600,571 600,595.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_55">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">10,515.5</av:Point>
+            <av:Size x:Key="ShapeSize">200,92</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">210,561.5 240,561.5 240,559.75 500,559.75</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_56">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">10,469</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">110,491 110,515.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_48">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">10,355.5</av:Point>
+            <av:Size x:Key="ShapeSize">200,92</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">110,447.5 110,469</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogString_4" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="WaitForX5MachineIsReadyForMoreWork_2" sap:VirtualizedContainerService.HintSize="200,62">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogString_5" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="PickBranch_7" sap:VirtualizedContainerService.HintSize="230,508" />
+      <sap2010:ViewStateData Id="WaitForMachineGroupOfflineOrError_2" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="WriteLine_7" sap:VirtualizedContainerService.HintSize="210.5,62" />
+      <sap2010:ViewStateData Id="TerminateWorkflow_5" sap:VirtualizedContainerService.HintSize="210.5,22" />
+      <sap2010:ViewStateData Id="Sequence_3" sap:VirtualizedContainerService.HintSize="232.5,248">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PickBranch_8" sap:VirtualizedContainerService.HintSize="262.5,508" />
+      <sap2010:ViewStateData Id="WaitForMachineGroupNotOnline_1" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="WriteLine_8" sap:VirtualizedContainerService.HintSize="210.5,62" />
+      <sap2010:ViewStateData Id="TerminateWorkflow_6" sap:VirtualizedContainerService.HintSize="210.5,22" />
+      <sap2010:ViewStateData Id="Sequence_4" sap:VirtualizedContainerService.HintSize="232.5,248">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PickBranch_9" sap:VirtualizedContainerService.HintSize="262.5,508" />
+      <sap2010:ViewStateData Id="Pick_3" sap:VirtualizedContainerService.HintSize="200,92">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_53">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">500,380</av:Point>
+            <av:Size x:Key="ShapeSize">200,92</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">600,472 600,549</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_57">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">500,329</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">600,351 600,380</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDecision_1" sap:VirtualizedContainerService.HintSize="128,87">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">208,253</av:Point>
+            <av:Size x:Key="ShapeSize">128,87</av:Size>
+            <av:PointCollection x:Key="FalseConnector">336,296.5 600,296.5 600,329</av:PointCollection>
+            <av:PointCollection x:Key="TrueConnector">208,296.5 110,296.5 110,355.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_46">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">170,201</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">270,222.714285714286 270,252.714285714286 271.142857142857,252.714285714286 271.142857142857,253</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_37">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">149,109</av:Point>
+            <av:Size x:Key="ShapeSize">242,62</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">270,171 270,201</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Flowchart_1" sap:VirtualizedContainerService.HintSize="734,740">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <av:Point x:Key="ShapeLocation">240,10</av:Point>
+            <av:Size x:Key="ShapeSize">60,75</av:Size>
+            <x:Double x:Key="Height">704.04</x:Double>
+            <av:PointCollection x:Key="ConnectorLocation">270,85 270,109</av:PointCollection>
+            <x:Double x:Key="Width">720</x:Double>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PackNet.Services.Workflows.MachineGroupNested.CreatePackageOnMachineGroupWithX5_1" sap:VirtualizedContainerService.HintSize="774,820" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

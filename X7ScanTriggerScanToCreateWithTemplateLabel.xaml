@@ -1,0 +1,554 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="PackNet.X7Service.Workflows.X7ScanTriggerScanToCreate"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:local="clr-namespace:PackNet.X7Service.CommunicationTypes;assembly=PackNet.X7Service"
+ xmlns:local1="clr-namespace:PackNet.X7Service.Activities;assembly=PackNet.X7Service"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
+ xmlns:pcidm="clr-namespace:PackNet.Common.Interfaces.DTO.Machines;assembly=PackNet.Common.Interfaces"
+ xmlns:pcidp="clr-namespace:PackNet.Common.Interfaces.DTO.ProductionGroups;assembly=PackNet.Common.Interfaces"
+ xmlns:pcidp1="clr-namespace:PackNet.Common.Interfaces.DTO.Packages;assembly=PackNet.Common.Interfaces"
+ xmlns:pcids="clr-namespace:PackNet.Common.Interfaces.DTO.Scanning;assembly=PackNet.Common.Interfaces"
+ xmlns:pcie="clr-namespace:PackNet.Common.Interfaces.Eventing;assembly=PackNet.Common.Interfaces"
+ xmlns:pcis="clr-namespace:PackNet.Common.Interfaces.Services;assembly=PackNet.Common.Interfaces"
+ xmlns:pcwp="clr-namespace:PackNet.Common.WorkflowActivities.Packages;assembly=PackNet.Common"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="ServiceLocator" Type="InArgument(pcis:IServiceLocator)" />
+    <x:Property Name="Publisher" Type="InArgument(pcie:IEventAggregatorPublisher)" />
+    <x:Property Name="MachineGroup" Type="InArgument(pcidm:MachineGroup)" />
+    <x:Property Name="ProductionGroup" Type="InArgument(pcidp:ProductionGroup)" />
+    <x:Property Name="ScanData" Type="InArgument(pcids:IScanTrigger)" />
+  </x:Members>
+  <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
+  <sap2010:WorkflowViewState.IdRef>PackNet.X7Service.Workflows.X7ScanTrigger_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Packages</x:String>
+      <x:String>PackNet.Common.Interfaces.Services</x:String>
+      <x:String>PackNet.Common.Interfaces.Eventing</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Machines</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.ProductionGroups</x:String>
+      <x:String>PackNet.Common.Interfaces.Enums</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Packages.ProductionStates</x:String>
+      <x:String>PackNet.X7Service.CommunicationTypes</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Common.Logging</AssemblyReference>
+      <AssemblyReference>Common.Logging.Core</AssemblyReference>
+      <AssemblyReference>LaunchDarkly.Cache</AssemblyReference>
+      <AssemblyReference>LaunchDarkly.Client</AssemblyReference>
+      <AssemblyReference>LaunchDarkly.Common.StrongName</AssemblyReference>
+      <AssemblyReference>LaunchDarkly.EventSource</AssemblyReference>
+      <AssemblyReference>MongoDB.Bson</AssemblyReference>
+      <AssemblyReference>Newtonsoft.Json</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Reactive</AssemblyReference>
+      <AssemblyReference>System.Reactive.Core</AssemblyReference>
+      <AssemblyReference>System.Reactive.Interfaces</AssemblyReference>
+      <AssemblyReference>System.Reactive.Linq</AssemblyReference>
+      <AssemblyReference>System.Runtime.CompilerServices.Unsafe</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>System.Threading.Tasks.Extensions</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>System.Windows</AssemblyReference>
+      <AssemblyReference>System.Windows.Forms</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.ReaderWriter</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>BoxLastSelectionAlgorithmService</AssemblyReference>
+      <AssemblyReference>PackNet.Common.Interfaces</AssemblyReference>
+      <AssemblyReference>PackNet.Common</AssemblyReference>
+      <AssemblyReference>PackNet.Data</AssemblyReference>
+      <AssemblyReference>PackNet.ScandataService</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>PackNet.X7Service</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Flowchart sap2010:WorkflowViewState.IdRef="Flowchart_1">
+    <Flowchart.Variables>
+      <Variable x:TypeArguments="pcidp1:Job" Name="job" />
+      <Variable x:TypeArguments="x:Boolean" Name="couldAddJob" />
+      <Variable x:TypeArguments="x:String" Name="infeedScanData" />
+      <Variable x:TypeArguments="x:String" Name="scannedBarcode" />
+      <Variable x:TypeArguments="local:InFeedScanData" Name="scannedData" />
+    </Flowchart.Variables>
+    <Flowchart.StartNode>
+      <FlowStep x:Name="__ReferenceID3" sap2010:WorkflowViewState.IdRef="FlowStep_10">
+        <Assign sap2010:WorkflowViewState.IdRef="Assign_8">
+          <Assign.To>
+            <OutArgument x:TypeArguments="x:String">
+              <mca:CSharpReference x:TypeArguments="x:String">infeedScanData</mca:CSharpReference>
+            </OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="x:String">
+              <mca:CSharpValue x:TypeArguments="x:String">ScanData.BarcodeData.Replace("\u0002", "").Replace("\u0003", "")</mca:CSharpValue>
+            </InArgument>
+          </Assign.Value>
+        </Assign>
+        <FlowStep.Next>
+          <FlowStep x:Name="__ReferenceID6" sap2010:WorkflowViewState.IdRef="FlowStep_13">
+            <local1:ParseScanData sap2010:WorkflowViewState.IdRef="ParseScanData_1">
+              <local1:ParseScanData.InfeedScanData>
+                <InArgument x:TypeArguments="x:String">
+                  <mca:CSharpValue x:TypeArguments="x:String">infeedScanData</mca:CSharpValue>
+                </InArgument>
+              </local1:ParseScanData.InfeedScanData>
+              <local1:ParseScanData.ScannedData>
+                <OutArgument x:TypeArguments="local:InFeedScanData">
+                  <mca:CSharpReference x:TypeArguments="local:InFeedScanData">scannedData</mca:CSharpReference>
+                </OutArgument>
+              </local1:ParseScanData.ScannedData>
+              <local1:ParseScanData.ServiceLocator>
+                <InArgument x:TypeArguments="pcis:IServiceLocator">
+                  <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                </InArgument>
+              </local1:ParseScanData.ServiceLocator>
+            </local1:ParseScanData>
+            <FlowStep.Next>
+              <FlowStep x:Name="__ReferenceID1" sap2010:WorkflowViewState.IdRef="FlowStep_7">
+                <Sequence DisplayName="Create Job" sap2010:WorkflowViewState.IdRef="Sequence_1">
+                  <Sequence.Variables>
+                    <Variable x:TypeArguments="pcidp1:Package" Name="package" />
+                    <Variable x:TypeArguments="pcidp1:Carton" Name="carton" />
+                    <Variable x:TypeArguments="pcidp1:TemplateLabel" Name="templateLabel" />
+                    <Variable x:TypeArguments="pcidp1:ExternalLabelPrintRequest" Name="externalPrintRequest" />
+                  </Sequence.Variables>
+                  <Assign sap2010:WorkflowViewState.IdRef="Assign_1">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="pcidp1:Job">
+                        <mca:CSharpReference x:TypeArguments="pcidp1:Job">job</mca:CSharpReference>
+                      </OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="pcidp1:Job">
+                        <mca:CSharpValue x:TypeArguments="pcidp1:Job">new Job(SelectionAlgorithmTypes.BoxLast)</mca:CSharpValue>
+                      </InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign sap2010:WorkflowViewState.IdRef="Assign_2">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:String">
+                        <mca:CSharpReference x:TypeArguments="x:String">job.CustomerUniqueId</mca:CSharpReference>
+                      </OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:String">
+                        <mca:CSharpValue x:TypeArguments="x:String">DateTimeOffset.Now.ToUnixTimeSeconds().ToString().PadRight(12, '0')</mca:CSharpValue>
+                      </InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign sap2010:WorkflowViewState.IdRef="Assign_10">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:String">
+                        <mca:CSharpReference x:TypeArguments="x:String">job.Title</mca:CSharpReference>
+                      </OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:String">
+                        <mca:CSharpValue x:TypeArguments="x:String">scannedData.Barcode</mca:CSharpValue>
+                      </InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Assign invoice print settings" sap2010:WorkflowViewState.IdRef="Assign_9">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">
+                        <mca:CSharpReference x:TypeArguments="scg:Dictionary(x:String, x:String)">job.CustomAttributes</mca:CSharpReference>
+                      </OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">
+                        <mca:CSharpValue x:TypeArguments="scg:Dictionary(x:String, x:String)" xml:space="preserve">new Dictionary&lt;string, string&gt; {{ "useDocFeeder1", "false" },{ "useDocFeeder2", "false" }, { "useDocFeeder3", "true" },{ "useDocFeeder4", "true" }, { "useDocFeeder5", "false" },
+{ "printerQueue", "defaultPrinterQueue" },
+{ "addInvoice", "true" },  { "invoiceFile", "TemplateA.pdf" }, 
+{ "ProductBarcode", scannedData.Barcode.ToString() },{ "ProductLength", scannedData.Length.ToString() },  { "ProductWidth", scannedData.Width.ToString() }, 
+{ "ProductHeight", scannedData.Height.ToString() }, { "ProductWeight", scannedData.Weight.ToString() }, { "VerificationValue", job.CustomerUniqueId.ToString() }};</mca:CSharpValue>
+                      </InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign sap2010:Annotation.AnnotationText="Create new instance of a Package before adding cartons or labels." sap2010:WorkflowViewState.IdRef="Assign_3">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="pcidp1:Package">
+                        <mca:CSharpReference x:TypeArguments="pcidp1:Package">package</mca:CSharpReference>
+                      </OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="pcidp1:Package">
+                        <mca:CSharpValue x:TypeArguments="pcidp1:Package">new Package()</mca:CSharpValue>
+                      </InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign sap2010:WorkflowViewState.IdRef="Assign_4">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="pcidp1:Carton">
+                        <mca:CSharpReference x:TypeArguments="pcidp1:Carton">carton</mca:CSharpReference>
+                      </OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="pcidp1:Carton">
+                        <mca:CSharpValue x:TypeArguments="pcidp1:Carton">new Carton()</mca:CSharpValue>
+                      </InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <pcwp:AddProductionItemToPackage sap2010:WorkflowViewState.IdRef="AddProductionItemToPackage_1" Quantity="1">
+                    <pcwp:AddProductionItemToPackage.Package>
+                      <InArgument x:TypeArguments="pcidp1:Package">
+                        <mca:CSharpValue x:TypeArguments="pcidp1:Package">package</mca:CSharpValue>
+                      </InArgument>
+                    </pcwp:AddProductionItemToPackage.Package>
+                    <pcwp:AddProductionItemToPackage.ProductionItem>
+                      <InArgument x:TypeArguments="pcidp1:ProductionItem">
+                        <mca:CSharpValue x:TypeArguments="pcidp1:ProductionItem">new ProductionItem(carton)</mca:CSharpValue>
+                      </InArgument>
+                    </pcwp:AddProductionItemToPackage.ProductionItem>
+                  </pcwp:AddProductionItemToPackage>
+                  <Assign sap2010:WorkflowViewState.IdRef="Assign_5">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="pcidp1:TemplateLabel">
+                        <mca:CSharpReference x:TypeArguments="pcidp1:TemplateLabel">templateLabel</mca:CSharpReference>
+                      </OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="pcidp1:TemplateLabel">
+                        <mca:CSharpValue x:TypeArguments="pcidp1:TemplateLabel">new TemplateLabel()</mca:CSharpValue>
+                      </InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign sap2010:WorkflowViewState.IdRef="Assign_11">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">
+                        <mca:CSharpReference x:TypeArguments="scg:Dictionary(x:String, x:String)">templateLabel.PrintVariables</mca:CSharpReference>
+                      </OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">
+                        <mca:CSharpValue x:TypeArguments="scg:Dictionary(x:String, x:String)" xml:space="preserve">new Dictionary&lt;string, string&gt; {
+{ "useDocFeeder1", "false" },
+{ "useDocFeeder2", "false" }, 
+{ "useDocFeeder3", "true" },
+{ "useDocFeeder4", "true" },
+{ "useDocFeeder5", "false" },
+{ "printerQueue", "defaultPrinterQueue" },
+{ "addInvoice", "true" },
+{ "invoiceFile", "TemplateA.pdf" },
+{ "ProductLength", scannedData.Length.ToString() },
+{ "ProductWidth", scannedData.Width.ToString() },
+{ "ProductHeight", scannedData.Height.ToString() },
+{ "ProductWeight", scannedData.Weight.ToString() },
+{ "Title", job.Title.ToString() }, 
+{"CustomerUniqueId", job.CustomerUniqueId.ToString() }
+};</mca:CSharpValue>
+                      </InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign sap2010:WorkflowViewState.IdRef="Assign_12">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:String">
+                        <mca:CSharpReference x:TypeArguments="x:String">templateLabel.TemplateName</mca:CSharpReference>
+                      </OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:String">Nike1st</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <pcwp:AddProductionItemToPackage sap2010:WorkflowViewState.IdRef="AddProductionItemToPackage_2" Quantity="1">
+                    <pcwp:AddProductionItemToPackage.Package>
+                      <InArgument x:TypeArguments="pcidp1:Package">
+                        <mca:CSharpValue x:TypeArguments="pcidp1:Package">package</mca:CSharpValue>
+                      </InArgument>
+                    </pcwp:AddProductionItemToPackage.Package>
+                    <pcwp:AddProductionItemToPackage.ProductionItem>
+                      <InArgument x:TypeArguments="pcidp1:ProductionItem">
+                        <mca:CSharpValue x:TypeArguments="pcidp1:ProductionItem">new ProductionItem(templateLabel)</mca:CSharpValue>
+                      </InArgument>
+                    </pcwp:AddProductionItemToPackage.ProductionItem>
+                  </pcwp:AddProductionItemToPackage>
+                  <pcwp:AddPackageToJob sap2010:WorkflowViewState.IdRef="AddPackageToJob_1" Quantity="1">
+                    <pcwp:AddPackageToJob.Job>
+                      <InArgument x:TypeArguments="pcidp1:Job">
+                        <mca:CSharpValue x:TypeArguments="pcidp1:Job">job</mca:CSharpValue>
+                      </InArgument>
+                    </pcwp:AddPackageToJob.Job>
+                    <pcwp:AddPackageToJob.Package>
+                      <InArgument x:TypeArguments="pcidp1:Package">
+                        <mca:CSharpValue x:TypeArguments="pcidp1:Package">package</mca:CSharpValue>
+                      </InArgument>
+                    </pcwp:AddPackageToJob.Package>
+                  </pcwp:AddPackageToJob>
+                  <pcwp:SetJobToWaitForProductionTrigger sap2010:WorkflowViewState.IdRef="SetJobToWaitForProductionTrigger_1">
+                    <pcwp:SetJobToWaitForProductionTrigger.Job>
+                      <InArgument x:TypeArguments="pcidp1:Job">
+                        <mca:CSharpValue x:TypeArguments="pcidp1:Job">job</mca:CSharpValue>
+                      </InArgument>
+                    </pcwp:SetJobToWaitForProductionTrigger.Job>
+                  </pcwp:SetJobToWaitForProductionTrigger>
+                  <pcwp:CreateJob sap2010:WorkflowViewState.IdRef="CreateJob_1">
+                    <pcwp:CreateJob.Job>
+                      <InArgument x:TypeArguments="pcidp1:Job">
+                        <mca:CSharpValue x:TypeArguments="pcidp1:Job">job</mca:CSharpValue>
+                      </InArgument>
+                    </pcwp:CreateJob.Job>
+                    <pcwp:CreateJob.ServiceLocator>
+                      <InArgument x:TypeArguments="pcis:IServiceLocator">
+                        <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                      </InArgument>
+                    </pcwp:CreateJob.ServiceLocator>
+                  </pcwp:CreateJob>
+                </Sequence>
+                <FlowStep.Next>
+                  <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_4">
+                    <local1:CreateProductionSetAndAddToQueue sap2010:Annotation.AnnotationText="Create ProductionSet and add Job to Machine Group Production Queue" DisplayName="Add Job to Queue" sap2010:WorkflowViewState.IdRef="CreateProductionSetAndAddToQueue_1">
+                      <local1:CreateProductionSetAndAddToQueue.CouldAdd>
+                        <OutArgument x:TypeArguments="x:Boolean">
+                          <mca:CSharpReference x:TypeArguments="x:Boolean">couldAddJob</mca:CSharpReference>
+                        </OutArgument>
+                      </local1:CreateProductionSetAndAddToQueue.CouldAdd>
+                      <local1:CreateProductionSetAndAddToQueue.Job>
+                        <InArgument x:TypeArguments="pcidp1:Job">
+                          <mca:CSharpValue x:TypeArguments="pcidp1:Job">job</mca:CSharpValue>
+                        </InArgument>
+                      </local1:CreateProductionSetAndAddToQueue.Job>
+                      <local1:CreateProductionSetAndAddToQueue.MachineGroup>
+                        <InArgument x:TypeArguments="pcidm:MachineGroup">
+                          <mca:CSharpValue x:TypeArguments="pcidm:MachineGroup">MachineGroup</mca:CSharpValue>
+                        </InArgument>
+                      </local1:CreateProductionSetAndAddToQueue.MachineGroup>
+                      <local1:CreateProductionSetAndAddToQueue.ServiceLocator>
+                        <InArgument x:TypeArguments="pcis:IServiceLocator">
+                          <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                        </InArgument>
+                      </local1:CreateProductionSetAndAddToQueue.ServiceLocator>
+                    </local1:CreateProductionSetAndAddToQueue>
+                    <FlowStep.Next>
+                      <FlowDecision x:Name="__ReferenceID2" DisplayName="Could add job?" sap2010:WorkflowViewState.IdRef="FlowDecision_2">
+                        <FlowDecision.Condition>
+                          <mca:CSharpValue x:TypeArguments="x:Boolean">couldAddJob</mca:CSharpValue>
+                        </FlowDecision.Condition>
+                        <FlowDecision.True>
+                          <FlowStep x:Name="__ReferenceID4" sap2010:WorkflowViewState.IdRef="FlowStep_11">
+                            <local1:SendJobIdToX7 DisplayName="Send job to X7" sap2010:WorkflowViewState.IdRef="SendJobIdToX7_1" IsFailed="False">
+                              <local1:SendJobIdToX7.JobId>
+                                <InArgument x:TypeArguments="x:String">
+                                  <mca:CSharpValue x:TypeArguments="x:String">job.CustomerUniqueId</mca:CSharpValue>
+                                </InArgument>
+                              </local1:SendJobIdToX7.JobId>
+                              <local1:SendJobIdToX7.MachineGroup>
+                                <InArgument x:TypeArguments="pcidm:MachineGroup">
+                                  <mca:CSharpValue x:TypeArguments="pcidm:MachineGroup">MachineGroup</mca:CSharpValue>
+                                </InArgument>
+                              </local1:SendJobIdToX7.MachineGroup>
+                              <local1:SendJobIdToX7.ServiceLocator>
+                                <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                  <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                                </InArgument>
+                              </local1:SendJobIdToX7.ServiceLocator>
+                            </local1:SendJobIdToX7>
+                          </FlowStep>
+                        </FlowDecision.True>
+                        <FlowDecision.False>
+                          <FlowStep x:Name="__ReferenceID5" sap2010:WorkflowViewState.IdRef="FlowStep_12">
+                            <local1:SendJobIdToX7 DisplayName="Send job Scan failed to X7" sap2010:WorkflowViewState.IdRef="SendJobIdToX7_2" IsFailed="True">
+                              <local1:SendJobIdToX7.JobId>
+                                <InArgument x:TypeArguments="x:String">
+                                  <mca:CSharpValue x:TypeArguments="x:String">scannedData.Barcode</mca:CSharpValue>
+                                </InArgument>
+                              </local1:SendJobIdToX7.JobId>
+                              <local1:SendJobIdToX7.MachineGroup>
+                                <InArgument x:TypeArguments="pcidm:MachineGroup">
+                                  <mca:CSharpValue x:TypeArguments="pcidm:MachineGroup">MachineGroup</mca:CSharpValue>
+                                </InArgument>
+                              </local1:SendJobIdToX7.MachineGroup>
+                              <local1:SendJobIdToX7.ServiceLocator>
+                                <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                  <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                                </InArgument>
+                              </local1:SendJobIdToX7.ServiceLocator>
+                            </local1:SendJobIdToX7>
+                          </FlowStep>
+                        </FlowDecision.False>
+                      </FlowDecision>
+                    </FlowStep.Next>
+                  </FlowStep>
+                </FlowStep.Next>
+              </FlowStep>
+            </FlowStep.Next>
+          </FlowStep>
+        </FlowStep.Next>
+      </FlowStep>
+    </Flowchart.StartNode>
+    <x:Reference>__ReferenceID0</x:Reference>
+    <x:Reference>__ReferenceID1</x:Reference>
+    <x:Reference>__ReferenceID2</x:Reference>
+    <x:Reference>__ReferenceID3</x:Reference>
+    <x:Reference>__ReferenceID4</x:Reference>
+    <x:Reference>__ReferenceID5</x:Reference>
+    <x:Reference>__ReferenceID6</x:Reference>
+    <sads:DebugSymbol.Symbol>d1xDOlxERVZcYml0YnVja2V0XHBob2VuaXhcWDdTZXJ2aWNlXFdvcmtmbG93c1xYN1NjYW5UcmlnZ2VyU2NhblRvQ3JlYXRlV2l0aFRlbXBsYXRlTGFiZWwueGFtbEW5AQP5Aw8CAQHDAQnOARIDAbsE0QEN4QEkAwGZBOQBEZ8DHAMBgAGiAxW3Az8CAVO7Axu7A2UCAUjUAx3kAzQCASW/Ax3PAzQCAQLLAQ/LAY0BAwHHBMYBD8YBYwMBvATUARPUAV8DAbAE3gET3gFrAwGlBNkBE9kBcAMBmgTrARP2ARwDAfoD9wETggIcAwHbA4MCE44CHAMBvAOPAhOeAhwDAZ0DnwITqgIcAwH+AqsCE7YCHAMB3wK3AhPCAjUDAb8CwwITzgIcAwGgAs8CE+kCHAMBgQLqAhPzAhwDAfAB9AIT/wI1AwHQAYADE4sDKgMBsAGMAxOSAzsDAaABkwMTngMkAwGBAaUDG6UDbQIBda8DG68DbwIBarQDG7QDcwIBX6oDG6oDXgIBVNwDI9wDdwIBPdQDlwHUA50BAgE81wMj1wNvAgEx4QMj4QN7AgEmxwMjxwN3AgEavwOLAb8DkgECARnCAyPCA3UCAQ7MAyPMA3sCAQPzARnzAYEBAwGKBO4BGe4BZAMB+wP/ARn/AZoBAwHrA/oBGfoBcwMB3AOLAhmLAmoDAcwDhgIZhgJoAwG9A5cCGZsCxwEDAa0DkgIZkgKNAQMBngOnAhmnAmoDAY4DogIZogJsAwH/ArMCGbMCaAMB7wKuAhmuAmoDAeACvwIZvwJ+AwHQAroCGboCZAMBwQK3Any3An8DAcACywIZywJ2AwGwAsYCGcYCeAMBoQLXAhnmAhUDAZEC0gIZ0gKVAQMBggLxAj7xAkUDAYAC7QIZ7QJ5AwHxAfwCGfwChQEDAeEB9wIZ9wJkAwHSAfQCfPQCfwMB0QGIAxmIA2QDAcEBgANmgANpAwHAAYMDGYMDXAMBsQGPAxmPA1wDAaEBmwMZmwNxAwGRAZYDGZYDXAMBggE=</sads:DebugSymbol.Symbol>
+  </Flowchart>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="Assign_8" sap:VirtualizedContainerService.HintSize="242,62">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ParseScanData_1" sap:VirtualizedContainerService.HintSize="200,22">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_2" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_10" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_9" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_3" sap:VirtualizedContainerService.HintSize="242,102">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_4" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="AddProductionItemToPackage_1" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="Assign_5" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_11" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_12" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="AddProductionItemToPackage_2" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="AddPackageToJob_1" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="SetJobToWaitForProductionTrigger_1" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="CreateJob_1" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="264,1352">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="CreateProductionSetAndAddToQueue_1" sap:VirtualizedContainerService.HintSize="200,78">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="SendJobIdToX7_1" sap:VirtualizedContainerService.HintSize="200,22">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_11">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">60,710</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="SendJobIdToX7_2" sap:VirtualizedContainerService.HintSize="200,22">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_12">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">380,720</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDecision_2" sap:VirtualizedContainerService.HintSize="85,87">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">258,566.5</av:Point>
+            <av:Size x:Key="ShapeSize">85,87</av:Size>
+            <av:PointCollection x:Key="FalseConnector">342,610 480,610 480,720</av:PointCollection>
+            <av:PointCollection x:Key="TrueConnector">258,610 160,610 160,710</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">200,351</av:Point>
+            <av:Size x:Key="ShapeSize">200,78</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,429 300,459 300.5,459 300.5,566.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_7">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">200,254</av:Point>
+            <av:Size x:Key="ShapeSize">200,52</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,305 300,351</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_13">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">199.895,200.0390625</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">299.895,222.0390625 299.895,252.0390625 300,252.0390625 300,254</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_10">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">178.895,108.0390625</av:Point>
+            <av:Size x:Key="ShapeSize">242,62</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">299.895,170.0390625 299.895,200.0390625</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Flowchart_1" sap:VirtualizedContainerService.HintSize="757,827">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <av:Point x:Key="ShapeLocation">270,2.5</av:Point>
+            <av:Size x:Key="ShapeSize">60,75</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,77.5 300,107.5 299.895,107.5 299.895,108.0390625</av:PointCollection>
+            <x:Double x:Key="Width">743</x:Double>
+            <x:Double x:Key="Height">791</x:Double>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PackNet.X7Service.Workflows.X7ScanTrigger_1" sap:VirtualizedContainerService.HintSize="797,907" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

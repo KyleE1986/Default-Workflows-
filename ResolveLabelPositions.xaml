@@ -1,0 +1,181 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="PackNet.Business.CodeGenerator.WorkFlows.X4ResolveLabelPositions"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
+ xmlns:pcid="clr-namespace:PackNet.Common.Interfaces.DTO;assembly=PackNet.Common.Interfaces"
+ xmlns:pcidp="clr-namespace:PackNet.Common.Interfaces.DTO.Packages;assembly=PackNet.Common.Interfaces"
+ xmlns:pcil="clr-namespace:PackNet.Common.Interfaces.Logging;assembly=PackNet.Common.Interfaces"
+ xmlns:pcwp="clr-namespace:PackNet.Common.WorkflowActivities.Producibles;assembly=PackNet.Common"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="DesignId" Type="InArgument(x:Int32)" />
+    <x:Property Name="CartonProductionSet" Type="InArgument(pcidp:CartonProductionSet)" />
+    <x:Property Name="Logger" Type="InArgument(pcil:ILogger)" />
+    <x:Property Name="LabelPositions" Type="OutArgument(scg:List(pcid:PhysicalCoordinate))" />
+    <x:Property Name="LabelCount" Type="InArgument(x:Int32)" />
+  </x:Members>
+  <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
+  <sap2010:WorkflowViewState.IdRef>PackNet.Business.CodeGenerator.WorkFlows.ResolveLabelPositions_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Packages</x:String>
+      <x:String>PackNet.Common.Interfaces.Logging</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>Microsoft.Reactive.Testing</AssemblyReference>
+      <AssemblyReference>Moq</AssemblyReference>
+      <AssemblyReference>Newtonsoft.Json</AssemblyReference>
+      <AssemblyReference>Specificity.MSTest</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Reactive.Core</AssemblyReference>
+      <AssemblyReference>System.Reactive.Interfaces</AssemblyReference>
+      <AssemblyReference>System.Reactive.Linq</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PackNet.Business</AssemblyReference>
+      <AssemblyReference>TestUtils</AssemblyReference>
+      <AssemblyReference>PackNet.Common.Interfaces</AssemblyReference>
+      <AssemblyReference>PackNet.Common</AssemblyReference>
+      <AssemblyReference>PackNet.Communication</AssemblyReference>
+      <AssemblyReference>DataTests</AssemblyReference>
+      <AssemblyReference>PackNet.Data</AssemblyReference>
+      <AssemblyReference>PackNet.Importer</AssemblyReference>
+      <AssemblyReference>Microsoft.Consulting.Workflow.Activities</AssemblyReference>
+      <AssemblyReference>PackNet.ScandataService</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>ServicesTests</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Flowchart sap2010:WorkflowViewState.IdRef="Flowchart_1">
+    <Flowchart.StartNode>
+      <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_3">
+        <pcwp:GetLabelPlacement sap2010:Annotation.AnnotationText="Label index parameter is 0 base, first label will be 0.&#xA;Order matters, when setting the X Value, remember that the X4 doesn't support reverse" DisplayName="Get Label Placement" sap2010:WorkflowViewState.IdRef="GetLabelPlacement_3" LabelIndex="0" XFormula="W/2+H/2" YFormula="L">
+          <pcwp:GetLabelPlacement.CartonProductionSet>
+            <InArgument x:TypeArguments="pcidp:CartonProductionSet">
+              <mca:CSharpValue x:TypeArguments="pcidp:CartonProductionSet">CartonProductionSet</mca:CSharpValue>
+            </InArgument>
+          </pcwp:GetLabelPlacement.CartonProductionSet>
+          <pcwp:GetLabelPlacement.LabelPositions>
+            <InOutArgument x:TypeArguments="scg:List(pcid:PhysicalCoordinate)">
+              <mca:CSharpReference x:TypeArguments="scg:List(pcid:PhysicalCoordinate)">LabelPositions</mca:CSharpReference>
+            </InOutArgument>
+          </pcwp:GetLabelPlacement.LabelPositions>
+          <pcwp:GetLabelPlacement.Logger>
+            <InArgument x:TypeArguments="pcil:ILogger">
+              <mca:CSharpValue x:TypeArguments="pcil:ILogger">Logger</mca:CSharpValue>
+            </InArgument>
+          </pcwp:GetLabelPlacement.Logger>
+        </pcwp:GetLabelPlacement>
+        <FlowStep.Next>
+          <FlowStep x:Name="__ReferenceID1" sap2010:WorkflowViewState.IdRef="FlowStep_5">
+            <If sap2010:WorkflowViewState.IdRef="If_1">
+              <If.Condition>
+                <InArgument x:TypeArguments="x:Boolean">
+                  <mca:CSharpValue x:TypeArguments="x:Boolean">LabelCount&gt;1</mca:CSharpValue>
+                </InArgument>
+              </If.Condition>
+              <If.Then>
+                <pcwp:GetLabelPlacement sap2010:Annotation.AnnotationText="If the workflow requires more than one label just copy/paste this activity and make sure they are connected.&#xA;Remember to increase the index, don't add this inside a loop, the SIE should be able to place it anywhere in the carton." DisplayName="Get Label Placement for second label" sap2010:WorkflowViewState.IdRef="GetLabelPlacement_5" LabelIndex="1" XFormula="W/2+H/2" YFormula="2L">
+                  <pcwp:GetLabelPlacement.CartonProductionSet>
+                    <InArgument x:TypeArguments="pcidp:CartonProductionSet">
+                      <mca:CSharpValue x:TypeArguments="pcidp:CartonProductionSet">CartonProductionSet</mca:CSharpValue>
+                    </InArgument>
+                  </pcwp:GetLabelPlacement.CartonProductionSet>
+                  <pcwp:GetLabelPlacement.LabelPositions>
+                    <InOutArgument x:TypeArguments="scg:List(pcid:PhysicalCoordinate)">
+                      <mca:CSharpReference x:TypeArguments="scg:List(pcid:PhysicalCoordinate)">LabelPositions</mca:CSharpReference>
+                    </InOutArgument>
+                  </pcwp:GetLabelPlacement.LabelPositions>
+                  <pcwp:GetLabelPlacement.Logger>
+                    <InArgument x:TypeArguments="pcil:ILogger">
+                      <mca:CSharpValue x:TypeArguments="pcil:ILogger">Logger</mca:CSharpValue>
+                    </InArgument>
+                  </pcwp:GetLabelPlacement.Logger>
+                </pcwp:GetLabelPlacement>
+              </If.Then>
+            </If>
+          </FlowStep>
+        </FlowStep.Next>
+      </FlowStep>
+    </Flowchart.StartNode>
+    <x:Reference>__ReferenceID0</x:Reference>
+    <x:Reference>__ReferenceID1</x:Reference>
+    <sads:DebugSymbol.Symbol>d0xDOlxDb2RlXHBob2VuaXhcV29ya2Zsb3dzXFdvcmtmbG93c1xUZXN0V29ya2Zsb3dzXFJlc29sdmVMYWJlbFBvc2l0aW9ucy54YW1sEUYDfQ8CAQFJCVkiAgEfXA11EgIBAknHAknQAgIBNEwPTHECAS5WD1ZXAgEoUQ9RfAIBIkm6Akm9AgIBIUnaAkndAgIBIF8TX2ECAQNjEXMqAgEJY7gDY8EDAgEeZhdmeQIBGHAXcF8CARJrF2uEAQIBDGOrA2OuAwIBC2PLA2PPAwIBCg==</sads:DebugSymbol.Symbol>
+  </Flowchart>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="GetLabelPlacement_3" sap:VirtualizedContainerService.HintSize="200,130">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="GetLabelPlacement_5" sap:VirtualizedContainerService.HintSize="200,180">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_1" sap:VirtualizedContainerService.HintSize="200,52.6666666666667">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_5">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">200,344.5</av:Point>
+            <av:Size x:Key="ShapeSize">200,52.6666666666667</av:Size>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_3">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">200,139</av:Point>
+            <av:Size x:Key="ShapeSize">200,130</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,269 300,344.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Flowchart_1" sap:VirtualizedContainerService.HintSize="614,688.666666666667">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <av:Point x:Key="ShapeLocation">270,2.5</av:Point>
+            <av:Size x:Key="ShapeSize">60,74.6666666666667</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,77.5 300,139</av:PointCollection>
+            <x:Double x:Key="Height">652.5</x:Double>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PackNet.Business.CodeGenerator.WorkFlows.ResolveLabelPositions_1" sap:VirtualizedContainerService.HintSize="654,768.666666666667" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

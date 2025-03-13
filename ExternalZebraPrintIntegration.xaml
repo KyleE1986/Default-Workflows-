@@ -1,0 +1,436 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="ExternalZebraPrintIntegration.WorkFlows.ExternalSystems.ExternalZebraPrintIntegration"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:local="clr-namespace:ExternalZebraPrintIntegration.CodeActivities;assembly=ExternalZebraPrintIntegration"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
+ xmlns:pcide="clr-namespace:PackNet.Common.Interfaces.DTO.ExternalSystems;assembly=PackNet.Common.Interfaces"
+ xmlns:pcidm="clr-namespace:PackNet.Common.Interfaces.DTO.Messaging;assembly=PackNet.Common.Interfaces"
+ xmlns:pcidp="clr-namespace:PackNet.Common.Interfaces.DTO.Packages;assembly=PackNet.Common.Interfaces"
+ xmlns:pcim="clr-namespace:PackNet.Common.Interfaces.Machines;assembly=PackNet.Common.Interfaces"
+ xmlns:pcis="clr-namespace:PackNet.Common.Interfaces.Services;assembly=PackNet.Common.Interfaces"
+ xmlns:pcw="clr-namespace:PackNet.Common.WorkflowActivities;assembly=PackNet.Common"
+ xmlns:s="clr-namespace:System;assembly=mscorlib"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="ServiceLocator" Type="InArgument(pcis:IServiceLocator)" />
+    <x:Property Name="Message" Type="InArgument(pcidm:IMessage)" />
+    <x:Property Name="ExternalCustomerSystem" Type="InArgument(pcide:ExternalCustomerSystem)" />
+  </x:Members>
+  <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
+  <sap2010:WorkflowViewState.IdRef>ExternalZebraPrintIntegration.WorkFlows.ExternalSystems.ExternalPrint_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>PackNet.Common.Interfaces.Eventing</x:String>
+      <x:String>PackNet.Common.Interfaces.Services</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.ExternalSystems</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Messaging</x:String>
+      <x:String>PackNet.Common.Interfaces.Enums</x:String>
+      <x:String>PackNet.Common.Interfaces.Producible</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Packages</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Packages.ProductionStates</x:String>
+      <x:String>PackNet.Common.Interfaces.Machines</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>PackNet.Common.Interfaces</AssemblyReference>
+      <AssemblyReference>PackNet.Common</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>ExternalZebraPrintIntegration</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Flowchart sap2010:WorkflowViewState.IdRef="Flowchart_1">
+    <Flowchart.Variables>
+      <Variable x:TypeArguments="pcidp:LabelProductionSet" Name="labelProductionSet" />
+      <Variable x:TypeArguments="pcidp:CartonProductionSet" Name="cartonProductionSet" />
+      <Variable x:TypeArguments="x:String" Default="%[SequenceNumber]" Name="sequenceNumberToken" />
+    </Flowchart.Variables>
+    <Flowchart.StartNode>
+      <FlowDecision x:Name="__ReferenceID0" DisplayName="Is Print Request?" sap2010:WorkflowViewState.IdRef="FlowDecision_2">
+        <FlowDecision.Condition>
+          <mca:CSharpValue x:TypeArguments="x:Boolean">Message.MessageType == ExternalCustomerSystemMessages.ExternalPrint</mca:CSharpValue>
+        </FlowDecision.Condition>
+        <FlowDecision.True>
+          <FlowStep x:Name="__ReferenceID2" sap2010:WorkflowViewState.IdRef="FlowStep_20">
+            <pcw:GetDataFromMessage x:TypeArguments="pcidp:LabelProductionSet" DisplayName="Get Label Production Set" sap2010:WorkflowViewState.IdRef="GetDataFromMessage`1_1">
+              <pcw:GetDataFromMessage.Data>
+                <OutArgument x:TypeArguments="pcidp:LabelProductionSet">
+                  <mca:CSharpReference x:TypeArguments="pcidp:LabelProductionSet">labelProductionSet</mca:CSharpReference>
+                </OutArgument>
+              </pcw:GetDataFromMessage.Data>
+              <pcw:GetDataFromMessage.Message>
+                <InArgument x:TypeArguments="pcidm:IMessage">
+                  <mca:CSharpValue x:TypeArguments="pcidm:IMessage">Message</mca:CSharpValue>
+                </InArgument>
+              </pcw:GetDataFromMessage.Message>
+            </pcw:GetDataFromMessage>
+            <FlowStep.Next>
+              <FlowStep x:Name="__ReferenceID1" sap2010:WorkflowViewState.IdRef="FlowStep_19">
+                <ForEach x:TypeArguments="pcidp:ProductionItem" DisplayName="Format and send label print request" sap2010:WorkflowViewState.IdRef="ForEach`1_1">
+                  <ForEach.Values>
+                    <InArgument x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">
+                      <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">labelProductionSet.ProductionItems</mca:CSharpValue>
+                    </InArgument>
+                  </ForEach.Values>
+                  <ActivityAction x:TypeArguments="pcidp:ProductionItem">
+                    <ActivityAction.Argument>
+                      <DelegateInArgument x:TypeArguments="pcidp:ProductionItem" Name="labelProductionItem" />
+                    </ActivityAction.Argument>
+                    <Sequence sap2010:WorkflowViewState.IdRef="Sequence_1">
+                      <Sequence.Variables>
+                        <Variable x:TypeArguments="x:String" Name="message">
+                          <Variable.Default>
+                            <mca:CSharpValue x:TypeArguments="x:String">string.Empty</mca:CSharpValue>
+                          </Variable.Default>
+                        </Variable>
+                        <Variable x:TypeArguments="pcidp:ExternalLabelPrintRequest" Name="label" />
+                        <Variable x:TypeArguments="x:Int32" Default="1" Name="produceCount" />
+                        <Variable x:TypeArguments="pcim:IMachine" Name="machine" />
+                      </Sequence.Variables>
+                      <Assign sap2010:WorkflowViewState.IdRef="Assign_3">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:Int32">
+                            <mca:CSharpReference x:TypeArguments="x:Int32">produceCount</mca:CSharpReference>
+                          </OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:Int32">
+                            <mca:CSharpValue x:TypeArguments="x:Int32">labelProductionItem.History.Count(ph =&gt; ph.NewStatus == CompletedProductionStatuses.Completed) + 1</mca:CSharpValue>
+                          </InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <Assign sap2010:WorkflowViewState.IdRef="Assign_1">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="pcidp:ExternalLabelPrintRequest">
+                            <mca:CSharpReference x:TypeArguments="pcidp:ExternalLabelPrintRequest">label</mca:CSharpReference>
+                          </OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="pcidp:ExternalLabelPrintRequest">
+                            <mca:CSharpValue x:TypeArguments="pcidp:ExternalLabelPrintRequest">labelProductionItem.Product as ExternalLabelPrintRequest</mca:CSharpValue>
+                          </InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <pcw:GetMachineFromId sap2010:WorkflowViewState.IdRef="GetMachineFromId_1">
+                        <pcw:GetMachineFromId.Machine>
+                          <OutArgument x:TypeArguments="pcim:IMachine">
+                            <mca:CSharpReference x:TypeArguments="pcim:IMachine">machine</mca:CSharpReference>
+                          </OutArgument>
+                        </pcw:GetMachineFromId.Machine>
+                        <pcw:GetMachineFromId.MachineId>
+                          <InArgument x:TypeArguments="s:Guid">
+                            <mca:CSharpValue x:TypeArguments="s:Guid">labelProductionSet.ProduceOnMachineId</mca:CSharpValue>
+                          </InArgument>
+                        </pcw:GetMachineFromId.MachineId>
+                        <pcw:GetMachineFromId.ServiceLocator>
+                          <InArgument x:TypeArguments="pcis:IServiceLocator">
+                            <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                          </InArgument>
+                        </pcw:GetMachineFromId.ServiceLocator>
+                      </pcw:GetMachineFromId>
+                      <Assign sap2010:WorkflowViewState.IdRef="Assign_2">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:String">
+                            <mca:CSharpReference x:TypeArguments="x:String">message</mca:CSharpReference>
+                          </OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:String">
+                            <mca:CSharpValue x:TypeArguments="x:String" xml:space="preserve">string.Format("\x0002{0}RLP;{1};{2};{3};{4};{5};{6}\x0003", 
+                sequenceNumberToken, 
+                label.PrintVariables["SerialNumber"].PadLeft(20,'0'), 
+                label.PrintVariables["Length"], 
+                label.PrintVariables["Width"], 
+                label.PrintVariables["Height"], 
+                machine.Alias,
+                produceCount)</mca:CSharpValue>
+                          </InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <local:SendMessageForExternalZebraPrint sap2010:WorkflowViewState.IdRef="SendMessageToExternalZebraPrint_1">
+                        <local:SendMessageForExternalZebraPrint.ExternalCustomerSystem>
+                          <InArgument x:TypeArguments="pcide:ExternalCustomerSystem">
+                            <mca:CSharpValue x:TypeArguments="pcide:ExternalCustomerSystem">ExternalCustomerSystem</mca:CSharpValue>
+                          </InArgument>
+                        </local:SendMessageForExternalZebraPrint.ExternalCustomerSystem>
+                        <local:SendMessageForExternalZebraPrint.Message>
+                          <InArgument x:TypeArguments="x:String">
+                            <mca:CSharpValue x:TypeArguments="x:String">message</mca:CSharpValue>
+                          </InArgument>
+                        </local:SendMessageForExternalZebraPrint.Message>
+                        <local:SendMessageForExternalZebraPrint.SequenceNumberToken>
+                          <InArgument x:TypeArguments="x:String">
+                            <mca:CSharpValue x:TypeArguments="x:String">sequenceNumberToken</mca:CSharpValue>
+                          </InArgument>
+                        </local:SendMessageForExternalZebraPrint.SequenceNumberToken>
+                        <local:SendMessageForExternalZebraPrint.ServiceLocator>
+                          <InArgument x:TypeArguments="pcis:IServiceLocator">
+                            <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                          </InArgument>
+                        </local:SendMessageForExternalZebraPrint.ServiceLocator>
+                      </local:SendMessageForExternalZebraPrint>
+                    </Sequence>
+                  </ActivityAction>
+                </ForEach>
+              </FlowStep>
+            </FlowStep.Next>
+          </FlowStep>
+        </FlowDecision.True>
+        <FlowDecision.False>
+          <FlowDecision x:Name="__ReferenceID3" DisplayName="Is Print Request?" sap2010:WorkflowViewState.IdRef="FlowDecision_3">
+            <FlowDecision.Condition>
+              <mca:CSharpValue x:TypeArguments="x:Boolean">Message.MessageType == ExternalCustomerSystemMessages.ReportProductionComplete</mca:CSharpValue>
+            </FlowDecision.Condition>
+            <FlowDecision.True>
+              <FlowStep x:Name="__ReferenceID4" sap2010:WorkflowViewState.IdRef="FlowStep_22">
+                <pcw:GetDataFromMessage x:TypeArguments="pcidp:CartonProductionSet" DisplayName="Get Carton Production Set" sap2010:WorkflowViewState.IdRef="GetDataFromMessage`1_2">
+                  <pcw:GetDataFromMessage.Data>
+                    <OutArgument x:TypeArguments="pcidp:CartonProductionSet">
+                      <mca:CSharpReference x:TypeArguments="pcidp:CartonProductionSet">cartonProductionSet</mca:CSharpReference>
+                    </OutArgument>
+                  </pcw:GetDataFromMessage.Data>
+                  <pcw:GetDataFromMessage.Message>
+                    <InArgument x:TypeArguments="pcidm:IMessage">
+                      <mca:CSharpValue x:TypeArguments="pcidm:IMessage">Message</mca:CSharpValue>
+                    </InArgument>
+                  </pcw:GetDataFromMessage.Message>
+                </pcw:GetDataFromMessage>
+                <FlowStep.Next>
+                  <FlowStep x:Name="__ReferenceID5" sap2010:WorkflowViewState.IdRef="FlowStep_21">
+                    <ForEach x:TypeArguments="pcidp:ProductionItem" DisplayName="Format and send report carton produced" sap2010:WorkflowViewState.IdRef="ForEach`1_2">
+                      <ForEach.Values>
+                        <InArgument x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">
+                          <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:ProductionItem)">cartonProductionSet.ProductionItems</mca:CSharpValue>
+                        </InArgument>
+                      </ForEach.Values>
+                      <ActivityAction x:TypeArguments="pcidp:ProductionItem">
+                        <ActivityAction.Argument>
+                          <DelegateInArgument x:TypeArguments="pcidp:ProductionItem" Name="cartonProductionItem" />
+                        </ActivityAction.Argument>
+                        <Sequence sap2010:WorkflowViewState.IdRef="Sequence_2">
+                          <Sequence.Variables>
+                            <Variable x:TypeArguments="x:String" Name="message">
+                              <Variable.Default>
+                                <mca:CSharpValue x:TypeArguments="x:String">string.Empty</mca:CSharpValue>
+                              </Variable.Default>
+                            </Variable>
+                            <Variable x:TypeArguments="pcidp:Carton" Name="carton" />
+                            <Variable x:TypeArguments="x:Int32" Default="1" Name="produceCount" />
+                          </Sequence.Variables>
+                          <Assign sap2010:WorkflowViewState.IdRef="Assign_4">
+                            <Assign.To>
+                              <OutArgument x:TypeArguments="x:Int32">
+                                <mca:CSharpReference x:TypeArguments="x:Int32">produceCount</mca:CSharpReference>
+                              </OutArgument>
+                            </Assign.To>
+                            <Assign.Value>
+                              <InArgument x:TypeArguments="x:Int32">
+                                <mca:CSharpValue x:TypeArguments="x:Int32">cartonProductionItem.History.Count(ph =&gt; ph.NewStatus == CompletedProductionStatuses.Completed) + 1</mca:CSharpValue>
+                              </InArgument>
+                            </Assign.Value>
+                          </Assign>
+                          <Assign sap2010:WorkflowViewState.IdRef="Assign_5">
+                            <Assign.To>
+                              <OutArgument x:TypeArguments="pcidp:Carton">
+                                <mca:CSharpReference x:TypeArguments="pcidp:Carton">carton</mca:CSharpReference>
+                              </OutArgument>
+                            </Assign.To>
+                            <Assign.Value>
+                              <InArgument x:TypeArguments="pcidp:Carton">
+                                <mca:CSharpValue x:TypeArguments="pcidp:Carton">cartonProductionItem.Product as Carton</mca:CSharpValue>
+                              </InArgument>
+                            </Assign.Value>
+                          </Assign>
+                          <Assign sap2010:WorkflowViewState.IdRef="Assign_6">
+                            <Assign.To>
+                              <OutArgument x:TypeArguments="x:String">
+                                <mca:CSharpReference x:TypeArguments="x:String">message</mca:CSharpReference>
+                              </OutArgument>
+                            </Assign.To>
+                            <Assign.Value>
+                              <InArgument x:TypeArguments="x:String">
+                                <mca:CSharpValue x:TypeArguments="x:String" xml:space="preserve">string.Format("\x0002{0}RCP;{1};{2};{3};{4};{5}\x0003", 
+                sequenceNumberToken, 
+                cartonProductionItem.Package.Job.CustomerUniqueId, 
+                carton.Dimensions.Length,
+                carton.Dimensions.Width,
+                carton.Dimensions.Height, 
+                produceCount)</mca:CSharpValue>
+                              </InArgument>
+                            </Assign.Value>
+                          </Assign>
+                          <local:SendMessageForExternalZebraPrint sap2010:WorkflowViewState.IdRef="SendMessageToExternalZebraPrint_2">
+                            <local:SendMessageForExternalZebraPrint.ExternalCustomerSystem>
+                              <InArgument x:TypeArguments="pcide:ExternalCustomerSystem">
+                                <mca:CSharpValue x:TypeArguments="pcide:ExternalCustomerSystem">ExternalCustomerSystem</mca:CSharpValue>
+                              </InArgument>
+                            </local:SendMessageForExternalZebraPrint.ExternalCustomerSystem>
+                            <local:SendMessageForExternalZebraPrint.Message>
+                              <InArgument x:TypeArguments="x:String">
+                                <mca:CSharpValue x:TypeArguments="x:String">message</mca:CSharpValue>
+                              </InArgument>
+                            </local:SendMessageForExternalZebraPrint.Message>
+                            <local:SendMessageForExternalZebraPrint.SequenceNumberToken>
+                              <InArgument x:TypeArguments="x:String">
+                                <mca:CSharpValue x:TypeArguments="x:String">sequenceNumberToken</mca:CSharpValue>
+                              </InArgument>
+                            </local:SendMessageForExternalZebraPrint.SequenceNumberToken>
+                            <local:SendMessageForExternalZebraPrint.ServiceLocator>
+                              <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                              </InArgument>
+                            </local:SendMessageForExternalZebraPrint.ServiceLocator>
+                          </local:SendMessageForExternalZebraPrint>
+                        </Sequence>
+                      </ActivityAction>
+                    </ForEach>
+                  </FlowStep>
+                </FlowStep.Next>
+              </FlowStep>
+            </FlowDecision.True>
+          </FlowDecision>
+        </FlowDecision.False>
+      </FlowDecision>
+    </Flowchart.StartNode>
+    <x:Reference>__ReferenceID0</x:Reference>
+    <x:Reference>__ReferenceID1</x:Reference>
+    <x:Reference>__ReferenceID2</x:Reference>
+    <x:Reference>__ReferenceID3</x:Reference>
+    <x:Reference>__ReferenceID4</x:Reference>
+    <x:Reference>__ReferenceID5</x:Reference>
+    <sads:DebugSymbol.Symbol>d2xROlxTb3VyY2VcUGFja05ldFxFeHRlcm5hbFplYnJhUHJpbnRJbnRlZ3JhdGlvblxXb3JrRmxvd3NcRXh0ZXJuYWxTeXN0ZW1zXEV4dGVybmFsWmVicmFQcmludEludGVncmF0aW9uLnhhbWw0QQPFAg8CAQFFNEVHAgECSgtKjQEDAeYCzQEPzQGcAQMB3wLRARHcASoDAdAC3wEVtQIfAwHJAU4NWSYDAboBXBHFARsCAQPZARfZAWIDAdgC1AEX1AGBAQMB0QLiARviAZkBAwHJAukBGbMCJAMBygFWE1ZeAwHCAVETUXsDAbsBXxdflAEDAbMBZhXDASACAQTtASHtAWsDAcwB8QFJ8QFMAwHLAfMBG/4BJAMBsgL/ARuKAiQDAZsCiwIbnAIkAwGEAp0CG7ICRAMB1wFqHWpnAgEGbkVuSAIBBXEXfCADAZoBfReIASADAYEBiQEXmQEuAgFcmgEXrAEgAgFDrQEXwgFAAgES+wEh+wHCAQMBvgL2ASH2AXIDAbMChwIhhwKJAQMBpwKCAiGCAnEDAZwCkwIhmQIwAwGQAo4CIY4CbgMBhQKlAiGlAmYDAfkBoAIhoAKJAQMB7gGqAiGqAnIDAeMBrwIhrwJ5AwHYAXkdeb0BAwGnAXQddG4DAZsBhQEdhQGqAQMBjgGAAR2AAX8DAYIBjAEdjAFvAgF1lgEdlgF1AgFpkQEdkQF+AgFdogEdqQEwAgFQnQEdnQFqAgFEtQEdtQFiAgE3sAEdsAGFAQIBK7oBHboBbgIBH78BHb8BdQIBEw==</sads:DebugSymbol.Symbol>
+  </Flowchart>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="GetDataFromMessage`1_1" sap:VirtualizedContainerService.HintSize="200,22">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_3" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="GetMachineFromId_1" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="Assign_2" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="SendMessageToExternalZebraPrint_1" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="264,514">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEach`1_1" sap:VirtualizedContainerService.HintSize="294,664" />
+      <sap2010:ViewStateData Id="FlowStep_19">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">30.0166666666667,299.04</av:Point>
+            <av:Size x:Key="ShapeSize">200,51</av:Size>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_20">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">30,199</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">130,221 130,251 130.016666666667,251 130.016666666667,299.04</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="GetDataFromMessage`1_2" sap:VirtualizedContainerService.HintSize="200,22">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_4" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_5" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="Assign_6" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="SendMessageToExternalZebraPrint_2" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="264,452">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEach`1_2" sap:VirtualizedContainerService.HintSize="200,51" />
+      <sap2010:ViewStateData Id="FlowStep_21">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">350,324.5</av:Point>
+            <av:Size x:Key="ShapeSize">200,51</av:Size>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_22">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">350,239</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">450,261 450,324.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDecision_3" sap:VirtualizedContainerService.HintSize="90,87">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">505,96.5</av:Point>
+            <av:Size x:Key="ShapeSize">90,87</av:Size>
+            <av:PointCollection x:Key="FalseConnector">345,150 560,150 560,309</av:PointCollection>
+            <av:PointCollection x:Key="TrueConnector">505,140 450,140 450,239</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDecision_2" sap:VirtualizedContainerService.HintSize="90,87">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">245,96.5</av:Point>
+            <av:Size x:Key="ShapeSize">90,87</av:Size>
+            <av:PointCollection x:Key="FalseConnector">335,140 365,140 365,66.5 550,66.5 550,96.5</av:PointCollection>
+            <av:PointCollection x:Key="TrueConnector">245,140 130,140 130,199</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Flowchart_1" sap:VirtualizedContainerService.HintSize="724,636">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <av:Point x:Key="ShapeLocation">260,0</av:Point>
+            <av:Size x:Key="ShapeSize">60,75</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">290,75 290,96.5</av:PointCollection>
+            <x:Double x:Key="Width">710</x:Double>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ExternalZebraPrintIntegration.WorkFlows.ExternalSystems.ExternalPrint_1" sap:VirtualizedContainerService.HintSize="764,716" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

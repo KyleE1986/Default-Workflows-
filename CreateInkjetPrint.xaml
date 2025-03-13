@@ -1,0 +1,358 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="Workflows.Workflows.ImportPlugins.CreateInkjetPrint"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
+ xmlns:pcidp="clr-namespace:PackNet.Common.Interfaces.DTO.Packages;assembly=PackNet.Common.Interfaces"
+ xmlns:pcis="clr-namespace:PackNet.Common.Interfaces.Services;assembly=PackNet.Common.Interfaces"
+ xmlns:pcw="clr-namespace:PackNet.Common.WorkflowActivities;assembly=PackNet.Common"
+ xmlns:pcwr="clr-namespace:PackNet.Common.WorkflowActivities.Restrictions;assembly=PackNet.Common"
+ xmlns:ppaw="clr-namespace:PackNet.Plugins.ArticleService.WorkflowCodeActivities;assembly=PackNet.Plugins.ArticleService"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="ServiceLocator" Type="InArgument(pcis:IServiceLocator)" />
+    <x:Property Name="Row" Type="InArgument(scg:IDictionary(x:String, x:String))" />
+    <x:Property Name="ProductionItem" Type="InArgument(pcidp:ProductionItem)" />
+  </x:Members>
+  <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
+  <sap2010:WorkflowViewState.IdRef>Workflows.Workflows.ImportPlugins.CreateInkjetPrint_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>PackNet.Common.Interfaces.Services</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Packages</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Newtonsoft.Json</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Net.Http</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PackNet.Plugins.ArticleService</AssemblyReference>
+      <AssemblyReference>CartonPropertyGroupService</AssemblyReference>
+      <AssemblyReference>PackNet.Common.Interfaces</AssemblyReference>
+      <AssemblyReference>PackNet.Common</AssemblyReference>
+      <AssemblyReference>ExternalZebraPrintIntegration</AssemblyReference>
+      <AssemblyReference>PackNet.IODeviceService</AssemblyReference>
+      <AssemblyReference>PackNet.KvmService</AssemblyReference>
+      <AssemblyReference>RestrictionService</AssemblyReference>
+      <AssemblyReference>PackNet.ScandataService</AssemblyReference>
+      <AssemblyReference>Microsoft.Consulting.Workflow.Activities</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>Workflows</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="externalPrintServiceName">
+        <Variable.Default>
+          <mca:CSharpValue x:TypeArguments="x:String">string.Empty</mca:CSharpValue>
+        </Variable.Default>
+      </Variable>
+    </Sequence.Variables>
+    <If sap2010:WorkflowViewState.IdRef="If_1">
+      <If.Condition>
+        <InArgument x:TypeArguments="x:Boolean">
+          <mca:CSharpValue x:TypeArguments="x:Boolean">string.IsNullOrWhiteSpace(externalPrintServiceName)</mca:CSharpValue>
+        </InArgument>
+      </If.Condition>
+      <If.Then>
+        <Sequence DisplayName="Create Template Label" sap2010:WorkflowViewState.IdRef="Sequence_3">
+          <Sequence.Variables>
+            <Variable x:TypeArguments="pcidp:TemplateLabel" Name="templateLabel">
+              <Variable.Default>
+                <mca:CSharpValue x:TypeArguments="pcidp:TemplateLabel">new TemplateLabel()</mca:CSharpValue>
+              </Variable.Default>
+            </Variable>
+            <Variable x:TypeArguments="scg:Dictionary(x:String, x:String)" Name="printDataHeaders" />
+            <Variable x:TypeArguments="scg:Dictionary(x:String, x:String)" Name="printData" />
+          </Sequence.Variables>
+          <pcw:ImportFieldLookup x:TypeArguments="x:String" DefaultValue="DefaultLicensePlate" DisplayName="Set Template" FieldToRetrieve="Template" sap2010:WorkflowViewState.IdRef="ImportFieldLookup`1_1">
+            <pcw:ImportFieldLookup.OutputValue>
+              <OutArgument x:TypeArguments="x:String">
+                <mca:CSharpReference x:TypeArguments="x:String">templateLabel.TemplateName</mca:CSharpReference>
+              </OutArgument>
+            </pcw:ImportFieldLookup.OutputValue>
+            <pcw:ImportFieldLookup.Row>
+              <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+                <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">Row</mca:CSharpValue>
+              </InArgument>
+            </pcw:ImportFieldLookup.Row>
+          </pcw:ImportFieldLookup>
+          <pcw:ImportFieldLookup x:TypeArguments="x:String" DisplayName="Set CustomerUniqueId" FieldToRetrieve="Template" sap2010:WorkflowViewState.IdRef="ImportFieldLookup`1_2">
+            <pcw:ImportFieldLookup.DefaultValue>
+              <InArgument x:TypeArguments="x:String">
+                <mca:CSharpValue x:TypeArguments="x:String">string.Empty</mca:CSharpValue>
+              </InArgument>
+            </pcw:ImportFieldLookup.DefaultValue>
+            <pcw:ImportFieldLookup.OutputValue>
+              <OutArgument x:TypeArguments="x:String">
+                <mca:CSharpReference x:TypeArguments="x:String">templateLabel.PrintVariables["CustomerUniqueId"]</mca:CSharpReference>
+              </OutArgument>
+            </pcw:ImportFieldLookup.OutputValue>
+            <pcw:ImportFieldLookup.Row>
+              <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+                <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">Row</mca:CSharpValue>
+              </InArgument>
+            </pcw:ImportFieldLookup.Row>
+          </pcw:ImportFieldLookup>
+          <ppaw:GetHeadersStartingOrEndingWith sap2010:WorkflowViewState.IdRef="GetHeadersStartingOrEndingWith_1">
+            <ppaw:GetHeadersStartingOrEndingWith.Dictionary>
+              <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+                <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">Row</mca:CSharpValue>
+              </InArgument>
+            </ppaw:GetHeadersStartingOrEndingWith.Dictionary>
+            <ppaw:GetHeadersStartingOrEndingWith.HeaderEndsWith>
+              <InArgument x:TypeArguments="x:String">
+                <Literal x:TypeArguments="x:String" Value="" />
+              </InArgument>
+            </ppaw:GetHeadersStartingOrEndingWith.HeaderEndsWith>
+            <ppaw:GetHeadersStartingOrEndingWith.HeaderStartsWith>
+              <InArgument x:TypeArguments="x:String">
+                <Literal x:TypeArguments="x:String" Value="" />
+              </InArgument>
+            </ppaw:GetHeadersStartingOrEndingWith.HeaderStartsWith>
+            <ppaw:GetHeadersStartingOrEndingWith.OutputValue>
+              <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">
+                <mca:CSharpReference x:TypeArguments="scg:Dictionary(x:String, x:String)">printDataHeaders</mca:CSharpReference>
+              </OutArgument>
+            </ppaw:GetHeadersStartingOrEndingWith.OutputValue>
+          </ppaw:GetHeadersStartingOrEndingWith>
+          <pcw:GetPrintDataForTemplate sap2010:WorkflowViewState.IdRef="GetPrintDataForTemplate_1">
+            <pcw:GetPrintDataForTemplate.ImportedPrintData>
+              <InArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">
+                <mca:CSharpValue x:TypeArguments="scg:Dictionary(x:String, x:String)">printDataHeaders</mca:CSharpValue>
+              </InArgument>
+            </pcw:GetPrintDataForTemplate.ImportedPrintData>
+            <pcw:GetPrintDataForTemplate.Result>
+              <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">
+                <mca:CSharpReference x:TypeArguments="scg:Dictionary(x:String, x:String)">printData</mca:CSharpReference>
+              </OutArgument>
+            </pcw:GetPrintDataForTemplate.Result>
+            <pcw:GetPrintDataForTemplate.ServiceLocator>
+              <InArgument x:TypeArguments="pcis:IServiceLocator">
+                <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+              </InArgument>
+            </pcw:GetPrintDataForTemplate.ServiceLocator>
+            <pcw:GetPrintDataForTemplate.TemplateName>
+              <InArgument x:TypeArguments="x:String">
+                <mca:CSharpValue x:TypeArguments="x:String">templateLabel.TemplateName</mca:CSharpValue>
+              </InArgument>
+            </pcw:GetPrintDataForTemplate.TemplateName>
+          </pcw:GetPrintDataForTemplate>
+          <ForEach x:TypeArguments="x:String" DisplayName="ForEach&lt;String&gt;" sap2010:WorkflowViewState.IdRef="ForEach`1_1">
+            <ForEach.Values>
+              <InArgument x:TypeArguments="scg:IEnumerable(x:String)">
+                <mca:CSharpValue x:TypeArguments="scg:IEnumerable(x:String)">printData.Keys</mca:CSharpValue>
+              </InArgument>
+            </ForEach.Values>
+            <ActivityAction x:TypeArguments="x:String">
+              <ActivityAction.Argument>
+                <DelegateInArgument x:TypeArguments="x:String" Name="key" />
+              </ActivityAction.Argument>
+              <pcw:ImportFieldLookup x:TypeArguments="x:String" DisplayName="Set Print Variable" sap2010:WorkflowViewState.IdRef="ImportFieldLookup`1_4">
+                <pcw:ImportFieldLookup.DefaultValue>
+                  <InArgument x:TypeArguments="x:String">
+                    <mca:CSharpValue x:TypeArguments="x:String">string.Empty</mca:CSharpValue>
+                  </InArgument>
+                </pcw:ImportFieldLookup.DefaultValue>
+                <pcw:ImportFieldLookup.FieldToRetrieve>
+                  <InArgument x:TypeArguments="x:String">
+                    <mca:CSharpValue x:TypeArguments="x:String">key</mca:CSharpValue>
+                  </InArgument>
+                </pcw:ImportFieldLookup.FieldToRetrieve>
+                <pcw:ImportFieldLookup.OutputValue>
+                  <OutArgument x:TypeArguments="x:String">
+                    <mca:CSharpReference x:TypeArguments="x:String">templateLabel.PrintVariables[key]</mca:CSharpReference>
+                  </OutArgument>
+                </pcw:ImportFieldLookup.OutputValue>
+                <pcw:ImportFieldLookup.Row>
+                  <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+                    <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">Row</mca:CSharpValue>
+                  </InArgument>
+                </pcw:ImportFieldLookup.Row>
+              </pcw:ImportFieldLookup>
+            </ActivityAction>
+          </ForEach>
+          <pcwr:AddPrintOnCartonRestriction sap2010:WorkflowViewState.IdRef="AddPrintOnCartonRestriction_1">
+            <pcwr:AddPrintOnCartonRestriction.ProductionItem>
+              <InArgument x:TypeArguments="pcidp:Restrictable">
+                <mca:CSharpValue x:TypeArguments="pcidp:Restrictable">ProductionItem</mca:CSharpValue>
+              </InArgument>
+            </pcwr:AddPrintOnCartonRestriction.ProductionItem>
+            <pcwr:AddPrintOnCartonRestriction.Value>
+              <InArgument x:TypeArguments="pcidp:LabelPrintRequest">
+                <mca:CSharpValue x:TypeArguments="pcidp:LabelPrintRequest">templateLabel</mca:CSharpValue>
+              </InArgument>
+            </pcwr:AddPrintOnCartonRestriction.Value>
+          </pcwr:AddPrintOnCartonRestriction>
+        </Sequence>
+      </If.Then>
+      <If.Else>
+        <Sequence DisplayName="Create External Print" sap2010:WorkflowViewState.IdRef="Sequence_4">
+          <Sequence.Variables>
+            <Variable x:TypeArguments="pcidp:ExternalLabelPrintRequest" Name="labelPrintRequest">
+              <Variable.Default>
+                <mca:CSharpValue x:TypeArguments="pcidp:ExternalLabelPrintRequest">new ExternalLabelPrintRequest()</mca:CSharpValue>
+              </Variable.Default>
+            </Variable>
+          </Sequence.Variables>
+          <Assign sap2010:WorkflowViewState.IdRef="Assign_1">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:String">
+                <mca:CSharpReference x:TypeArguments="x:String">labelPrintRequest.ExternalSystemName</mca:CSharpReference>
+              </OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:String">
+                <mca:CSharpValue x:TypeArguments="x:String">externalPrintServiceName</mca:CSharpValue>
+              </InArgument>
+            </Assign.Value>
+          </Assign>
+          <pcw:ImportFieldLookup x:TypeArguments="x:String" DisplayName="Set Serial Number" FieldToRetrieve="CustomerUniqueId" sap2010:WorkflowViewState.IdRef="ImportFieldLookup`1_5">
+            <pcw:ImportFieldLookup.DefaultValue>
+              <InArgument x:TypeArguments="x:String">
+                <mca:CSharpValue x:TypeArguments="x:String">string.Empty</mca:CSharpValue>
+              </InArgument>
+            </pcw:ImportFieldLookup.DefaultValue>
+            <pcw:ImportFieldLookup.OutputValue>
+              <OutArgument x:TypeArguments="x:String">
+                <mca:CSharpReference x:TypeArguments="x:String">labelPrintRequest.PrintVariables["SerialNumber"]</mca:CSharpReference>
+              </OutArgument>
+            </pcw:ImportFieldLookup.OutputValue>
+            <pcw:ImportFieldLookup.Row>
+              <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+                <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">Row</mca:CSharpValue>
+              </InArgument>
+            </pcw:ImportFieldLookup.Row>
+          </pcw:ImportFieldLookup>
+          <pcw:ImportFieldLookup x:TypeArguments="x:String" DisplayName="Set Length" FieldToRetrieve="Length" sap2010:WorkflowViewState.IdRef="ImportFieldLookup`1_6">
+            <pcw:ImportFieldLookup.DefaultValue>
+              <InArgument x:TypeArguments="x:String">
+                <mca:CSharpValue x:TypeArguments="x:String">string.Empty</mca:CSharpValue>
+              </InArgument>
+            </pcw:ImportFieldLookup.DefaultValue>
+            <pcw:ImportFieldLookup.OutputValue>
+              <OutArgument x:TypeArguments="x:String">
+                <mca:CSharpReference x:TypeArguments="x:String">labelPrintRequest.PrintVariables["Length"]</mca:CSharpReference>
+              </OutArgument>
+            </pcw:ImportFieldLookup.OutputValue>
+            <pcw:ImportFieldLookup.Row>
+              <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+                <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">Row</mca:CSharpValue>
+              </InArgument>
+            </pcw:ImportFieldLookup.Row>
+          </pcw:ImportFieldLookup>
+          <pcw:ImportFieldLookup x:TypeArguments="x:String" DisplayName="Set Width" FieldToRetrieve="Width" sap2010:WorkflowViewState.IdRef="ImportFieldLookup`1_7">
+            <pcw:ImportFieldLookup.DefaultValue>
+              <InArgument x:TypeArguments="x:String">
+                <mca:CSharpValue x:TypeArguments="x:String">string.Empty</mca:CSharpValue>
+              </InArgument>
+            </pcw:ImportFieldLookup.DefaultValue>
+            <pcw:ImportFieldLookup.OutputValue>
+              <OutArgument x:TypeArguments="x:String">
+                <mca:CSharpReference x:TypeArguments="x:String">labelPrintRequest.PrintVariables["Width"]</mca:CSharpReference>
+              </OutArgument>
+            </pcw:ImportFieldLookup.OutputValue>
+            <pcw:ImportFieldLookup.Row>
+              <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+                <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">Row</mca:CSharpValue>
+              </InArgument>
+            </pcw:ImportFieldLookup.Row>
+          </pcw:ImportFieldLookup>
+          <pcw:ImportFieldLookup x:TypeArguments="x:String" DisplayName="Set Height" FieldToRetrieve="Height" sap2010:WorkflowViewState.IdRef="ImportFieldLookup`1_8">
+            <pcw:ImportFieldLookup.DefaultValue>
+              <InArgument x:TypeArguments="x:String">
+                <mca:CSharpValue x:TypeArguments="x:String">string.Empty</mca:CSharpValue>
+              </InArgument>
+            </pcw:ImportFieldLookup.DefaultValue>
+            <pcw:ImportFieldLookup.OutputValue>
+              <OutArgument x:TypeArguments="x:String">
+                <mca:CSharpReference x:TypeArguments="x:String">labelPrintRequest.PrintVariables["Height"]</mca:CSharpReference>
+              </OutArgument>
+            </pcw:ImportFieldLookup.OutputValue>
+            <pcw:ImportFieldLookup.Row>
+              <InArgument x:TypeArguments="scg:IDictionary(x:String, x:String)">
+                <mca:CSharpValue x:TypeArguments="scg:IDictionary(x:String, x:String)">Row</mca:CSharpValue>
+              </InArgument>
+            </pcw:ImportFieldLookup.Row>
+          </pcw:ImportFieldLookup>
+          <pcwr:AddPrintOnCartonRestriction sap2010:WorkflowViewState.IdRef="AddPrintOnCartonRestriction_2">
+            <pcwr:AddPrintOnCartonRestriction.ProductionItem>
+              <InArgument x:TypeArguments="pcidp:Restrictable">
+                <mca:CSharpValue x:TypeArguments="pcidp:Restrictable">ProductionItem</mca:CSharpValue>
+              </InArgument>
+            </pcwr:AddPrintOnCartonRestriction.ProductionItem>
+            <pcwr:AddPrintOnCartonRestriction.Value>
+              <InArgument x:TypeArguments="pcidp:LabelPrintRequest">
+                <mca:CSharpValue x:TypeArguments="pcidp:LabelPrintRequest">labelPrintRequest</mca:CSharpValue>
+              </InArgument>
+            </pcwr:AddPrintOnCartonRestriction.Value>
+          </pcwr:AddPrintOnCartonRestriction>
+        </Sequence>
+      </If.Else>
+    </If>
+    <sads:DebugSymbol.Symbol>d0dDOlxHaXRcQm91bmRlZFxXb3JrZmxvd3NcV29ya2Zsb3dzXEltcG9ydFBsdWdpbnNcQ3JlYXRlSW5ramV0UHJpbnQueGFtbEBCA70CDgIBAUYLRlUCAQJKBbsCCgIBB00LTX0CAQhRCdIBFAIBftUBCbkCFAIBDVURVW0CAX9bC2YjAwGUAmcLdyMDAfoBeAuNATEDAecBjgELowEpAwHGAaQBC8UBFQMBmAHGAQvRAS4DAYcB2QER2QGFAQIBDt0BC+gBFAIBcekBC/kBIwIBXfoBC4oCIwIBSYsCC5sCIwIBNZwCC6wCIwIBIa0CC7gCLgIBFFtKW18DAaYCW4sBW5UBAwGlAmMRY20DAZ0CXhFecQMBlQJqEWpbAwGMAmdwZ3oDAYsCdBF0bQMBgwJvEW+HAQMB+wF7EXttAwHyAYABEYABQAMB8QGKARGKAYEBAwHpAYUBEYUBQAMB6AGgARGgAWkDAd8BlgERlgF6AwHXAZsBEZsBaQMBzwGRARGRAXkDAccBpwERpwFuAwG+Aa4BD8MBJwMBmQHOARHOAWsDAZAByQERyQFnAwGIAeUBEeUBZwIBeOABEeABewIBcuwBEewBWwIBa+kBbekBfwIBavYBEfYBbQIBZPEBEfEBhwECAV79ARH9AVsCAVf6AWb6AW4CAVaHAhGHAm0CAVCCAhGCAoEBAgFKjgIRjgJbAgFDiwJliwJsAgFCmAIRmAJtAgE8kwIRkwKAAQIBNp8CEZ8CWwIBL5wCZpwCbgIBLqkCEakCbQIBKKQCEaQCgQECASK1AhG1Am8CARuwAhGwAmcCARWxARWxAV8DAbUBtgEVtgFWAwGsAcABFcABcQMBowG7ARW7AXwDAZoB</sads:DebugSymbol.Symbol>
+  </Sequence>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="ImportFieldLookup`1_1" sap:VirtualizedContainerService.HintSize="287,22" />
+      <sap2010:ViewStateData Id="ImportFieldLookup`1_2" sap:VirtualizedContainerService.HintSize="287,22" />
+      <sap2010:ViewStateData Id="GetHeadersStartingOrEndingWith_1" sap:VirtualizedContainerService.HintSize="287,22" />
+      <sap2010:ViewStateData Id="GetPrintDataForTemplate_1" sap:VirtualizedContainerService.HintSize="287,22" />
+      <sap2010:ViewStateData Id="ImportFieldLookup`1_4" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="ForEach`1_1" sap:VirtualizedContainerService.HintSize="287,210" />
+      <sap2010:ViewStateData Id="AddPrintOnCartonRestriction_1" sap:VirtualizedContainerService.HintSize="287,22" />
+      <sap2010:ViewStateData Id="Sequence_3" sap:VirtualizedContainerService.HintSize="309,644">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="ImportFieldLookup`1_5" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="ImportFieldLookup`1_6" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="ImportFieldLookup`1_7" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="ImportFieldLookup`1_8" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="AddPrintOnCartonRestriction_2" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="Sequence_4" sap:VirtualizedContainerService.HintSize="264,496">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_1" sap:VirtualizedContainerService.HintSize="598,794" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="620,918">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Workflows.Workflows.ImportPlugins.CreateInkjetPrint_1" sap:VirtualizedContainerService.HintSize="660,998" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

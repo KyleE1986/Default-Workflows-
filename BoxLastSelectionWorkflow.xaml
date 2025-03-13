@@ -1,0 +1,381 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="PackNet.Business.SelectionAlgorithms.Plugins.BoxLast.BoxLastSelectionWorkflow"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
+ xmlns:pcid="clr-namespace:PackNet.Common.Interfaces.Data;assembly=PackNet.Common.Interfaces"
+ xmlns:pcidm="clr-namespace:PackNet.Common.Interfaces.DTO.Machines;assembly=PackNet.Common.Interfaces"
+ xmlns:pcidp="clr-namespace:PackNet.Common.Interfaces.DTO.Packages;assembly=PackNet.Common.Interfaces"
+ xmlns:pcidpp="clr-namespace:PackNet.Common.Interfaces.DTO.Packages.ProductionStates;assembly=PackNet.Common.Interfaces"
+ xmlns:pcie="clr-namespace:PackNet.Common.Interfaces.Enums;assembly=PackNet.Common.Interfaces"
+ xmlns:pcis="clr-namespace:PackNet.Common.Interfaces.Services;assembly=PackNet.Common.Interfaces"
+ xmlns:pcwp="clr-namespace:PackNet.Common.WorkflowActivities.Packages;assembly=PackNet.Common"
+ xmlns:pcwr="clr-namespace:PackNet.Common.WorkflowActivities.Restrictions;assembly=PackNet.Common"
+ xmlns:rr="clr-namespace:RestrictionService.Restrictions;assembly=RestrictionService"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="JobsRepository" Type="InArgument(pcid:IJobsRepository)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="RestrictionService" Type="InArgument(pcis:IRestrictionService)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="MachineGroup" Type="InArgument(pcidm:MachineGroup)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="ServiceLocator" Type="InArgument(pcis:IServiceLocator)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="PackagesToProduce" Type="OutArgument(scg:List(pcidp:Package))">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+  </x:Members>
+  <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
+  <sap2010:WorkflowViewState.IdRef>PackNet.Business.SelectionAlgorithms.Plugins.BoxLast.BoxLastSelectionWorkflow_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>PackNet.Common.Interfaces.Data</x:String>
+      <x:String>PackNet.Common.Interfaces.Services</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Machines</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Packages</x:String>
+      <x:String>PackNet.Common.Interfaces.DTO.Packages.ProductionStates</x:String>
+      <x:String>PackNet.Common.Interfaces.Enums</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Newtonsoft.Json</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Net.Http</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PackNet.Plugins.ArticleService</AssemblyReference>
+      <AssemblyReference>CartonPropertyGroupService</AssemblyReference>
+      <AssemblyReference>PackNet.Common.Interfaces</AssemblyReference>
+      <AssemblyReference>PackNet.Common</AssemblyReference>
+      <AssemblyReference>ExternalZebraPrintIntegration</AssemblyReference>
+      <AssemblyReference>PackNet.IODeviceService</AssemblyReference>
+      <AssemblyReference>PackNet.KvmService</AssemblyReference>
+      <AssemblyReference>RestrictionService</AssemblyReference>
+      <AssemblyReference>PackNet.ScandataService</AssemblyReference>
+      <AssemblyReference>Microsoft.Consulting.Workflow.Activities</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>Workflows</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Flowchart sap2010:WorkflowViewState.IdRef="Flowchart_1" ValidateUnconnectedNodes="True">
+    <Flowchart.Variables>
+      <Variable x:TypeArguments="scg:List(pcidp:Job)" Name="availableJobs">
+        <Variable.Default>
+          <mca:CSharpValue x:TypeArguments="scg:List(pcidp:Job)">new List&lt;Job&gt;()</mca:CSharpValue>
+        </Variable.Default>
+      </Variable>
+      <Variable x:TypeArguments="scg:IEnumerable(pcidp:Job)" Name="sortedJobs">
+        <Variable.Default>
+          <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:Job)">new List&lt;Job&gt;()</mca:CSharpValue>
+        </Variable.Default>
+      </Variable>
+      <Variable x:TypeArguments="pcidp:Job" Name="jobToProduce" />
+    </Flowchart.Variables>
+    <Flowchart.StartNode>
+      <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_4">
+        <pcwp:AppendJobsWithStatus sap2010:Annotation.AnnotationText="Get Box Last jobs with at least one package  in staged status" DisplayName="Get Staged Jobs" sap2010:WorkflowViewState.IdRef="AppendJobsWithStatus_1">
+          <pcwp:AppendJobsWithStatus.Jobs>
+            <InArgument x:TypeArguments="scg:List(pcidp:Job)">
+              <mca:CSharpValue x:TypeArguments="scg:List(pcidp:Job)">availableJobs</mca:CSharpValue>
+            </InArgument>
+          </pcwp:AppendJobsWithStatus.Jobs>
+          <pcwp:AppendJobsWithStatus.JobsRepository>
+            <InArgument x:TypeArguments="pcid:IJobsRepository">
+              <mca:CSharpValue x:TypeArguments="pcid:IJobsRepository">JobsRepository</mca:CSharpValue>
+            </InArgument>
+          </pcwp:AppendJobsWithStatus.JobsRepository>
+          <pcwp:AppendJobsWithStatus.MachineGroup>
+            <InArgument x:TypeArguments="pcidm:MachineGroup">
+              <mca:CSharpValue x:TypeArguments="pcidm:MachineGroup">MachineGroup</mca:CSharpValue>
+            </InArgument>
+          </pcwp:AppendJobsWithStatus.MachineGroup>
+          <pcwp:AppendJobsWithStatus.ProductionStatus>
+            <InArgument x:TypeArguments="pcidpp:ProductionStatuses">
+              <mca:CSharpValue x:TypeArguments="pcidpp:ProductionStatuses">PreProductionStatuses.Staged</mca:CSharpValue>
+            </InArgument>
+          </pcwp:AppendJobsWithStatus.ProductionStatus>
+          <pcwp:AppendJobsWithStatus.SelectionAlgorithmType>
+            <InArgument x:TypeArguments="pcie:SelectionAlgorithmTypes">
+              <mca:CSharpValue x:TypeArguments="pcie:SelectionAlgorithmTypes">SelectionAlgorithmTypes.BoxLast</mca:CSharpValue>
+            </InArgument>
+          </pcwp:AppendJobsWithStatus.SelectionAlgorithmType>
+          <pcwp:AppendJobsWithStatus.ServiceLocator>
+            <InArgument x:TypeArguments="pcis:IServiceLocator">
+              <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+            </InArgument>
+          </pcwp:AppendJobsWithStatus.ServiceLocator>
+        </pcwp:AppendJobsWithStatus>
+        <FlowStep.Next>
+          <FlowStep x:Name="__ReferenceID2" sap2010:WorkflowViewState.IdRef="FlowStep_7">
+            <pcwp:GetJobsWithPackageInProgressOnMachineGroup sap2010:Annotation.AnnotationText="Returns jobs that has packages in progress on machine group or jobs with packages not in progress on other machine groups." DisplayName="Get Jobs with Packages in Progress" sap2010:WorkflowViewState.IdRef="GetJobsWithPackageInProgressOnMachineGroup_1">
+              <pcwp:GetJobsWithPackageInProgressOnMachineGroup.Jobs>
+                <InArgument x:TypeArguments="scg:IEnumerable(pcidp:Job)">
+                  <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:Job)">availableJobs</mca:CSharpValue>
+                </InArgument>
+              </pcwp:GetJobsWithPackageInProgressOnMachineGroup.Jobs>
+              <pcwp:GetJobsWithPackageInProgressOnMachineGroup.MachineGroup>
+                <InArgument x:TypeArguments="pcidm:MachineGroup">
+                  <mca:CSharpValue x:TypeArguments="pcidm:MachineGroup">MachineGroup</mca:CSharpValue>
+                </InArgument>
+              </pcwp:GetJobsWithPackageInProgressOnMachineGroup.MachineGroup>
+              <pcwp:GetJobsWithPackageInProgressOnMachineGroup.Result>
+                <OutArgument x:TypeArguments="scg:List(pcidp:Job)">
+                  <mca:CSharpReference x:TypeArguments="scg:List(pcidp:Job)">availableJobs</mca:CSharpReference>
+                </OutArgument>
+              </pcwp:GetJobsWithPackageInProgressOnMachineGroup.Result>
+              <pcwp:GetJobsWithPackageInProgressOnMachineGroup.ServiceLocator>
+                <InArgument x:TypeArguments="pcis:IServiceLocator">
+                  <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                </InArgument>
+              </pcwp:GetJobsWithPackageInProgressOnMachineGroup.ServiceLocator>
+            </pcwp:GetJobsWithPackageInProgressOnMachineGroup>
+            <FlowStep.Next>
+              <FlowDecision x:Name="__ReferenceID1" DisplayName="Has Any Jobs?" sap2010:WorkflowViewState.IdRef="FlowDecision_1">
+                <FlowDecision.Condition>
+                  <mca:CSharpValue x:TypeArguments="x:Boolean">availableJobs.Any()</mca:CSharpValue>
+                </FlowDecision.Condition>
+                <FlowDecision.True>
+                  <FlowStep x:Name="__ReferenceID3" sap2010:WorkflowViewState.IdRef="FlowStep_10">
+                    <pcwr:SortByPriorityRestriction x:TypeArguments="rr:DateTimePriorityRestrictionHandler" sap2010:Annotation.AnnotationText="Sorts the jobs by trigger time the earliest trigger is sorted first." DisplayName="Sort by trigger time" sap2010:WorkflowViewState.IdRef="SortByPriorityRestriction`1_3">
+                      <pcwr:SortByPriorityRestriction.Jobs>
+                        <InArgument x:TypeArguments="scg:IEnumerable(pcidp:Job)">
+                          <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:Job)">availableJobs</mca:CSharpValue>
+                        </InArgument>
+                      </pcwr:SortByPriorityRestriction.Jobs>
+                      <pcwr:SortByPriorityRestriction.RestrictionService>
+                        <InArgument x:TypeArguments="pcis:IRestrictionService">
+                          <mca:CSharpValue x:TypeArguments="pcis:IRestrictionService">RestrictionService</mca:CSharpValue>
+                        </InArgument>
+                      </pcwr:SortByPriorityRestriction.RestrictionService>
+                      <pcwr:SortByPriorityRestriction.ServiceLocator>
+                        <InArgument x:TypeArguments="pcis:IServiceLocator">
+                          <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                        </InArgument>
+                      </pcwr:SortByPriorityRestriction.ServiceLocator>
+                      <pcwr:SortByPriorityRestriction.SortedJobs>
+                        <OutArgument x:TypeArguments="scg:IEnumerable(pcidp:Job)">
+                          <mca:CSharpReference x:TypeArguments="scg:IEnumerable(pcidp:Job)">sortedJobs</mca:CSharpReference>
+                        </OutArgument>
+                      </pcwr:SortByPriorityRestriction.SortedJobs>
+                    </pcwr:SortByPriorityRestriction>
+                    <FlowStep.Next>
+                      <FlowStep x:Name="__ReferenceID4" sap2010:WorkflowViewState.IdRef="FlowStep_9">
+                        <pcwr:ResolveProductionRestrictions AllUsedMaterialsMustBeLoaded="True" sap2010:Annotation.AnnotationText="Return the job with the highest priority that is optimally producible on the machine group" DisplayName="Get Job with highest priority" sap2010:WorkflowViewState.IdRef="ResolveProductionRestrictions_2">
+                          <pcwr:ResolveProductionRestrictions.HighestPriorityProducibleJob>
+                            <OutArgument x:TypeArguments="pcidp:Job">
+                              <mca:CSharpReference x:TypeArguments="pcidp:Job">jobToProduce</mca:CSharpReference>
+                            </OutArgument>
+                          </pcwr:ResolveProductionRestrictions.HighestPriorityProducibleJob>
+                          <pcwr:ResolveProductionRestrictions.Jobs>
+                            <InArgument x:TypeArguments="scg:IEnumerable(pcidp:Job)">
+                              <mca:CSharpValue x:TypeArguments="scg:IEnumerable(pcidp:Job)">sortedJobs</mca:CSharpValue>
+                            </InArgument>
+                          </pcwr:ResolveProductionRestrictions.Jobs>
+                          <pcwr:ResolveProductionRestrictions.MachineGroup>
+                            <InArgument x:TypeArguments="pcidm:MachineGroup">
+                              <mca:CSharpValue x:TypeArguments="pcidm:MachineGroup">MachineGroup</mca:CSharpValue>
+                            </InArgument>
+                          </pcwr:ResolveProductionRestrictions.MachineGroup>
+                          <pcwr:ResolveProductionRestrictions.PackagesToProduce>
+                            <InArgument x:TypeArguments="scg:List(pcidp:Package)">
+                              <mca:CSharpValue x:TypeArguments="scg:List(pcidp:Package)">PackagesToProduce</mca:CSharpValue>
+                            </InArgument>
+                          </pcwr:ResolveProductionRestrictions.PackagesToProduce>
+                          <pcwr:ResolveProductionRestrictions.ServiceLocator>
+                            <InArgument x:TypeArguments="pcis:IServiceLocator">
+                              <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                            </InArgument>
+                          </pcwr:ResolveProductionRestrictions.ServiceLocator>
+                        </pcwr:ResolveProductionRestrictions>
+                        <FlowStep.Next>
+                          <FlowStep x:Name="__ReferenceID5" sap2010:WorkflowViewState.IdRef="FlowStep_8">
+                            <pcwr:AddPackageWithTilingPartnersToProductionList sap2010:Annotation.AnnotationText="Selects the package(s) to produce including tiling partners" DisplayName="Select Package to produce" sap2010:WorkflowViewState.IdRef="AddPackageWithTilingPartnersToProductionList_2">
+                              <pcwr:AddPackageWithTilingPartnersToProductionList.Job>
+                                <InArgument x:TypeArguments="pcidp:Job">
+                                  <mca:CSharpValue x:TypeArguments="pcidp:Job">jobToProduce</mca:CSharpValue>
+                                </InArgument>
+                              </pcwr:AddPackageWithTilingPartnersToProductionList.Job>
+                              <pcwr:AddPackageWithTilingPartnersToProductionList.MachineGroup>
+                                <InArgument x:TypeArguments="pcidm:MachineGroup">
+                                  <mca:CSharpValue x:TypeArguments="pcidm:MachineGroup">MachineGroup</mca:CSharpValue>
+                                </InArgument>
+                              </pcwr:AddPackageWithTilingPartnersToProductionList.MachineGroup>
+                              <pcwr:AddPackageWithTilingPartnersToProductionList.Result>
+                                <OutArgument x:TypeArguments="scg:List(pcidp:Package)">
+                                  <mca:CSharpReference x:TypeArguments="scg:List(pcidp:Package)">PackagesToProduce</mca:CSharpReference>
+                                </OutArgument>
+                              </pcwr:AddPackageWithTilingPartnersToProductionList.Result>
+                              <pcwr:AddPackageWithTilingPartnersToProductionList.ServiceLocator>
+                                <InArgument x:TypeArguments="pcis:IServiceLocator">
+                                  <mca:CSharpValue x:TypeArguments="pcis:IServiceLocator">ServiceLocator</mca:CSharpValue>
+                                </InArgument>
+                              </pcwr:AddPackageWithTilingPartnersToProductionList.ServiceLocator>
+                            </pcwr:AddPackageWithTilingPartnersToProductionList>
+                          </FlowStep>
+                        </FlowStep.Next>
+                      </FlowStep>
+                    </FlowStep.Next>
+                  </FlowStep>
+                </FlowDecision.True>
+              </FlowDecision>
+            </FlowStep.Next>
+          </FlowStep>
+        </FlowStep.Next>
+      </FlowStep>
+    </Flowchart.StartNode>
+    <x:Reference>__ReferenceID0</x:Reference>
+    <x:Reference>__ReferenceID1</x:Reference>
+    <x:Reference>__ReferenceID2</x:Reference>
+    <x:Reference>__ReferenceID3</x:Reference>
+    <x:Reference>__ReferenceID4</x:Reference>
+    <x:Reference>__ReferenceID5</x:Reference>
+    <sads:DebugSymbol.Symbol>d11DOlxDb2RlXHBob2VuaXhcV29ya2Zsb3dzXFdvcmtmbG93c1xTZWxlY3Rpb25BbGdvcml0aG1zXEJveExhc3RcQm94TGFzdFNlbGVjdGlvbldvcmtmbG93LnhhbWwhYQOOAg8CAQFlC2VpAgELagtqcAIBAnEJkAElAwG7AawBE6wBZQMBsgGTAQ2oAT8DAY0BsAEVxQE2AgFoyAEZ4gE+AgE55QEd+gFRAgEUfg9+YwMB6QF5D3lnAwHgAXQPdGUDAdcBgwEPgwF6AwHOAYgBD4gBgAEDAcUBjQEPjQFnAwG8AZsBE5sBZwMBqQGWAROWAXADAaABoAEToAFxAwGXAaUBE6UBawMBjgHCARvCAX0DAYQBswEbswF4AgF7uAEbuAF7AgFyvQEbvQFzAgFp1QEf1QFzAgFfywEfywFyAgFW0AEf0AF5AgFNyAFayAFgAgFM3wEf3wF3AgFD2gEf2gF9AgE67QEj7QF3AgEw8gEj8gGJAQIBJ/cBI/cBewIBHugBI+gBbgIBFQ==</sads:DebugSymbol.Symbol>
+  </Flowchart>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="AppendJobsWithStatus_1" sap:VirtualizedContainerService.HintSize="200,63.3333333333333">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="GetJobsWithPackageInProgressOnMachineGroup_1" sap:VirtualizedContainerService.HintSize="200,113.333333333333">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="SortByPriorityRestriction`1_3" sap:VirtualizedContainerService.HintSize="200,80">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ResolveProductionRestrictions_2" sap:VirtualizedContainerService.HintSize="200,96.6666666666667">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="AddPackageWithTilingPartnersToProductionList_2" sap:VirtualizedContainerService.HintSize="200,75">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">20,642.5</av:Point>
+            <av:Size x:Key="ShapeSize">200,74.6666666666667</av:Size>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_9">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">20,520</av:Point>
+            <av:Size x:Key="ShapeSize">200,96.6666666666667</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">120,616.666666666667 120,642.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_10">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">20,420</av:Point>
+            <av:Size x:Key="ShapeSize">200,80</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">120,500 120,520</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDecision_1" sap:VirtualizedContainerService.HintSize="80.6666666666667,86.6666666666667">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">260.5,336.5</av:Point>
+            <av:Size x:Key="ShapeSize">80.6666666666667,86.6666666666667</av:Size>
+            <av:PointCollection x:Key="TrueConnector">260.5,380 120,380 120,420</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_7">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">200,200</av:Point>
+            <av:Size x:Key="ShapeSize">200,113.333333333333</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,313.333333333333 300,336.5 300.833333333333,336.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">200,107.5</av:Point>
+            <av:Size x:Key="ShapeSize">200,63.3333333333333</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,170.833333333333 300,200</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Flowchart_1" sap:VirtualizedContainerService.HintSize="614,753.333333333333">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <av:Point x:Key="ShapeLocation">270,2.5</av:Point>
+            <av:Size x:Key="ShapeSize">60,74.6666666666667</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,77.5 300,107.5</av:PointCollection>
+            <x:Double x:Key="Height">717.5</x:Double>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PackNet.Business.SelectionAlgorithms.Plugins.BoxLast.BoxLastSelectionWorkflow_1" sap:VirtualizedContainerService.HintSize="654,833.333333333333" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>
